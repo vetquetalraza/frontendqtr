@@ -7,7 +7,7 @@ function App() {
 
   const [data, setData] = useState([])
   useEffect(()=>{
-      axios.get('https://api-vet-iy2t.onrender.com/api/v1/clients')
+      axios.get('https://api-vet-2utn.onrender.com/api/v1/clients')
       .then(res => setData(Array.from(res.data)))
       .catch(err => console.log(err));
   }, [])
