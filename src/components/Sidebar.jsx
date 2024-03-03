@@ -20,7 +20,7 @@ const Sidebar = () => {
                 </li>
                 <li>
                     <img src={cliente} alt="Clientes" className="icon-menu"/>
-                    <a href="list_client.html">Clientes</a>
+                    <a href="/clients">Clientes</a>
                 </li>
                 <li>
                     <img src={mascota} alt="Mascotas" className="icon-menu"/>

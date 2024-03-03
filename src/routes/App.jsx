@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from '../containers/Layout';
 // import Login from '../pages/Login';
 import Home from '../containers/Home';
+import Client from '../containers/Client';
 // import CreateClient from '../pages/CreateClient';
 // import EditClient from '../pages/EditClient';
 // import ListPet from '../pages/ListPet';
@@ -34,6 +35,7 @@ const App = () => {
                 <Layout>
                     <Routes>
                         <Route exact path="/" element={<Home/>}/>
+                        <Route exact path="/clients" element={<Client/>}/>
                         {/* <Route exact path="/login" element={<Login/>}/>
                         <Route exact path="/calendar" element={<Calendar/>}/>
                         <Route exact path="/CreateClient" element={<CreateClient/>}/>

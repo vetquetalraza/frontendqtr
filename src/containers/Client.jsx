@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/global.scss';
+import axios from 'axios';
 
 const Client = () => {
+
+    const [data, setData] = useState([])
+    useEffect(()=>{
+        axios.get('https://api-vet-2utn.onrender.com/api/v1/clients')
+        .then(res => setData(Array.from(res.data)))
+        .catch(err => console.log(err));
+    }, [])
+
     return (
         <>
         <label for="" className="title">Clientes</label>
@@ -11,68 +20,34 @@ const Client = () => {
         </div>
         <table class="table">
             <thead>
-            <tr>
-                <th>N°</th>
-                <th>DNI</th>
-                <th>Nombres y Apellidos</th>
-                <th>Dirección</th>
-                <th>Celular</th>
-                <th>Correo</th>
-                <th>Acciones</th>
-            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>78787878</td>
-                                <td>María Paz</td>
-                                <td>Av. Flores 345</td>
-                                <td>999999999</td>
-                                <td>maria@gmail.com</td>
-                                <td>
-                                    <a class="button button-edit" href="#popup1">Editar</a>
-                                    <a class="button button-delete" href="#popup2">Eliminar</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>78787878</td>
-                                <td>María Paz</td>
-                                <td>Av. Flores 345</td>
-                                <td>999999999</td>
-                                <td>maria@gmail.com</td>
-                                <td>
-                                    <a class="button button-edit" href="#popup1">Editar</a>
-                                    <a class="button button-delete" href="#popup2">Eliminar</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>78787878</td>
-                                <td>María Paz</td>
-                                <td>Av. Flores 345</td>
-                                <td>999999999</td>
-                                <td>maria@gmail.com</td>
-                                <td>
-                                    <a class="button button-edit" href="#popup1">Editar</a> 
-                                    <a class="button button-delete" href="#popup2">Eliminar</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>78787878</td>
-                                <td>María Paz</td>
-                                <td>Av. Flores 345</td>
-                                <td>999999999</td>
-                                <td>maria@gmail.com</td>
-                                <td>
-                                    <a class="button button-edit" href="#popup1">Editar</a>
-                                    <a class="button button-delete" href="#popup2">Eliminar</a>
-                                </td>
-                            </tr>        
-                </tbody>
-            </table>
-        </>      
+                <tr>
+                    <th>N°</th>
+                    <th>DNI</th>
+                    <th>Nombres y Apellidos</th>
+                    <th>Dirección</th>
+                    <th>Celular</th>
+                    <th>Correo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            {data.map((client,index) => {
+            return <tr key={index}> 
+                    <td>{index + 1}</td>
+                    <td>{client.dniclient} </td>
+                    <td>{client.nameclient} {client.surnameclient}</td>
+                    <td>{client.addressclient}</td>
+                    <td>{client.phoneclient}</td>
+                    <td>{client.emailclient}</td>
+                    <td>
+                        <a className="button button-edit" href="#popup1">Editar</a>
+                        <a className="button button-delete" href="#popup2">Eliminar</a>
+                    </td>
+                </tr>
+            })}      
+            </tbody>
+        </table>
+    </>      
     );
 };
 
