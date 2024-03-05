@@ -16,7 +16,7 @@ const Sidebar = () => {
             <ul>
                 <li>
                     <img src={inicio} alt="Inicio" className="icon-menu"/>
-                    <a href="index.html">Inicio</a>
+                    <a href="/home">Inicio</a>
                 </li>
                 <li>
                     <img src={cliente} alt="Clientes" className="icon-menu"/>
@@ -24,27 +24,27 @@ const Sidebar = () => {
                 </li>
                 <li>
                     <img src={mascota} alt="Mascotas" className="icon-menu"/>
-                    <a href="list_pet.html">Mascotas</a>
+                    <a href="/pets">Mascotas</a>
                 </li>
                 <li>
                     <img src={cita} alt="Citas" className="icon-menu"/>
-                    <a href="list_appointment.html">Citas</a>
+                    <a href="/appointment">Citas</a>
                 </li>
                 <li>
                     <img src={atencion} alt="Atenciones" className="icon-menu"/>
-                    <a href="list_attend.html">Atenciones</a>
+                    <a href="/care">Atenciones</a>
                 </li>
                 <li>
                     <img src={historial} alt="Historial Clínico" className="icon-menu"/>
-                    <a href="list_history.html">Historial Clínico</a>
+                    <a href="/history">Historial Clínico</a>
                 </li>
                 <li>
                     <img src={inventario} alt="Inventario" className="icon-menu"/>
-                    <a href="list_inventory.html">Inventario</a>
+                    <a href="/inventory">Inventario</a>
                 </li>
                 <li>
                     <img src={reporte} alt="Reportes" className="icon-menu"/>
-                    <a href="reports.html">Reportes</a>
+                    <a href="/reports">Reportes</a>
                 </li>
             </ul>
         </div>
