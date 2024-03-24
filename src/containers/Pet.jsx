@@ -13,7 +13,7 @@ const Pet = () => {
 
     function getEdad(dateString) {
         let hoy = new Date()
-        let fechaNacimiento = new Date(dateString.replace("-","/"))
+        let fechaNacimiento = new Date(dateString)
         let edad = hoy.getFullYear() - fechaNacimiento.getFullYear()
         let diferenciaMeses = hoy.getMonth() - fechaNacimiento.getMonth()
         if (
@@ -52,7 +52,7 @@ return (
                     <td>{pet.namespeciepet}</td>
                     <td>{pet.racepet}</td>
                     <td>{pet.namegenderpet}</td>
-                    <td>{ getEdad(pet.birthdatepet) }</td>
+                    <td>{ getEdad(pet.birthdatepet) } años</td>
                     <td>
                         <a class="button button-edit" href="#popup1">Editar</a>
                         <a class="button button-delete" href="#popup2">Eliminar</a>
