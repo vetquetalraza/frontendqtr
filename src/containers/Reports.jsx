@@ -6,7 +6,7 @@ const Reports = () => {
 
     const [data, setData] = useState([])
     useEffect(()=>{
-        axios.get('https://api-vet-2utn.onrender.com/api/v1/reportes')
+        axios.get('https://api-vet-2utn.onrender.com/api/v1/reports')
         .then(res => setData(Array.from(res.data)))
         .catch(err => console.log(err));
     }, [])

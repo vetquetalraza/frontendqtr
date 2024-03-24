@@ -6,10 +6,24 @@ const Pet = () => {
 
     const [data, setData] = useState([])
     useEffect(()=>{
-        axios.get('https://api-vet-2utn.onrender.com/api/v1/mascotas')
+        axios.get('https://api-vet-2utn.onrender.com/api/v1/pets')
         .then(res => setData(Array.from(res.data)))
         .catch(err => console.log(err));
     }, [])
+
+    function getEdad(dateString) {
+        let hoy = new Date()
+        let fechaNacimiento = new Date(dateString.replace("-","/"))
+        let edad = hoy.getFullYear() - fechaNacimiento.getFullYear()
+        let diferenciaMeses = hoy.getMonth() - fechaNacimiento.getMonth()
+        if (
+          diferenciaMeses < 0 ||
+          (diferenciaMeses === 0 && hoy.getDate() < fechaNacimiento.getDate())
+        ) {
+          edad--
+        }
+        return edad
+    }
 
 return (
     <>
@@ -31,18 +45,20 @@ return (
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Arenita</td>
-                    <td>Gato</td>
-                    <td>Europeo pelo corto</td>
-                    <td>Hembra</td>
-                    <td>3 años</td>
+            {data.map((pet,index) => {
+            return <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>{pet.namepet}</td>
+                    <td>{pet.namespeciepet}</td>
+                    <td>{pet.racepet}</td>
+                    <td>{pet.namegenderpet}</td>
+                    <td>getEdad({pet.birthdatepet})</td>
                     <td>
                         <a class="button button-edit" href="#popup1">Editar</a>
                         <a class="button button-delete" href="#popup2">Eliminar</a>
                     </td>
                 </tr>
+            })} 
             </tbody>
         </table>
     </>
