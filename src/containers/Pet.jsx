@@ -52,7 +52,7 @@ return (
                     <td>{pet.namespeciepet}</td>
                     <td>{pet.racepet}</td>
                     <td>{pet.namegenderpet}</td>
-                    <td>getEdad({pet.birthdatepet})</td>
+                    <td>{ getEdad(pet.birthdatepet) }</td>
                     <td>
                         <a class="button button-edit" href="#popup1">Editar</a>
                         <a class="button button-delete" href="#popup2">Eliminar</a>
