@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/global.scss';
+import Calendar from '../components/Calendar';
 import axios from 'axios';
 
 const Appointment = () => {
@@ -15,6 +16,7 @@ return (
     <>
         <label for="" className="title">Citas</label>
         <a className="button button-new" href="#popup1">Nueva cita</a>
+        <Calendar />
     </>
 );
 
