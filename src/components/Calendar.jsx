@@ -4,28 +4,74 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { useState } from "react";
 import EventItem from '../hooks/useGetEvent';
 import uuid from 'react-uuid';
+import axios from 'axios';
 
 export default function Calendar() {
 
 const [events, setEvents] = useState([]);
 
+const [values , setValues] = useState({
+  idpet:'',
+  idservice: '',
+  dateappo: '',
+  timeappo: '',
+  comment: '',
+  status: '1'
+})
+
 const handleSelect = (info) => {
     const { start, end } = info;
-    const eventNamePrompt = prompt("Seleccione:");
-    if (eventNamePrompt) {
-      setEvents([
+
+    const popup = document.getElementById("btnPopup");
+    popup.click()
+
+    const dateApp = document.getElementById("dateappo")
+    var day = start.getDate(),
+        month = start.getMonth(),
+        year = start.getFullYear()
+
+    var dayT = day < 10 ? 0 + day : day,
+        monthT = month < 10 ? 0 + month.toString() : month,
+        dateT = year + "-" + monthT + "-" + dayT
+    dateApp.value = dateT
+
+    const timeApp = document.getElementById("timeappo")
+    var hour = start.getHours(),
+        minutes = start.getMinutes(),
+        hourT = hour < 10 ? 0 + hour.toString() : hour,
+        minutesT = minutes < 10 ? 0 + minutes.toString() : minutes,
+        timeT = hourT + ":" + minutesT
+        
+    timeApp.value = timeT
+
+    setEvents([
         ...events,
         {
           start,
           end,
-          title: eventNamePrompt,
+          title: 'CITA',
           id: uuid(),
+          date: dateT,
+          time: timeT
+
         },
-      ]);
-    }
+    ]);
+
+    setValues({...values,dateappo: dateT})
+
+    setValues({...values,timeappo: timeT})
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(values);
+    axios.post('https://api-vet-2utn.onrender.com/api/v1/appointments',values)
+    .then(res => console.log(res))
+    .catch(err => console.log(err))
+}
+
   return (
+    <>
     <FullCalendar
       plugins={[ timeGridPlugin,  interactionPlugin]}
       initialView="timeGridWeek"
@@ -64,9 +110,59 @@ const handleSelect = (info) => {
     slotLabelFormat={{
         hour: '2-digit',
         minute: '2-digit',
-        hour12: true
+        hour12: false
       }}
     />
+    <div id="popup1" className="overlay">
+      <div className="popup-pet">
+          <div className="popup-header">
+              <label className="title">Datos cita</label>
+              <a className="close" href="#">&times;</a>
+          </div>
+          <div className="content">
+
+              <form action="/" className="form" onSubmit={handleSubmit}>
+                  
+                  <label for="name" className="label">DNI Cliente</label>
+                  <input type="text" id="dni" placeholder="" className="input input-text"/>
+            
+                  <label for="name" className="label">Cliente</label>
+                  <input type="text" id="name" placeholder="María Paz" className="input input-text" readonly/>
+
+                  <label for="name" className="label">Nombre mascota</label>
+                  <select id="origin" name="origin" className="input" onChange={e => setValues({...values,idpet: e.target.value})}>
+                      <option selected>Seleccionar</option>
+                      <option value="1">Gato: Arenita</option>
+                      <option value="2">Gato: Zeus</option>
+                      <option value="3">Perro: Wookie</option>
+                  </select>
+                  
+                  <label for="idservice" className="label label-pet">Servicio</label>
+                  <select id="idservice" name="service" className="input" onChange={e => setValues({...values,idservice: e.target.value})}>
+                      <option selected>Seleccionar</option>
+                      <option value="1">Consulta Médica</option>
+                      <option value="2">Grooming</option>
+                      <option value="3">Plan de vacunación</option>
+                  </select>
+
+                  <label for="dateappo" className="label">Fecha cita</label>
+                  <input type="date" id="dateappo" className="input input-text" onChange={e => setValues({...values,dateappo: e.target.value})}/>
+                  
+                  <label for="timeappo" className="label">Hora cita</label>
+                  <input type="time" id="timeappo" className="input input-text" onChange={e => setValues({...values,timeappo: e.target.value})}/>
+
+                  <label for="comment" className="label">Comentarios (Opcional)</label>
+                  <input type="text" id="comment" className="input input-text" onChange={e => setValues({...values,comment: e.target.value})}/>
+                  
+                  <div className="button-section">
+                      <input type="submit" value="Guardar" className="button primary-button"/> 
+                  </div>
+                  
+              </form>
+          </div>
+      </div>
+  </div>
+  </>
   )
 }
 

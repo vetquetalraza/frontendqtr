@@ -7,7 +7,7 @@ const Appointment = () => {
 
     const [data, setData] = useState([])
     useEffect(()=>{
-        axios.get('https://api-vet-2utn.onrender.com/api/v1/appointment')
+        axios.get('https://api-vet-2utn.onrender.com/api/v1/appointments')
         .then(res => setData(Array.from(res.data)))
         .catch(err => console.log(err));
     }, [])
@@ -15,7 +15,8 @@ const Appointment = () => {
 return (
     <>
         <label for="" className="title">Citas</label>
-        <a className="button button-new" href="#popup1">Nueva cita</a>
+        <div class="table-header"><a className="button button-new" href="#popup1" id="btnPopup" hidden>Nueva cita</a></div>
+        
         <Calendar />
     </>
 );
