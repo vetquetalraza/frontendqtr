@@ -44,12 +44,14 @@ const handleSelect = (info) => {
         
     timeApp.value = timeT
 
+    var nameAppo = document.getElementById("idservice"),
+        selected = nameAppo.options[nameAppo.selectedIndex].text;
     setEvents([
         ...events,
         {
           start,
           end,
-          title: 'CITA',
+          title: selected,
           id: uuid(),
           date: dateT,
           time: timeT
@@ -64,8 +66,7 @@ const handleSelect = (info) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(values);
-    axios.post('https://api-vet-2utn.onrender.com/api/v1/appointments',values)
+    axios.post('https://api-vet-2utn.onrender.com/api/v1/appointments/',values)
     .then(res => console.log(res))
     .catch(err => console.log(err))
 }
@@ -129,8 +130,8 @@ const handleSelect = (info) => {
                   <label for="name" className="label">Cliente</label>
                   <input type="text" id="name" placeholder="María Paz" className="input input-text" readonly/>
 
-                  <label for="name" className="label">Nombre mascota</label>
-                  <select id="origin" name="origin" className="input" onChange={e => setValues({...values,idpet: e.target.value})}>
+                  <label for="idpet" className="label">Nombre mascota</label>
+                  <select id="idpet" name="idpet" className="input" onChange={e => setValues({...values,idpet: e.target.value})}>
                       <option selected>Seleccionar</option>
                       <option value="1">Gato: Arenita</option>
                       <option value="2">Gato: Zeus</option>
@@ -138,7 +139,7 @@ const handleSelect = (info) => {
                   </select>
                   
                   <label for="idservice" className="label label-pet">Servicio</label>
-                  <select id="idservice" name="service" className="input" onChange={e => setValues({...values,idservice: e.target.value})}>
+                  <select id="idservice" name="idservice" className="input" onChange={e => setValues({...values,idservice: e.target.value})}>
                       <option selected>Seleccionar</option>
                       <option value="1">Consulta Médica</option>
                       <option value="2">Grooming</option>
