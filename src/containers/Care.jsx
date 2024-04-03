@@ -1,32 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/global.scss';
 import axios from 'axios';
+import moment from 'moment'; 
 
 const Care = () => {
 
-    var now = new Date(),
-    day = now.getDate(),
-    month = now.getMonth() + 1,
-    year = now.getFullYear()
-
-    var dayT = day < 10 ? 0 + day : day,
-    monthT = month < 10 ? 0 + month.toString() : month,
-    dateT = year + "-" + monthT + "-" + dayT
-
+    const [dateCare, setDateCare] = useState("");
     const [data, setData] = useState([])
-    useEffect(()=>{
-        var id = dateT
-        axios.get('https://api-vet-2utn.onrender.com/api/v1/care/'+id)
+
+    const handleChange = (event) => {
+        setDateCare(event.target.value);
+        axios.get('https://api-vet-2utn.onrender.com/api/v1/care/'+event.target.value)
         .then(res => setData(Array.from(res.data)))
         .catch(err => console.log(err));
-    }, [])
+    };
+
+    useEffect(() => {
+        let date = moment().format("YYYY-MM-DD")
+        setDateCare(date);  
+        axios.get('https://api-vet-2utn.onrender.com/api/v1/care/'+date)
+        .then(res => setData(Array.from(res.data)))
+        .catch(err => console.log(err));
+    }, []);
 
 return (
     <>
         <label for="" className="title">Atenciones</label>
         <div className="table-header">
             <input className="input-inset" type="text" placeholder="Buscar"/> 
-            <input type="date" id="dateCare" className="input input-text"/>
+            <input type="date" value={dateCare} onChange={handleChange} className="input input-text"/>
         </div>
         <table className="table">
             <thead>
