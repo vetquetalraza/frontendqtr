@@ -3,7 +3,6 @@ import '../styles/global.scss';
 import axios from 'axios';
 
 const Inventory = () => {
-
     const [data, setData] = useState([])
     const [option, setOption] = useState([])
 
