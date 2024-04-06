@@ -12,11 +12,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.7",
-<<<<<<< HEAD
     "moment": "^2.30.1",
-=======
-    "node": "^18.20.0",
->>>>>>> ffc047afa8c585adcb4472c170a0c1317b976b98
     "path": "^0.12.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

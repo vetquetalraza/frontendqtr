@@ -4,12 +4,29 @@ import axios from 'axios';
 
 const Client = () => {
 
+    var url = 'https://api-vet-2utn.onrender.com/api/v1/clients'
     const [data, setData] = useState([])
     useEffect(()=>{
-        axios.get('https://api-vet-2utn.onrender.com/api/v1/clients')
+        axios.get(url)
         .then(res => setData(Array.from(res.data)))
         .catch(err => console.log(err));
     }, [])
+
+    const [values, setValues] = useState({
+        dni: '',
+        name: '',
+        surname: '',
+        address: '',
+        email: '',
+        phone: ''
+    })
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        axios.post(url,values)
+        .then(res => console.log(res))
+        .catch(err => console.log(err))
+    }
 
     return (
         <>
@@ -47,6 +64,41 @@ const Client = () => {
             })}      
             </tbody>
         </table>
+        <div id="popup1" className="overlay">
+            <div className="popup">
+                <div className="popup-header">
+                    <label className="title">Datos cliente</label>
+                    <a className="close" href="#">&times;</a>
+                </div>
+                <div className="content">
+                    <form action="/" className="form" onSubmit={handleSubmit}>
+        
+                        <label for="name" className="label">DNI</label>
+                        <input type="text" id="dni" placeholder="" onChange={e => setValues({...values,dni: e.target.value})} className="input input-text"/>
+                           
+                        <label for="name" className="label">Nombres </label>
+                        <input type="text" id="name" placeholder="" onChange={e => setValues({...values,name: e.target.value})} className="input input-text"/>
+        
+                        <label for="name" className="label">Apellidos</label>
+                        <input type="text" id="surname" placeholder="" onChange={e => setValues({...values,surname: e.target.value})} className="input input-text"/>
+        
+                        <label for="name" className="label">Dirección</label>
+                        <textarea name="" id="address" cols="20" rows="3" onChange={e => setValues({...values,address: e.target.value})} className="textarea"></textarea>
+        
+                        <label for="email" className="label">Email</label>
+                        <input type="text" id="email" placeholder="" onChange={e => setValues({...values,email: e.target.value})} className="input input-email"/>
+        
+                        <label for="name" className="label">N° de celular</label>
+                        <input type="text" id="phone" placeholder="" onChange={e => setValues({...values,phone: e.target.value})} className="input input-text"/>
+                            
+                        <div className="button-section">
+                            <input type="submit" value="Guardar" className="button primary-button"/> 
+                        </div>
+                            
+                    </form>
+                </div>
+            </div>
+        </div>
     </>      
     );
 };
