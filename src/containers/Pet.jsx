@@ -61,6 +61,82 @@ return (
             })} 
             </tbody>
         </table>
+        <div id="popup1" className="overlay">
+            <div className="popup-pet">
+                <div className="popup-header">
+                    <label className="title">Datos mascota</label>
+                    <a className="close" href="#">&times;</a>
+                </div>
+                <div className="content">
+
+                    <form action="/" className="form" onSubmit="">
+                            
+                        <label for="name" className="label">DNI Cliente</label>
+                        <input type="text" id="dni" placeholder="" className="input input-text"/>
+                          
+                        <label for="name" className="label">Cliente</label>
+                        <input type="text" id="name" placeholder="María Paz" className="input input-text" readonly/>
+
+                        <label for="name" className="label">Nombre mascota</label>
+                        <input type="text" id="pet" className="input input-name"/>
+                            
+                        <div className="group-data-pet">
+                            <div>
+                                <label for="specie" className="label label-pet">Especie</label>
+                                <select id="specie" name="specie" className="input" >
+                                    <option selected>Seleccionar</option>
+                                    <option value="">Gato</option>
+                                    <option value="">Perro</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="gender" className="label label-pet">Género</label>
+                                <select id="gender" name="gender" className="input">
+                                    <option selected>Seleccionar</option>
+                                    <option value="">Hembra</option>
+                                    <option value="">Macho</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="origin" className="label label-pet">Procedencia</label>
+                                <select id="origin" name="origin" className="input">
+                                    <option selected>Seleccionar</option>
+                                    <option value="">Costa</option>
+                                    <option value="">Sierra</option>
+                                    <option value="">Selva</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div className="group-data-pet">
+                            <div>
+                                <label for="race" className="label label-pet">Raza</label>
+                                <input type="text" id="race" className="input input-name" />
+                            </div>
+                            <div>
+                                <label for="color" className="label label-pet">Color</label>
+                                <input type="text" id="color" className="input input-name" />
+                            </div>
+                        </div>
+
+                        <label for="birthday" className="label">Fecha de Nacimiento</label>
+                        <input type="date" id="birthday" className="input input-name"/>
+               
+                        <label for="description" className="label">Señas particulares</label>
+                        <textarea className="textarea" rows="3" id="description"></textarea>
+
+                        <label for="" className="label">¿Deseas que conoscamos más a tu mascota?</label>
+                        <label for="photo" className="button photo-file">Sube una foto!</label>
+                        <input id="photo" type="file" placeholder="" />
+                        <div className="preview-pet"><img src="images/mascotas.png" alt=""></img></div>
+                            
+                        <div className="button-section">
+                            <input type="submit" value="Guardar" className="button primary-button"/> 
+                        </div>
+                            
+                    </form>
+                </div>
+            </div>
+        </div>
     </>
 );
 
