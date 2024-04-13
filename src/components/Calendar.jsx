@@ -16,7 +16,7 @@ const [values , setValues] = useState({
   dateappo: '',
   timeappo: '',
   comment: '',
-  status: '1'
+  status: 'Agendado'
 })
 
 const handleSelect = (info) => {
