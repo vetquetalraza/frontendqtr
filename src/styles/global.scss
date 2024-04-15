@@ -111,7 +111,7 @@ nav {
     display: flex;
 }
 .second-container {
-    width: 80%;
+    width: 100%;
     height: auto;
     display: flex;
     align-items:flex-start;
@@ -120,8 +120,8 @@ nav {
 
 .form-container {
     display: grid;
-    grid-template-columns: 65%;
-    width: 70%;
+    grid-template-columns: 90%;
+    width: 100%;
     margin-top: 20px;
     justify-content: center;
 }
@@ -348,6 +348,7 @@ nav {
   border-radius: 8px;
   font-size: var(--xs);
   text-decoration: none;
+  margin-left: 10px;
 }
 
 .button-new {
@@ -358,6 +359,7 @@ nav {
   border-radius: 8px;
   font-size: var(--sm);
   text-decoration: none;
+  margin-left: 10px;
 }
 
 .input-inset{
@@ -371,7 +373,7 @@ nav {
   border: 1px solid #C5CBD5;
   box-shadow: inset 0 1px 4px 0 rgba(0,0,0,0.20);
   border-radius: 8px;
-  width: 45%;
+  width: 30%;
   padding: .5em 1em .5em 2.5em;
   } 
   
@@ -384,6 +386,10 @@ nav {
     border: 1px solid var(--hover-color);
   }
 
+  .filter {
+    margin-left: 10px;
+  }
+  
   .table-header {
     margin-top: 10px;
   }
@@ -491,11 +497,15 @@ nav {
 
   .photo-file {
     background-color: var(--dark-color);
-    border-radius: 5px;
-    width: 30%;
+    width: 100%;
     font-size: var(--xs);
     height: 20px;
     text-align: center;
+    padding: 10px;
+  }
+
+  .photo-file img {
+    object-fit: contain;
   }
 
   .preview-pet {
@@ -618,4 +628,17 @@ nav {
 .text-cancel {
   color: #696767;
   font-weight: bold;
+}
+
+//Grooming
+
+.contentPhotos {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  width: 100%;
+}
+
+.columnPhoto {
+  width: 50%;
 }

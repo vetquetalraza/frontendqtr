@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+//import React, { useEffect, useState } from 'react';
 import '../styles/global.scss';
-import axios from 'axios';
+//import axios from 'axios';
 
 const Reports = () => {
 
-    const [data, setData] = useState([])
-    useEffect(()=>{
-        axios.get('https://api-vet-2utn.onrender.com/api/v1/reports')
-        .then(res => setData(Array.from(res.data)))
-        .catch(err => console.log(err));
-    }, [])
+    // const [data, setData] = useState([])
+    // useEffect(()=>{
+    //     axios.get('https://api-vet-2utn.onrender.com/api/v1/reports')
+    //     .then(res => setData(Array.from(res.data)))
+    //     .catch(err => console.log(err));
+    // }, [])
 
 return (
     <>

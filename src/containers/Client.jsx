@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/global.scss';
 import axios from 'axios';
+import Swal from 'sweetalert2'
 
 const Client = () => {
 
     var url = 'https://api-vet-2utn.onrender.com/api/v1/clients'
     const [data, setData] = useState([])
     useEffect(()=>{
+        loadData()
+    }, [])
+
+    const loadData = () => {
         axios.get(url)
         .then(res => setData(Array.from(res.data)))
         .catch(err => console.log(err));
-    }, [])
+    }
 
     const [values, setValues] = useState({
         dni: '',
@@ -23,9 +28,30 @@ const Client = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const close = document.querySelector(".close");
         axios.post(url,values)
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
+        .then(res => {
+            console.log(res);
+            close.click();
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Datos guardados correctamente.",
+                showConfirmButton: false,
+                timer: 1500
+              });
+            loadData()
+        })
+        .catch(err => {
+            console.log(err);
+            Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: "Ha ocurrido un error.",
+                showConfirmButton: false,
+                timer: 1500
+              });
+        })
     }
 
     return (

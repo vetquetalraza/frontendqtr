@@ -10,6 +10,21 @@ const Care = () => {
     const [vaccine , setVaccine] = useState([])
     const [vaccineSel, setVaccineSel] = useState([])
 
+    const [medical, setMedical] = useState({
+        idappo: '',
+        anamnesis: '123',
+        weight: '',
+        temperature: '',
+        treatment: ''
+    })
+
+    const [grooming, setGrooming] = useState({  
+        idappo: '',
+        before: '',
+        after: '',
+        comment: ''
+    })
+
     const [values, setValues] = useState({
         idappo: '',
         idvaccine: [],
@@ -18,12 +33,17 @@ const Care = () => {
         comments: ''
     })
 
-    const [grooming, setGrooming] = useState({
-        idappo: '',
-        before: '',
-        after: '',
-        comment: ''
-    })
+    const [ filePreview, setFilePreview] = useState("");
+
+    const handlePreview = (event) => {
+        setFilePreview(URL.createObjectURL(event.target.files[0]))
+    }
+
+    const [ filePreviewA, setFilePreviewA] = useState("");
+
+    const handlePreviewA = (event) => {
+        setFilePreviewA(URL.createObjectURL(event.target.files[0]))
+    }
 
     const handleChange = (event) => {
         setDateCare(event.target.value);
@@ -33,8 +53,11 @@ const Care = () => {
     };
 
     const handleOpen = (event) => {
+
+        setMedical({...medical,idappo: event.target.dataset.appo})
         setValues({...values,idappo: event.target.dataset.appo})
         setGrooming({...grooming,idappo: event.target.dataset.appo})
+
         axios.get('https://api-vet-2utn.onrender.com/api/v1/vaccines')
         .then(res => setVaccine(Array.from(res.data)))
         .catch(err => console.log(err));
@@ -50,9 +73,11 @@ const Care = () => {
 
     const handleSubmitMedic = (e) => {
         e.preventDefault();
-        console.log(grooming)
-        axios.post('https://api-vet-2utn.onrender.com/api/v1/grooming',grooming)
-        .then(res => console.log(res))
+        console.log(medical)
+        axios.post('https://api-vet-2utn.onrender.com/api/v1/medical',medical)
+        .then(res => {
+
+        })
         .catch(err => console.log(err))
     }
 
@@ -78,7 +103,7 @@ return (
         <label for="" className="title">Atenciones</label>
         <div className="table-header">
             <input className="input-inset" type="text" placeholder="Buscar"/> 
-            <input type="date" value={dateCare} onChange={handleChange} className="input input-text"/>
+            <input type="date" value={dateCare} onChange={handleChange} className="input input-text filter"/>
         </div>
         <table className="table">
             <thead>
@@ -104,7 +129,7 @@ return (
                         <td>{care.namevetservices}</td>
                         <td className="text-wait"> {care.statusappointment}</td>
                         <td>
-                            <a className="button button-edit" data-appo={care.idappointment} onClick={handleOpen} href="#popup1">Atender</a>
+                            <a className="button button-edit" data-appo={care.idappointment} onClick={handleOpen} href="#popup3">Atender</a>
                         </td>
                     </tr>
                 })}  
@@ -129,34 +154,31 @@ return (
                         </div>
                         <div className="group-data-pet"> 
                             <label for="temperature" className="label">Temperatura (c°)</label>
-                            <input type="number" id="temperature" className="input input-text"/>
+                            <input type="number" id="temperature" className="input input-text" onChange={e => setMedical({...values,temperature: e.target.value})}/>
                             <label for="weight" className="label">Peso (kg)</label>
-                            <input type="number" id="weight" className="input input-text"/>
+                            <input type="number" id="weight" className="input input-text" onChange={e => setMedical({...values,weight: e.target.value})}/>
                         </div>
                         <label for="sintomas" className="label label-care">Síntomas</label>
                         <div className="group-data-care"> 
-                                    <label className="label-check"><input type="checkbox" id="sintomas" /> Vómitos<span className="checkmark"></span></label>
-                                    <label className="label-check"><input type="checkbox" id="sintomas" /> Cansancio<span className="checkmark"></span></label>
-                                    <label className="label-check"><input type="checkbox" id="sintomas" /> Piel y pelaje<span className="checkmark"></span></label>
-                                    <label className="label-check"><input type="checkbox" id="sintomas" /> Aumento de peso<span className="checkmark"></span></label>
-                                    <label className="label-check"><input type="checkbox" id="sintomas" /> Respiración agitada<span className="checkmark"></span></label>
-                                    <label className="label-check"><input type="checkbox" id="sintomas" /> Diarrea<span className="checkmark"></span></label>
+                            <label className="label-check"><input value="1" type="checkbox" id="sintomas" /> Vómitos<span className="checkmark"></span></label>
+                            <label className="label-check"><input value="2" type="checkbox" id="sintomas" /> Cansancio<span className="checkmark"></span></label>
+                            <label className="label-check"><input value="3" type="checkbox" id="sintomas" /> Piel y pelaje<span className="checkmark"></span></label>
+                            <label className="label-check"><input value="4" type="checkbox" id="sintomas" /> Aumento de peso<span className="checkmark"></span></label>
+                            <label className="label-check"><input value="5" type="checkbox" id="sintomas" /> Respiración agitada<span className="checkmark"></span></label>
+                            <label className="label-check"><input value="6" type="checkbox" id="sintomas" /> Diarrea<span className="checkmark"></span></label>
                         </div>
                         <label for="diagnostico" className="label label-care">Diagnóstico</label>
                         <div className="group-data-care"> 
-                            <label className="label-check"><input type="checkbox" id="diagnostico" /> Otitis<span className="checkmark"></span></label>
-                            <label className="label-check"><input type="checkbox" id="diagnostico" /> Conjuntivitis<span className="checkmark"></span></label>
-                            <label className="label-check"><input type="checkbox" id="diagnostico" /> Rabia<span className="checkmark"></span></label>
-                            <label className="label-check"><input type="checkbox" id="diagnostico" /> Leucemia felina<span className="checkmark"></span></label>
-                            <label className="label-check"><input type="checkbox" id="diagnostico" /> Panleucopenia felina<span className="checkmark"></span></label>
-                            <label className="label-check"><input type="checkbox" id="diagnostico" /> Inmunodeficiencia felina<span className="checkmark"></span></label>
+                            <label className="label-check"><input value="1" type="checkbox" id="diagnostico" /> Otitis<span className="checkmark"></span></label>
+                            <label className="label-check"><input value="2" type="checkbox" id="diagnostico" /> Conjuntivitis<span className="checkmark"></span></label>
+                            <label className="label-check"><input value="3" type="checkbox" id="diagnostico" /> Rabia<span className="checkmark"></span></label>
+                            <label className="label-check"><input value="4" type="checkbox" id="diagnostico" /> Leucemia felina<span className="checkmark"></span></label>
+                            <label className="label-check"><input value="5" type="checkbox" id="diagnostico" /> Panleucopenia felina<span className="checkmark"></span></label>
+                            <label className="label-check"><input value="6" type="checkbox" id="diagnostico" /> Inmunodeficiencia felina<span className="checkmark"></span></label>
                         </div>
 
                         <label for="treatment" className="label label-care">Tratamiento</label>
-                        <textarea className="textarea" rows="3" id="treatment"></textarea>
-                              
-                        <label for="anamnesis" className="label">Observaciones</label>
-                        <textarea className="textarea" rows="3" id="anamnesis"></textarea>
+                        <textarea className="textarea" rows="3" id="treatment" onChange={e => setMedical({...values,treatment: e.target.value})}></textarea>
                 
                         <div className="button-section">
                             <input type="submit" value="Guardar" className="button primary-button"/> 
@@ -234,16 +256,18 @@ return (
 
                         <form action="/" className="form" onSubmit={handleSubmitGrooming}>
                             
-                            <label for="" className="label">Foto antes</label>
-                            <label for="before" className="button photo-file">Sube una foto!</label>
-                            <input id="before" type="file" placeholder="" onChange={e => setGrooming({...grooming,before: e.target.value})}/>
-                            <div className="preview-pet"><img src="images/mascotas.png" alt=""></img></div>
-
-                            <label for="" className="label">Foto después</label>
-                            <label for="after" className="button photo-file">Sube una foto!</label>
-                            <input id="after" type="file" placeholder="" onChange={e => setGrooming({...grooming,after: e.target.value})}/>
-                            <div className="preview-pet"><img src="images/mascotas.png" alt=""></img></div>
-                            
+                            <div className="contentPhotos">
+                                <div className="columnPhoto">
+                                    <label for="before" className="button photo-file">Sube una foto del antes!</label>
+                                    <input id="before" type="file" onChange={handlePreview}/>
+                                    <div className="preview-pet"><img src={filePreview} alt="" accept=".jpg, .jpeg, .png"></img></div>
+                                </div>
+                                <div className="columnPhoto">
+                                    <label for="after" className="button photo-file">Sube una foto de ahora!</label>
+                                    <input id="after" type="file" placeholder="" onChange={handlePreviewA}/>
+                                    <div className="preview-pet"><img src={filePreviewA} alt="" accept=".jpg, .jpeg, .png"></img></div>
+                                </div>
+                            </div>
                             <label for="comment" className="label">Observaciones</label>
                             <textarea className="textarea" rows="3" id="comment" onChange={e => setGrooming({...grooming,comment: e.target.value})}></textarea>
             
