@@ -33,16 +33,29 @@ const Care = () => {
         comments: ''
     })
 
+    //Vista Previa de imágenes
     const [ filePreview, setFilePreview] = useState("");
+    const [ filePreviewA, setFilePreviewA] = useState("");
+    const [ files, setFile] = useState([])
 
     const handlePreview = (event) => {
+        setFile([...files,event.target.files[0]])
         setFilePreview(URL.createObjectURL(event.target.files[0]))
     }
 
-    const [ filePreviewA, setFilePreviewA] = useState("");
-
     const handlePreviewA = (event) => {
+        setFile([...files,event.target.files[0]])
         setFilePreviewA(URL.createObjectURL(event.target.files[0]))
+    }
+
+    const handleUpload = (event) => {
+        const formdata = new FormData()
+        formdata.append('file', files)
+        axios.post('https://api-vet-2utn.onrender.com/public/upload',formdata)
+        .then(function (res) {
+            console.log(res.data)
+        })
+        .catch(err => console.log(err))
     }
 
     const handleChange = (event) => {
@@ -92,6 +105,7 @@ const Care = () => {
     
     const handleSubmitGrooming = (e) => {
         e.preventDefault();
+        handleUpload();
         console.log(grooming)
         axios.post('https://api-vet-2utn.onrender.com/api/v1/grooming',grooming)
         .then(res => console.log(res))
