@@ -5,8 +5,11 @@ import { useState } from "react";
 import EventItem from '../hooks/useGetEvent';
 import uuid from 'react-uuid';
 import axios from 'axios';
+import Swal from 'sweetalert2'
 
 export default function Calendar() {
+
+const close = document.querySelector(".close");
 
 const [events, setEvents] = useState([]);
 
@@ -27,7 +30,7 @@ const handleSelect = (info) => {
 
     const dateApp = document.getElementById("dateappo")
     var day = start.getDate(),
-        month = start.getMonth(),
+        month = start.getMonth() + 1,
         year = start.getFullYear()
 
     var dayT = day < 10 ? 0 + day : day,
@@ -67,8 +70,29 @@ const handleSelect = (info) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios.post('https://api-vet-2utn.onrender.com/api/v1/appointments/',values)
-    .then(res => console.log(res))
-    .catch(err => console.log(err))
+    .then(res => {
+      console.log(res);
+      close.click();
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Datos guardados correctamente.",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      //Limpiar campos
+      e.target.reset();
+    })
+    .catch(err => {
+      console.log(err);
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: "Ha ocurrido un error.",
+        showConfirmButton: false,
+        timer: 1500
+      });
+    })
 }
 
   return (
@@ -141,8 +165,8 @@ const handleSelect = (info) => {
                   <label for="idservice" className="label label-pet">Servicio</label>
                   <select id="idservice" name="idservice" className="input" onChange={e => setValues({...values,idservice: e.target.value})}>
                       <option selected>Seleccionar</option>
-                      <option value="1">Consulta Médica</option>
-                      <option value="2">Grooming</option>
+                      <option value="2">Consulta Médica</option>
+                      <option value="1">Grooming</option>
                       <option value="3">Plan de vacunación</option>
                   </select>
 

@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 
 const Client = () => {
 
-    var url = 'https://api-vet-2utn.onrender.com/api/v1/clients'
+    var url = 'https://api-vet-2utn.onrender.com/api/v1/clients/'
     const [data, setData] = useState([])
     useEffect(()=>{
         loadData()
@@ -40,6 +40,10 @@ const Client = () => {
                 showConfirmButton: false,
                 timer: 1500
               });
+            //Limpiar campos
+            e.target.reset();
+
+            //Cargar lista de datos nuevamente
             loadData()
         })
         .catch(err => {

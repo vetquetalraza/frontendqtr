@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import '../styles/global.scss';
 import axios from 'axios';
 import moment from 'moment'; 
+import Swal from 'sweetalert2'
 
 const Care = () => {
-
+    
+    const close = document.querySelector(".close");
     const [dateCare, setDateCare] = useState("")
     const [data, setData] = useState([])
     const [vaccine , setVaccine] = useState([])
@@ -36,26 +38,35 @@ const Care = () => {
     //Vista Previa de imágenes
     const [ filePreview, setFilePreview] = useState("");
     const [ filePreviewA, setFilePreviewA] = useState("");
-    const [ files, setFile] = useState([])
+
+    const [ file, setFile] = useState({
+        before: '',
+        after: '',
+    })
 
     const handlePreview = (event) => {
-        setFile([...files,event.target.files[0]])
+        //setFile({...file,before: event.target.files[0]})
+        setGrooming({...grooming,before: event.target.value})
         setFilePreview(URL.createObjectURL(event.target.files[0]))
     }
 
     const handlePreviewA = (event) => {
-        setFile([...files,event.target.files[0]])
+        //setFile({...file,after: event.target.files[0]})
+        setGrooming({...grooming,after: event.target.value})
         setFilePreviewA(URL.createObjectURL(event.target.files[0]))
     }
 
-    const handleUpload = (event) => {
+    const handleUpload = () => {
+
+        let photo1 = file.before
         const formdata = new FormData()
-        formdata.append('file', files)
-        axios.post('https://api-vet-2utn.onrender.com/public/upload',formdata)
+        formdata.append('file', photo1)
+        axios.post('http://localhost:3001/public/upload',formdata)
         .then(function (res) {
-            console.log(res.data)
+            setGrooming({...grooming,before: res.data})
         })
         .catch(err => console.log(err))
+
     }
 
     const handleChange = (event) => {
@@ -77,39 +88,144 @@ const Care = () => {
     }
 
     useEffect(() => {
+        loadData();
+    }, []);
+
+    const loadData = () => {
         let date = moment().format("YYYY-MM-DD")
         setDateCare(date);  
         axios.get('https://api-vet-2utn.onrender.com/api/v1/care/'+date)
         .then(res => setData(Array.from(res.data)))
         .catch(err => console.log(err));
-    }, []);
+    }
 
     const handleSubmitMedic = (e) => {
         e.preventDefault();
         console.log(medical)
         axios.post('https://api-vet-2utn.onrender.com/api/v1/medical',medical)
         .then(res => {
-
+            console.log(res);
+            close.click();
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Datos guardados correctamente.",
+                showConfirmButton: false,
+                timer: 1500
+            });
+            //Limpiar campos
+            e.target.reset();
+            loadData()
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            console.log(err);
+            Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: "Ha ocurrido un error.",
+                showConfirmButton: false,
+                timer: 1500
+              });
+        })
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmitVaccine = (e) => {
         e.preventDefault();
-        setValues({...values,idvaccine: vaccineSel})
+        setValues({...values,idvaccine: vaccineSel});
         console.log(values)
         axios.post('https://api-vet-2utn.onrender.com/api/v1/plan',values)
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
+        .then(res => {
+            console.log(res);
+            close.click();
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Datos guardados correctamente.",
+                showConfirmButton: false,
+                timer: 1500
+            });
+            //Limpiar campos
+            e.target.reset();
+            loadData()
+        })
+        .catch(err => {
+            console.log(err);
+            Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: "Ha ocurrido un error.",
+                showConfirmButton: false,
+                timer: 1500
+              });
+        })
     }
     
+
+
+    const handleAddRow = () => {
+        var selected = document.getElementById("idvaccine"),
+            text = selected.options[selected.selectedIndex].text,
+            val = selected.value;
+
+        setVaccineSel([...vaccineSel, {id : val, name : text}])
+        
+        setTimeout(() => {
+            var table = document.querySelectorAll(".test");
+
+            var list = [];
+            table.forEach((input) => {
+                list.push(parseInt(input.value));
+              });
+
+            setValues({...values,idvaccine: list});
+            console.log(list)
+
+        }, 500);
+
+    }
+
     const handleSubmitGrooming = (e) => {
         e.preventDefault();
-        handleUpload();
+        //handleUpload()
         console.log(grooming)
         axios.post('https://api-vet-2utn.onrender.com/api/v1/grooming',grooming)
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
+        .then(res => {
+            console.log(res);
+            close.click();
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Datos guardados correctamente.",
+                showConfirmButton: false,
+                timer: 1500
+            });
+            //Limpiar campos
+            e.target.reset();
+            loadData();
+        })
+        .catch(err => {
+            console.log(err);
+            Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: "Ha ocurrido un error.",
+                showConfirmButton: false,
+                timer: 1500
+              });
+        })
+    }
+
+    const selectForm = (value) => {
+        switch (value) {
+            case 1:
+              return '#popup1'
+            case 2:
+                return '#popup2'
+            case 3:
+                return '#popup3'
+            default:
+              return ''
+          }
     }
 
 return (
@@ -142,14 +258,47 @@ return (
                         <td>{care.namespeciepet}</td>
                         <td>{care.namevetservices}</td>
                         <td className="text-wait"> {care.statusappointment}</td>
-                        <td>
-                            <a className="button button-edit" data-appo={care.idappointment} onClick={handleOpen} href="#popup3">Atender</a>
+                        <td> 
+                            <a className="button button-edit" data-appo={care.idappointment} onClick={handleOpen} href={selectForm(care.idvetservices)}>Atender</a>
                         </td>
                     </tr>
                 })}  
             </tbody>
         </table>
         <div id="popup1" className="overlay">
+                <div className="popup-care">
+                    <div className="popup-header">
+                        <label className="title">Datos grooming</label>
+                        <a className="close" href="#">&times;</a>
+                    </div>
+                    <div className="content">
+
+                        <form action="/" className="form" onSubmit={handleSubmitGrooming}>
+                            
+                            <div className="contentPhotos">
+                                <div className="columnPhoto">
+                                    <label for="before" className="button photo-file">Sube una foto del antes!</label>
+                                    <input id="before" type="file" onChange={handlePreview}/>
+                                    <div className="preview-pet"><img src={filePreview} alt="" accept=".jpg, .jpeg, .png"></img></div>
+                                </div>
+                                <div className="columnPhoto">
+                                    <label for="after" className="button photo-file">Sube una foto de ahora!</label>
+                                    <input id="after" type="file" placeholder="" onChange={handlePreviewA}/>
+                                    <div className="preview-pet"><img src={filePreviewA} alt="" accept=".jpg, .jpeg, .png"></img></div>
+                                </div>
+                            </div>
+                            <label for="comment" className="label">Observaciones</label>
+                            <textarea className="textarea" rows="3" id="comment" onChange={e => setGrooming({...grooming,comment: e.target.value})}></textarea>
+            
+                            <div className="button-section">
+                                <input type="submit" value="Guardar" className="button primary-button"/> 
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+        </div>
+        <div id="popup2" className="overlay">
             <div className="popup-care">
                 <div className="popup-header">
                     <label className="title">Datos atención médica</label>
@@ -202,21 +351,34 @@ return (
                 </div>
              </div>
         </div>
-        <div id="popup2" className="overlay">
+        <div id="popup3" className="overlay">
             <div className="popup-care">
                 <div className="popup-header">
                     <label className="title">Datos Vacunación</label>
                     <a className="close" href="#">&times;</a>
                 </div>
                 <div className="content">
-                    <form action="/" className="form" onSubmit={handleSubmit}>
+                    <form action="/" className="form" onSubmit={handleSubmitVaccine}>
                         <label for="idvaccine" className="label">Plan de vacunación</label>
-                        <select id="idvaccine" name="vaccine" className="input" onChange={e => setVaccineSel(vaccineOld => [...vaccineOld,e.target.value])}>
+                        <select id="idvaccine" name="vaccine" className="input">
                             <option selected>Seleccionar</option>
                             {vaccine.map((vaccine,index) => {
                                 return <option value={vaccine.idvaccine}>{vaccine.namevaccine}</option>
                             })}     
                         </select>
+                        <a onClick={handleAddRow}>Agregar</a>
+                        <table className="table-inventory" id="vaccine-table">
+                            <tr>
+                                <th>N°</th>
+                                <th>Vacuna</th>
+                            </tr>
+                            {vaccineSel.map((vaccine,index) => {
+                            return <tr key={index}>
+                                    <td>{index + 1}</td>
+                                    <td><input type="number" value={vaccine.id} className="test" hidden/>{vaccine.name}</td>
+                                </tr>
+                            })}  
+                        </table>
 
                         <label for="temperature" className="label">Temperatura (c°)</label>
                         <input type="number" id="temperature" className="input input-text" onChange={e => setValues({...values,temperature: e.target.value})}/>
@@ -260,39 +422,6 @@ return (
                 </div>
             </div>
         </div>
-        <div id="popup3" className="overlay">
-                <div className="popup-care">
-                    <div className="popup-header">
-                        <label className="title">Datos grooming</label>
-                        <a className="close" href="#">&times;</a>
-                    </div>
-                    <div className="content">
-
-                        <form action="/" className="form" onSubmit={handleSubmitGrooming}>
-                            
-                            <div className="contentPhotos">
-                                <div className="columnPhoto">
-                                    <label for="before" className="button photo-file">Sube una foto del antes!</label>
-                                    <input id="before" type="file" onChange={handlePreview}/>
-                                    <div className="preview-pet"><img src={filePreview} alt="" accept=".jpg, .jpeg, .png"></img></div>
-                                </div>
-                                <div className="columnPhoto">
-                                    <label for="after" className="button photo-file">Sube una foto de ahora!</label>
-                                    <input id="after" type="file" placeholder="" onChange={handlePreviewA}/>
-                                    <div className="preview-pet"><img src={filePreviewA} alt="" accept=".jpg, .jpeg, .png"></img></div>
-                                </div>
-                            </div>
-                            <label for="comment" className="label">Observaciones</label>
-                            <textarea className="textarea" rows="3" id="comment" onChange={e => setGrooming({...grooming,comment: e.target.value})}></textarea>
-            
-                            <div className="button-section">
-                                <input type="submit" value="Guardar" className="button primary-button"/> 
-                            </div>
-                            
-                        </form>
-                    </div>
-                </div>
-            </div>
     </>
 );
 
