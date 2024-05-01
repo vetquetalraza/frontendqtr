@@ -531,6 +531,10 @@ nav {
   width: 100%;
   height: 400px;
 }
+
+.container-calendar {
+  height: 70%;
+}
 /* 5. Medical History */
 
 .label-check {
@@ -599,6 +603,7 @@ nav {
   border: 1px solid #ddd;
 }
 
+
 .input-table
 {
   width: 100%;
@@ -641,4 +646,29 @@ nav {
 
 .columnPhoto {
   width: 50%;
+}
+
+//Plan de vacunación
+
+.options-vaccine  {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 60%;
+}
+
+.options-vaccine select {
+  width: 70%;
+  margin-right: 10px;
+}
+
+.tables-data-vaccine {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.tables-data-vaccine div {
+  width: 80%;
 }

@@ -11,6 +11,7 @@ const Care = () => {
     const [data, setData] = useState([])
     const [vaccine , setVaccine] = useState([])
     const [vaccineSel, setVaccineSel] = useState([])
+    const [history , setHistory] = useState([])
 
     const [medical, setMedical] = useState({
         idappo: '',
@@ -82,8 +83,15 @@ const Care = () => {
         setValues({...values,idappo: event.target.dataset.appo})
         setGrooming({...grooming,idappo: event.target.dataset.appo})
 
-        axios.get('https://api-vet-2utn.onrender.com/api/v1/vaccines')
+        //Listar vacunas con stock
+        axios.get('https://api-vet-2utn.onrender.com/api/v1/vaccines/filter')
         .then(res => setVaccine(Array.from(res.data)))
+        .catch(err => console.log(err));
+
+        //Listar historial de vacunas de la mascota
+        var pet = event.target.dataset.pet;
+        axios.get('https://api-vet-2utn.onrender.com/api/v1/plan/'+pet)
+        .then(res => setHistory(Array.from(res.data)))
         .catch(err => console.log(err));
     }
 
@@ -167,15 +175,23 @@ const Care = () => {
             text = selected.options[selected.selectedIndex].text,
             val = selected.value;
 
-        setVaccineSel([...vaccineSel, {id : val, name : text}])
+        const dosage = document.getElementById("id-dosage").value;
+
+        setVaccineSel([...vaccineSel, {id : val, name : text, dosage: dosage}])
         
         setTimeout(() => {
-            var table = document.querySelectorAll(".test");
 
+            const tableRows = document.querySelectorAll('#table-vaccine tbody tr');
             var list = [];
-            table.forEach((input) => {
-                list.push(parseInt(input.value));
-              });
+
+            for(let i=0; i<tableRows.length; i++) {
+                const row = tableRows[i];
+                const number = row.querySelector('.number').innerHTML;
+                console.log(number)
+                const id = row.querySelector('.id-vaccine').value;
+                
+                list.push({idvaccine : parseInt(id), dosage : parseInt(number)});
+            }
 
             setValues({...values,idvaccine: list});
             console.log(list)
@@ -259,7 +275,7 @@ return (
                         <td>{care.namevetservices}</td>
                         <td className="text-wait"> {care.statusappointment}</td>
                         <td> 
-                            <a className="button button-edit" data-appo={care.idappointment} onClick={handleOpen} href={selectForm(care.idvetservices)}>Atender</a>
+                            <a className="button button-edit" data-appo={care.idappointment} data-pet={care.idpet} onClick={handleOpen} href={selectForm(care.idvetservices)}>Atender</a>
                         </td>
                     </tr>
                 })}  
@@ -359,58 +375,83 @@ return (
                 </div>
                 <div className="content">
                     <form action="/" className="form" onSubmit={handleSubmitVaccine}>
-                        <label for="idvaccine" className="label">Plan de vacunación</label>
-                        <select id="idvaccine" name="vaccine" className="input">
-                            <option selected>Seleccionar</option>
-                            {vaccine.map((vaccine,index) => {
-                                return <option value={vaccine.idvaccine}>{vaccine.namevaccine}</option>
-                            })}     
-                        </select>
-                        <a onClick={handleAddRow}>Agregar</a>
-                        <table className="table-inventory" id="vaccine-table">
-                            <tr>
-                                <th>N°</th>
-                                <th>Vacuna</th>
-                            </tr>
-                            {vaccineSel.map((vaccine,index) => {
-                            return <tr key={index}>
-                                    <td>{index + 1}</td>
-                                    <td><input type="number" value={vaccine.id} className="test" hidden/>{vaccine.name}</td>
-                                </tr>
-                            })}  
-                        </table>
-
-                        <label for="temperature" className="label">Temperatura (c°)</label>
-                        <input type="number" id="temperature" className="input input-text" onChange={e => setValues({...values,temperature: e.target.value})}/>
-
-                        <label for="weight" className="label">Peso (kg)</label>
-                        <input type="number" id="weight" className="input input-text" onChange={e => setValues({...values,weight: e.target.value})}/>
-
-                        <label for="name" className="label">Histórico</label>
-
-                        <table className="table-inventory">
-                            <tr>
-                                <td>N°</td>
-                                <td>Fecha - Hora</td>
-                                <td>Vacuna</td>
-                            </tr>
-                            <tr>
-                                <td>Primera dosis</td>
-                                <td>23/11/2023</td>
-                                <td>ID2345HJ</td>
-                            </tr>
-                            <tr>
-                                <td>Segunda dosis</td>
-                                <td>23/12/2023</td>
-                                <td>5834FG5</td>
-                            </tr>
-                            <tr>
-                                <td>Tercera dosis</td>
-                                <td>23/01/2024</td>
-                                <td><input type="text" className="input input-table"/></td>
-                            </tr>
-                        </table>
-                            
+                        <label for="idvaccine" className="label">Seleccione vacuna y número de dosis:</label>
+                        <div className="options-vaccine">
+                            <select id="idvaccine" name="vaccine" className="input">
+                                <option selected>Seleccionar</option>
+                                {vaccine.map((vaccine,index) => {
+                                    return <option value={vaccine.idvaccine}>{vaccine.namevaccine}</option>
+                                })}     
+                            </select>
+                            <select name="numero-dosis" className="input" id="id-dosage">
+                                <option selected>Seleccionar</option>
+                                <option value="1">Primera dosis</option>
+                                <option value="2">Segunda dosis</option>
+                                <option value="3">Tercera dosis </option>
+                                <option value="4">Cuarta dosis</option>
+                                <option value="5">Quinta dosis</option>
+                            </select>
+                            <div><a onClick={handleAddRow} className="button button-edit">Agregar</a></div>
+                        </div>
+                        <div className="tables-data-vaccine">
+                            <div>
+                                <label for="idvaccine" className="label">Plan de vacunación</label>
+                                <table className="table-inventory" id="table-vaccine">
+                                    <thead>
+                                        <tr>
+                                            <th>N°</th> 
+                                            <th>Número de dosis</th>
+                                            <th>Nombre vacuna</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {vaccineSel.map((vaccine,index) => {
+                                    return <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td><label className="number">{vaccine.dosage}</label></td>
+                                            <td><input type="number" value={vaccine.id} className="id-vaccine" hidden/>{vaccine.name}</td>
+                                        </tr>
+                                    })} 
+                                    </tbody> 
+                                </table>
+                            </div>
+                            <div>
+                                <label for="idvaccine" className="label">Últimas vacunas</label>
+                                <table className="table-inventory">
+                                    <thead>
+                                        <tr>
+                                            <th>N°</th> 
+                                            <th>Número de dosis</th>
+                                            <th>Nombre vacuna</th>
+                                            <th>Fecha aplicación</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {history.map((history,index) => {
+                                    return <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td>{history.numbervaccine}</td>
+                                            <td>{history.namevaccine}</td>
+                                            <td>{history.dateappointment}</td>
+                                        </tr>
+                                    })} 
+                                    </tbody> 
+                                </table>
+                            </div>
+                        </div>
+                        
+                        
+                        <div>
+                            <div>
+                                <label for="temperature" className="label">Temperatura (c°) <input type="number" id="temperature" className="input input-text" min="0" step="0.1" onChange={e => setValues({...values,temperature: e.target.value})}/></label>
+                                
+                            </div>
+                            <div>
+                                <label for="weight" className="label">Peso (kg) <input type="number" id="weight" className="input input-text" min="0" step="0.1" onChange={e => setValues({...values,weight: e.target.value})}/></label>
+                                
+                            </div>
+                        </div>
+                        
                         <label for="anamnesis" className="label">Observaciones</label>
                         <textarea className="textarea" rows="3" id="comments" onChange={e => setValues({...values,comments: e.target.value})}></textarea>
             
