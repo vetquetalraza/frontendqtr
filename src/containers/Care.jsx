@@ -40,42 +40,32 @@ const Care = () => {
     const [ filePreview, setFilePreview] = useState("");
     const [ filePreviewA, setFilePreviewA] = useState("");
 
-    const [ file, setFile] = useState({
-        before: '',
-        after: '',
-    })
 
-    const handlePreview = (event) => {
-        //setFile({...file,before: event.target.files[0]})
-        setGrooming({...grooming,before: event.target.value})
-        setFilePreview(URL.createObjectURL(event.target.files[0]))
-    }
-
-    const handlePreviewA = (event) => {
-        //setFile({...file,after: event.target.files[0]})
-        setGrooming({...grooming,after: event.target.value})
-        setFilePreviewA(URL.createObjectURL(event.target.files[0]))
-    }
-
-    const handleUpload = () => {
-
-        let photo1 = file.before
-        const formdata = new FormData()
-        formdata.append('file', photo1)
-        axios.post('http://localhost:3001/public/upload',formdata)
-        .then(function (res) {
-            setGrooming({...grooming,before: res.data})
-        })
-        .catch(err => console.log(err))
-
-    }
-
+    //Actualizar lista de atenciones de acuerdo a la fecha de filtrado
     const handleChange = (event) => {
         setDateCare(event.target.value);
         axios.get('https://api-vet-2utn.onrender.com/api/v1/care/'+event.target.value)
         .then(res => setData(Array.from(res.data)))
         .catch(err => console.log(err));
     };
+
+    useEffect(() => {
+        loadData();
+    }, []);
+
+    //Funciones para diferenciar formularios
+    const selectForm = (value) => {
+        switch (value) {
+            case 1:
+              return '#popup1'
+            case 2:
+                return '#popup2'
+            case 3:
+                return '#popup3'
+            default:
+              return ''
+          }
+    }
 
     const handleOpen = (event) => {
 
@@ -95,9 +85,6 @@ const Care = () => {
         .catch(err => console.log(err));
     }
 
-    useEffect(() => {
-        loadData();
-    }, []);
 
     const loadData = () => {
         let date = moment().format("YYYY-MM-DD")
@@ -107,6 +94,7 @@ const Care = () => {
         .catch(err => console.log(err));
     }
 
+    //CONSULTAS MÉDICAS
     const handleSubmitMedic = (e) => {
         e.preventDefault();
         console.log(medical)
@@ -137,6 +125,7 @@ const Care = () => {
         })
     }
 
+    //PLAN DE VACUNACIÓN
     const handleSubmitVaccine = (e) => {
         e.preventDefault();
         setValues({...values,idvaccine: vaccineSel});
@@ -168,8 +157,6 @@ const Care = () => {
         })
     }
     
-
-
     const handleAddRow = () => {
         var selected = document.getElementById("idvaccine"),
             text = selected.options[selected.selectedIndex].text,
@@ -194,15 +181,44 @@ const Care = () => {
             }
 
             setValues({...values,idvaccine: list});
-            console.log(list)
 
         }, 500);
 
     }
 
+    //GROOMING
+    const handlePreview = (event) => {
+        let photo1 = event.target.files[0]
+        const formdata = new FormData()
+        formdata.append('file', photo1)
+        axios.post('http://localhost:3001/public/upload',formdata)
+        .then(function (res) {
+            setGrooming({...grooming,before: res.data})    
+        })
+        .catch(err => console.log(err))
+
+        setTimeout(() => {
+            setFilePreview(URL.createObjectURL(event.target.files[0]))
+        }, 500);  
+    }
+
+    const handlePreviewA = (event) => {
+        let photo1 = event.target.files[0]
+        const formdata = new FormData()
+        formdata.append('file', photo1)
+        axios.post('http://localhost:3001/public/upload',formdata)
+        .then(function (res) {
+            setGrooming({...grooming,after: res.data})    
+        })
+        .catch(err => console.log(err))
+
+        setTimeout(() => {
+            setFilePreviewA(URL.createObjectURL(event.target.files[0]))
+        }, 500); 
+    }
+
     const handleSubmitGrooming = (e) => {
         e.preventDefault();
-        //handleUpload()
         console.log(grooming)
         axios.post('https://api-vet-2utn.onrender.com/api/v1/grooming',grooming)
         .then(res => {
@@ -227,21 +243,8 @@ const Care = () => {
                 title: "Ha ocurrido un error.",
                 showConfirmButton: false,
                 timer: 1500
-              });
+            });
         })
-    }
-
-    const selectForm = (value) => {
-        switch (value) {
-            case 1:
-              return '#popup1'
-            case 2:
-                return '#popup2'
-            case 3:
-                return '#popup3'
-            default:
-              return ''
-          }
     }
 
 return (
@@ -295,7 +298,8 @@ return (
                                 <div className="columnPhoto">
                                     <label for="before" className="button photo-file">Sube una foto del antes!</label>
                                     <input id="before" type="file" onChange={handlePreview}/>
-                                    <div className="preview-pet"><img src={filePreview} alt="" accept=".jpg, .jpeg, .png"></img></div>
+                                    <div className="preview-pet"><img src={filePreview} alt="" accept=".jpg, .jpeg, .png" ></img></div>
+                                    <label id="label_before"></label>
                                 </div>
                                 <div className="columnPhoto">
                                     <label for="after" className="button photo-file">Sube una foto de ahora!</label>
