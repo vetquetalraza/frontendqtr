@@ -1,29 +1,78 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/global.scss';
 import axios from 'axios';
+import Swal from 'sweetalert2'
 
 const Pet = () => {
 
     const [data, setData] = useState([])
     var url='https://api-vet-2utn.onrender.com/api/v1/pets'
     useEffect(()=>{
+        loadData()
+    }, [])
+
+    const loadData = () => {
         axios.get(url)
         .then(res => setData(Array.from(res.data)))
         .catch(err => console.log(err));
-    }, [])
+    }
 
+    //Función para devolver la Edad de la mascota
     function getEdad(dateString) {
-        let hoy = new Date()
-        let fechaNacimiento = new Date(dateString)
-        let edad = hoy.getFullYear() - fechaNacimiento.getFullYear()
-        let diferenciaMeses = hoy.getMonth() - fechaNacimiento.getMonth()
-        if (
-          diferenciaMeses < 0 ||
-          (diferenciaMeses === 0 && hoy.getDate() < fechaNacimiento.getDate())
-        ) {
-          edad--
+        let hoy = new Date();
+        let fechaNacimiento = new Date(dateString);
+        let edadAnios = hoy.getFullYear() - fechaNacimiento.getFullYear();
+        let diferenciaMeses = hoy.getMonth() - fechaNacimiento.getMonth();
+        let edadMeses = 0;
+    
+        if (diferenciaMeses < 0 || (diferenciaMeses === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
+            edadAnios--;
+            diferenciaMeses += 12;
         }
-        return edad
+    
+        edadMeses = diferenciaMeses;
+        //Aqui se hace el analisis para que muestre la edad en años, meses o menos de un mes y retorna lo que convenga.
+        if (edadAnios > 0 && edadMeses > 0) {
+            return `${edadAnios} años y ${edadMeses} meses`;
+        } else if (edadAnios > 0) {
+            return `${edadAnios} años`;
+        } else if (edadMeses > 0) {
+            return `${edadMeses} meses`;
+        } else {
+            return "Menos de un mes";
+        }
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const close = document.querySelector(".close");
+        axios.post(url,values)
+        .then(res => {
+            console.log(res);
+            close.click();
+            Swal.fire({
+                position: "bottom-end",
+                icon: "success",
+                title: "Datos guardados correctamente.",
+                showConfirmButton: false,
+                timer: 1500
+              });
+            //Limpiar campos
+            e.target.reset();
+
+            //Cargar lista de datos nuevamente
+            loadData()
+        })
+        .catch(err => {
+            console.log(err);
+            Swal.fire({
+                position: "bottom-end",
+                icon: "error",
+                title: "Ha ocurrido un error.",
+                showConfirmButton: false,
+                timer: 1500
+              });
+        })
     }
 
     const [values, setValues] = useState({
@@ -39,13 +88,13 @@ const Pet = () => {
         photo: '',
     })
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(values)
-        axios.post(url,values)
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
-    }
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     console.log(values)
+    //     axios.post(url,values)
+    //     .then(res => console.log(res))
+    //     .catch(err => console.log(err))
+    // }
 
 
 return (
@@ -75,7 +124,7 @@ return (
                     <td>{pet.namespeciepet}</td>
                     <td>{pet.racepet}</td>
                     <td>{pet.namegenderpet}</td>
-                    <td>{ getEdad(pet.birthdatepet) } años</td>
+                    <td>{ getEdad(pet.birthdatepet) }</td>
                     <td>
                         <a class="button button-edit" href="#popup1">Editar</a>
                         <a class="button button-delete" href="#popup2">Eliminar</a>
@@ -97,8 +146,8 @@ return (
                         <label for="name" className="label">DNI Cliente</label>
                         <input type="text" id="dni" placeholder="DNI del Usuario" onChange={e => setValues({...values,client: e.target.value})} className="input input-text"/>
                           
-                        <label for="name" className="label">Cliente</label>
-                        <input type="text" id="name" placeholder="Nombre del usuario" className="input input-text" readonly/>
+                        <label for="name"  className="label">Cliente</label>
+                        <input type="text" disabled id="name" placeholder="Nombre del usuario" className="input input-text" />
 
                         <label for="name" className="label">Nombre mascota</label>
                         <input type="text" id="pet" placeholder="Nombre de la mascota" onChange={e => setValues({...values,namepet: e.target.value})} className="input input-name"/>

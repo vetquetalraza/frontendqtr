@@ -34,7 +34,7 @@ const Client = () => {
             console.log(res);
             close.click();
             Swal.fire({
-                position: "top-end",
+                position: "bottom-end",
                 icon: "success",
                 title: "Datos guardados correctamente.",
                 showConfirmButton: false,
@@ -49,7 +49,7 @@ const Client = () => {
         .catch(err => {
             console.log(err);
             Swal.fire({
-                position: "top-end",
+                position: "bottom-end",
                 icon: "error",
                 title: "Ha ocurrido un error.",
                 showConfirmButton: false,
