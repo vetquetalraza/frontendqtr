@@ -1,5 +1,4 @@
 
-
 const EventItem = ({ info }) => {
     const { event } = info;
     return (

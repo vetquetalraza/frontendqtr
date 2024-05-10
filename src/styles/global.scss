@@ -184,6 +184,7 @@ nav {
     margin-bottom: 12px;
     border: 0px;
     outline: none;
+    font-family: 'Poppins', sans-serif;
   }
 
 .button {
@@ -671,4 +672,18 @@ nav {
 }
 .tables-data-vaccine div {
   width: 80%;
+}
+
+//Consulta médica
+
+.anamnesis {
+  display: flex;
+  justify-content: start;
+  gap: 10px;
+  align-items: start;
+  width: 100%;
+}
+
+.anamnesis textarea {
+  width: 50%;
 }

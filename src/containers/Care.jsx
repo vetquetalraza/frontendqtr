@@ -3,6 +3,7 @@ import '../styles/global.scss';
 import axios from 'axios';
 import moment from 'moment'; 
 import Swal from 'sweetalert2'
+import Select from 'react-select'
 
 const Care = () => {
     
@@ -12,10 +13,12 @@ const Care = () => {
     const [vaccine , setVaccine] = useState([])
     const [vaccineSel, setVaccineSel] = useState([])
     const [history , setHistory] = useState([])
+    const [symptoms , setSymptoms] = useState([])
+    const [diagnosis , setDiagnosis] = useState([])
 
     const [medical, setMedical] = useState({
         idappo: '',
-        anamnesis: '123',
+        anamnesis: '',
         weight: '',
         temperature: '',
         treatment: ''
@@ -83,6 +86,17 @@ const Care = () => {
         axios.get('https://api-vet-2utn.onrender.com/api/v1/plan/'+pet)
         .then(res => setHistory(Array.from(res.data)))
         .catch(err => console.log(err));
+
+        //Listar símtomas
+        axios.get('https://api-vet-2utn.onrender.com/api/v1/symptoms')
+        .then(res => setSymptoms(Array.from(res.data)))
+        .catch(err => console.log(err));
+
+        //Listar símtomas
+        axios.get('https://api-vet-2utn.onrender.com/api/v1/diagnosis')
+        .then(res => setDiagnosis(Array.from(res.data)))
+        .catch(err => console.log(err));
+
     }
 
 
@@ -95,6 +109,8 @@ const Care = () => {
     }
 
     //CONSULTAS MÉDICAS
+
+    
     const handleSubmitMedic = (e) => {
         e.preventDefault();
         console.log(medical)
@@ -103,7 +119,7 @@ const Care = () => {
             console.log(res);
             close.click();
             Swal.fire({
-                position: "top-end",
+                position: "bottom-end",
                 icon: "success",
                 title: "Datos guardados correctamente.",
                 showConfirmButton: false,
@@ -116,7 +132,7 @@ const Care = () => {
         .catch(err => {
             console.log(err);
             Swal.fire({
-                position: "top-end",
+                position: "bottom-end",
                 icon: "error",
                 title: "Ha ocurrido un error.",
                 showConfirmButton: false,
@@ -135,7 +151,7 @@ const Care = () => {
             console.log(res);
             close.click();
             Swal.fire({
-                position: "top-end",
+                position: "bottom-end",
                 icon: "success",
                 title: "Datos guardados correctamente.",
                 showConfirmButton: false,
@@ -148,7 +164,7 @@ const Care = () => {
         .catch(err => {
             console.log(err);
             Swal.fire({
-                position: "top-end",
+                position: "bottom-end",
                 icon: "error",
                 title: "Ha ocurrido un error.",
                 showConfirmButton: false,
@@ -225,7 +241,7 @@ const Care = () => {
             console.log(res);
             close.click();
             Swal.fire({
-                position: "top-end",
+                position: "bottom-end",
                 icon: "success",
                 title: "Datos guardados correctamente.",
                 showConfirmButton: false,
@@ -238,7 +254,7 @@ const Care = () => {
         .catch(err => {
             console.log(err);
             Swal.fire({
-                position: "top-end",
+                position: "bottom-end",
                 icon: "error",
                 title: "Ha ocurrido un error.",
                 showConfirmButton: false,
@@ -327,42 +343,41 @@ return (
                 <div className="content">
                     <form action="/" className="form" onSubmit={handleSubmitMedic}>      
                         <label for="anamnesis" className="label label-care">Anamnesis</label>
-                        <div className="group-checkbox">
-                            <label className="label-check"><input type="checkbox" id="anamnesis" /> ¿Ha tenido algún problema de salud que necesitara tratamiento?<span className="checkmark"></span></label>
-                            <label className="label-check"><input type="checkbox" id="anamnesis" /> ¿Está al día con las vacunas? <span className="checkmark"></span></label>
-                            <label className="label-check"><input type="checkbox" id="anamnesis" /> ¿Cuándo se realizó la última desparasitación? <span className="checkmark"></span></label>
-                            <label className="label-check"><input type="checkbox" id="anamnesis" /> ¿Tomo actualmente alguna medicación? <span className="checkmark"></span></label>
-                            <label className="label-check"><input type="checkbox" id="anamnesis" /> ¿Cómo es la alimentación de tu mascota? <span className="checkmark"></span></label>
-                            <label className="label-check"><input type="checkbox" id="anamnesis" /> ¿Qué hábitos tiene tu mascota? <span className="checkmark"></span></label>
+                        <div className="anamnesis">
+                            <ul>
+                                <li>¿Ha tenido algún problema de salud que necesitara tratamiento?</li>
+                                <li>¿Está al día con las vacunas?</li>
+                                <li>¿Cuándo se realizó la última desparasitación? </li>
+                                <li>¿Tomo actualmente alguna medicación? </li>
+                                <li>¿Cómo es la alimentación de tu mascota?</li>
+                                <li>¿Qué hábitos tiene tu mascota?</li>
+                            </ul>
+                            <textarea className="textarea" rows="7" id="anamnesis" onChange={e => setMedical({...values,anamnesis: e.target.value})}></textarea>
                         </div>
                         <div className="group-data-pet"> 
                             <label for="temperature" className="label">Temperatura (c°)</label>
-                            <input type="number" id="temperature" className="input input-text" onChange={e => setMedical({...values,temperature: e.target.value})}/>
+                            <input type="number" id="temperature" min="0" step="0.1" className="input input-text" onChange={e => setMedical({...values,temperature: e.target.value})}/>
                             <label for="weight" className="label">Peso (kg)</label>
-                            <input type="number" id="weight" className="input input-text" onChange={e => setMedical({...values,weight: e.target.value})}/>
+                            <input type="number" id="weight" min="0" step="0.1" className="input input-text" onChange={e => setMedical({...values,weight: e.target.value})}/>
                         </div>
                         <label for="sintomas" className="label label-care">Síntomas</label>
-                        <div className="group-data-care"> 
-                            <label className="label-check"><input value="1" type="checkbox" id="sintomas" /> Vómitos<span className="checkmark"></span></label>
-                            <label className="label-check"><input value="2" type="checkbox" id="sintomas" /> Cansancio<span className="checkmark"></span></label>
-                            <label className="label-check"><input value="3" type="checkbox" id="sintomas" /> Piel y pelaje<span className="checkmark"></span></label>
-                            <label className="label-check"><input value="4" type="checkbox" id="sintomas" /> Aumento de peso<span className="checkmark"></span></label>
-                            <label className="label-check"><input value="5" type="checkbox" id="sintomas" /> Respiración agitada<span className="checkmark"></span></label>
-                            <label className="label-check"><input value="6" type="checkbox" id="sintomas" /> Diarrea<span className="checkmark"></span></label>
-                        </div>
+                        <Select
+                            closeMenuOnSelect={false}
+                            id="simptoms"
+                            placeholder="Seleccionar"
+                            options={symptoms}
+                            isMulti
+                        />
                         <label for="diagnostico" className="label label-care">Diagnóstico</label>
-                        <div className="group-data-care"> 
-                            <label className="label-check"><input value="1" type="checkbox" id="diagnostico" /> Otitis<span className="checkmark"></span></label>
-                            <label className="label-check"><input value="2" type="checkbox" id="diagnostico" /> Conjuntivitis<span className="checkmark"></span></label>
-                            <label className="label-check"><input value="3" type="checkbox" id="diagnostico" /> Rabia<span className="checkmark"></span></label>
-                            <label className="label-check"><input value="4" type="checkbox" id="diagnostico" /> Leucemia felina<span className="checkmark"></span></label>
-                            <label className="label-check"><input value="5" type="checkbox" id="diagnostico" /> Panleucopenia felina<span className="checkmark"></span></label>
-                            <label className="label-check"><input value="6" type="checkbox" id="diagnostico" /> Inmunodeficiencia felina<span className="checkmark"></span></label>
-                        </div>
-
+                        <Select
+                            closeMenuOnSelect={false}
+                            id="diagnosis"
+                            placeholder="Seleccionar"
+                            options={diagnosis}
+                            isMulti
+                        />
                         <label for="treatment" className="label label-care">Tratamiento</label>
                         <textarea className="textarea" rows="3" id="treatment" onChange={e => setMedical({...values,treatment: e.target.value})}></textarea>
-                
                         <div className="button-section">
                             <input type="submit" value="Guardar" className="button primary-button"/> 
                         </div>
