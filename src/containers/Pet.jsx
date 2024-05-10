@@ -9,6 +9,7 @@ const Pet = () => {
     var url='https://api-vet-2utn.onrender.com/api/v1/pets'
     useEffect(()=>{
         loadData()
+        setNameClient({nameclient: "Nombre del",surnameclient: "Usuario"});
     }, [])
 
     const loadData = () => {
@@ -41,6 +42,28 @@ const Pet = () => {
         } else {
             return "Menos de un mes";
         }
+    }
+
+
+    const [nameClient, setNameClient] = useState([])
+
+    const getName = (e) =>{
+        if (e.target.value.length >= 8) {
+            setValues({...values,client: e.target.value})
+            axios.get('https://api-vet-2utn.onrender.com/api/v1/clients/' + e.target.value)
+            .then( res => {
+                if(res.data[0]){
+                    setNameClient(res.data[0])
+                }
+                else{
+                    setNameClient({nameclient: "Usuario",surnameclient: "Desconocido"});
+        }})
+            //.then(res => console.log((res.data[0])))
+            .catch(err => console.log(err));
+        }
+       else {
+          setNameClient({nameclient: "Nombre del",surnameclient: "Usuario"});
+       }
     }
 
     const handleSubmit = (e) => {
@@ -87,16 +110,7 @@ const Pet = () => {
         signs: '',
         photo: '',
     })
-
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     console.log(values)
-    //     axios.post(url,values)
-    //     .then(res => console.log(res))
-    //     .catch(err => console.log(err))
-    // }
-
-
+ 
 return (
     <>
         <label for="" class="title">Mascotas</label>
@@ -144,10 +158,10 @@ return (
                     <form action="/" className="form" onSubmit={handleSubmit}>
                             
                         <label for="name" className="label">DNI Cliente</label>
-                        <input type="text" id="dni" placeholder="DNI del Usuario" onChange={e => setValues({...values,client: e.target.value})} className="input input-text"/>
+                        <input type="text" id="dni" placeholder="DNI del Usuario" onChange={getName} className="input input-text"/>
                           
                         <label for="name"  className="label">Cliente</label>
-                        <input type="text" disabled id="name" placeholder="Nombre del usuario" className="input input-text" />
+                        <input type="text" disabled id="name" placeholder="Nombre del usuario" className="input input-text" value={nameClient.nameclient+ ' ' + nameClient.surnameclient}/>
 
                         <label for="name" className="label">Nombre mascota</label>
                         <input type="text" id="pet" placeholder="Nombre de la mascota" onChange={e => setValues({...values,namepet: e.target.value})} className="input input-name"/>
