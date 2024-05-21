@@ -676,14 +676,15 @@ nav {
 
 //Consulta médica
 
-.anamnesis {
-  display: flex;
-  justify-content: start;
-  gap: 10px;
+.column1 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 15px;
   align-items: start;
-  width: 100%;
 }
 
-.anamnesis textarea {
-  width: 50%;
+.column2 {
+  display: grid;
+  grid-template-rows: auto;
+
 }

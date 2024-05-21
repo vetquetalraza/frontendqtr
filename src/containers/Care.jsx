@@ -21,6 +21,8 @@ const Care = () => {
         anamnesis: '',
         weight: '',
         temperature: '',
+        symptoms: [],
+        diagnosis: [],
         treatment: ''
     })
 
@@ -109,8 +111,6 @@ const Care = () => {
     }
 
     //CONSULTAS MÉDICAS
-
-    
     const handleSubmitMedic = (e) => {
         e.preventDefault();
         console.log(medical)
@@ -127,7 +127,7 @@ const Care = () => {
             });
             //Limpiar campos
             e.target.reset();
-            loadData()
+            loadData();
         })
         .catch(err => {
             console.log(err);
@@ -341,47 +341,52 @@ return (
                     <a className="close" href="#">&times;</a>
                 </div>
                 <div className="content">
-                    <form action="/" className="form" onSubmit={handleSubmitMedic}>      
-                        <label for="anamnesis" className="label label-care">Anamnesis</label>
-                        <div className="anamnesis">
-                            <ul>
-                                <li>¿Ha tenido algún problema de salud que necesitara tratamiento?</li>
-                                <li>¿Está al día con las vacunas?</li>
-                                <li>¿Cuándo se realizó la última desparasitación? </li>
-                                <li>¿Tomo actualmente alguna medicación? </li>
-                                <li>¿Cómo es la alimentación de tu mascota?</li>
-                                <li>¿Qué hábitos tiene tu mascota?</li>
-                            </ul>
-                            <textarea className="textarea" rows="7" id="anamnesis" onChange={e => setMedical({...values,anamnesis: e.target.value})}></textarea>
-                        </div>
-                        <div className="group-data-pet"> 
-                            <label for="temperature" className="label">Temperatura (c°)</label>
-                            <input type="number" id="temperature" min="0" step="0.1" className="input input-text" onChange={e => setMedical({...values,temperature: e.target.value})}/>
-                            <label for="weight" className="label">Peso (kg)</label>
-                            <input type="number" id="weight" min="0" step="0.1" className="input input-text" onChange={e => setMedical({...values,weight: e.target.value})}/>
-                        </div>
-                        <label for="sintomas" className="label label-care">Síntomas</label>
-                        <Select
-                            closeMenuOnSelect={false}
-                            id="simptoms"
-                            placeholder="Seleccionar"
-                            options={symptoms}
-                            isMulti
-                        />
-                        <label for="diagnostico" className="label label-care">Diagnóstico</label>
-                        <Select
-                            closeMenuOnSelect={false}
-                            id="diagnosis"
-                            placeholder="Seleccionar"
-                            options={diagnosis}
-                            isMulti
-                        />
+                    <form action="/" className="form" onSubmit={handleSubmitMedic}>    
+                        <div className="column1">  
+                            <div className="column2">
+                                <label for="anamnesis" className="label label-care">Anamnesis</label>
+                                <label for="" className="label label-care">¿Ha tenido algún problema de salud que necesitara tratamiento? , ¿Está al día con las vacunas?, 
+                                ¿Cuándo se realizó la última desparasitación? , ¿Tomo actualmente alguna medicación?, ¿Cómo es la alimentación de tu mascota?, ¿Qué hábitos tiene tu mascota?</label>
+                                <textarea className="textarea" rows="3" id="anamnesis" onChange={e => setMedical({...medical,anamnesis: e.target.value})}></textarea>
+                                <label for="temperature" className="label">Temperatura (c°)</label>
+                                <input type="number" id="temperature" min="0" step="0.1" className="input input-text" onChange={e => setMedical({...medical,temperature: e.target.value})}/>
+                                <label for="weight" className="label">Peso (kg)</label>
+                                <input type="number" id="weight" min="0" step="0.1" className="input input-text" onChange={e => setMedical({...medical,weight: e.target.value})}/>
+                            </div>
+                            <div className="column2">
+                                <label for="sintomas" className="label label-care">Síntomas</label>
+                                <Select
+                                    closeMenuOnSelect={false}
+                                    id="simptoms"
+                                    className="label"
+                                    placeholder="Seleccionar"
+                                    options={symptoms}
+                                    isMulti
+                                    onChange={options => {
+                                        const values = options.map(option => option.value);
+                                        setMedical({...medical,symptoms: values})
+                                    }}
+                                />
+                                <label for="diagnostico" className="label label-care">Diagnóstico</label>
+                                <Select
+                                    closeMenuOnSelect={false}
+                                    id="diagnosis"
+                                    className="label"
+                                    placeholder="Seleccionar"
+                                    options={diagnosis}
+                                    isMulti
+                                    onChange={options => {
+                                        const values = options.map(option => option.value);
+                                        setMedical({...medical,diagnosis: values})
+                                    }}
+                                />
+                            </div> 
+                        </div>  
                         <label for="treatment" className="label label-care">Tratamiento</label>
-                        <textarea className="textarea" rows="3" id="treatment" onChange={e => setMedical({...values,treatment: e.target.value})}></textarea>
+                        <textarea className="textarea" rows="3" id="treatment" onChange={e => setMedical({...medical,treatment: e.target.value})}></textarea>
                         <div className="button-section">
-                            <input type="submit" value="Guardar" className="button primary-button"/> 
-                        </div>
-                                
+                                <input type="submit" value="Guardar" className="button primary-button"/> 
+                        </div>     
                     </form>
                 </div>
              </div>
