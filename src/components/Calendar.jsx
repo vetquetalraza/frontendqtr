@@ -1,11 +1,12 @@
 import FullCalendar from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid' 
 import interactionPlugin from '@fullcalendar/interaction';
-import { useState } from "react";
+import React, { useEffect, useState } from 'react';
 import EventItem from '../hooks/useGetEvent';
 import uuid from 'react-uuid';
 import axios from 'axios';
 import Swal from 'sweetalert2'
+import moment from 'moment'; 
 
 export default function Calendar() {
 
@@ -18,9 +19,81 @@ const [values , setValues] = useState({
   idservice: '',
   dateappo: '',
   timeappo: '',
+  duration: '',
   comment: '',
   status: 'Agendado'
 })
+
+const getColor = (e) => {
+  var color = '';
+  switch (e) {
+    case 1:
+      color = '#F08080';
+      break;
+    case 2:
+      color = '#AA77C3';
+      break;
+    case 3:
+      color = '#5D58D7';
+      break;  
+  }
+  return color
+}
+
+const setService = (e) => {
+  setValues({...values,idservice: e.target.value})
+
+  let duration = 0;
+  switch (e.target.value) {
+      case "1":
+        duration = '59';
+        break;
+      case "2":
+        duration = '29';
+        break;
+      case "3":
+        duration = '29';
+        break;  
+    }
+
+  const durationApp = document.getElementById("duration")
+  durationApp.value = duration
+
+}
+const load = () => {
+  axios.get('https://api-vet-2utn.onrender.com/api/v1/appointments')
+  .then(res => {
+    
+    var data = Array.from(res.data);
+    var lista = [];
+    data.map((element, index) => {
+      let varStart = element.dateappointment + " " + element.timeappointment
+      let varEnd = moment(varStart).add(element.durationappointment, 'm').format("yyyy-MM-DD HH:mm");
+      let color = getColor(element.idvetservices);
+
+      lista.push(
+        {
+          title: element.namevetservices,
+          id: element.idappointment,
+          start: varStart,
+          end: varEnd,
+          rendering: 'background',
+          color:color
+        }
+      )
+    })
+
+    setEvents(lista);
+  })
+  .catch(err => console.log(err));
+
+  console.log(events);
+}
+useEffect(()=>{
+
+  load()
+
+}, [])
 
 const handleSelect = (info) => {
     const { start, end } = info;
@@ -29,70 +102,62 @@ const handleSelect = (info) => {
     popup.click()
 
     const dateApp = document.getElementById("dateappo")
-    var day = start.getDate(),
-        month = start.getMonth() + 1,
-        year = start.getFullYear()
-
-    var dayT = day < 10 ? 0 + day : day,
-        monthT = month < 10 ? 0 + month.toString() : month,
-        dateT = year + "-" + monthT + "-" + dayT
-    dateApp.value = dateT
+    dateApp.value = moment(start).format("yyyy-MM-DD")
 
     const timeApp = document.getElementById("timeappo")
-    var hour = start.getHours(),
-        minutes = start.getMinutes(),
-        hourT = hour < 10 ? 0 + hour.toString() : hour,
-        minutesT = minutes < 10 ? 0 + minutes.toString() : minutes,
-        timeT = hourT + ":" + minutesT
-        
-    timeApp.value = timeT
+    timeApp.value = moment(start).format("hh:mm")
 
-    var nameAppo = document.getElementById("idservice"),
+    let nameAppo = document.getElementById("idservice"),
         selected = nameAppo.options[nameAppo.selectedIndex].text;
+
+    let color = getColor();
+    
     setEvents([
         ...events,
         {
-          start,
-          end,
           title: selected,
           id: uuid(),
-          date: dateT,
-          time: timeT
-
+          start: start,
+          end: end,
+          rendering: 'background',
+          color:color
         },
     ]);
 
-    setValues({...values,dateappo: dateT})
-
-    setValues({...values,timeappo: timeT})
+    console.log(events)
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    axios.post('https://api-vet-2utn.onrender.com/api/v1/appointments/',values)
-    .then(res => {
-      console.log(res);
-      close.click();
-      Swal.fire({
-        position: "bottom-end",
-        icon: "success",
-        title: "Datos guardados correctamente.",
-        showConfirmButton: false,
-        timer: 1500
-      });
-      //Limpiar campos
-      e.target.reset();
-    })
-    .catch(err => {
-      console.log(err);
-      Swal.fire({
-        position: "bottom-end",
-        icon: "error",
-        title: "Ha ocurrido un error.",
-        showConfirmButton: false,
-        timer: 1500
-      });
-    })
+    //console.log(events);
+
+      e.preventDefault();
+      axios.post('https://api-vet-2utn.onrender.com/api/v1/appointments/',values)
+      .then(res => {
+        console.log(res);
+        close.click();
+        Swal.fire({
+          position: "bottom-end",
+          icon: "success",
+          title: "Datos guardados correctamente.",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        //Limpiar campos
+        e.target.reset();
+        //Actualizar vista
+        load()
+      }).catch(err => {
+        console.log(err);
+        Swal.fire({
+          position: "bottom-end",
+          icon: "error",
+          title: "Ha ocurrido un error.",
+          showConfirmButton: false,
+          timer: 1500
+        });
+      })
+
+    console.log(values);
 }
 
   return (
@@ -101,6 +166,7 @@ const handleSelect = (info) => {
       plugins={[ timeGridPlugin,  interactionPlugin]}
       initialView="timeGridWeek"
       locale="es"
+      timeZone="local"
       headerToolbar={{
         left: 'timeGridWeek',
         center: 'title',
@@ -109,7 +175,7 @@ const handleSelect = (info) => {
       businessHours={{
         daysOfWeek: [ 1, 2, 3, 4, 5, 6 ], 
         startTime: '09:00',
-        endTime: '20:00'
+        endTime: '21:00'
       }}
       buttonText={{
         prev: "Anterior",
@@ -120,12 +186,11 @@ const handleSelect = (info) => {
         day: "Día",
         list: "Agenda"
     }}
-    eventColor="#9ACD32"
     allDayText="Todo el día"
     moreLinkText="más"
     noEventsText="No hay eventos para mostrar"
     selectable="true"
-    editable="true"
+    editable="false"
     events={events}
     select={handleSelect}
     eventContent={(info) => <EventItem info={info} />}
@@ -137,6 +202,8 @@ const handleSelect = (info) => {
         minute: '2-digit',
         hour12: false
       }}
+    slotMinTime="08:00"
+    slotMaxTime="22:00"
     />
     <div id="popup1" className="overlay">
       <div className="popup-pet">
@@ -163,7 +230,7 @@ const handleSelect = (info) => {
                   </select>
                   
                   <label for="idservice" className="label label-pet">Servicio</label>
-                  <select id="idservice" name="idservice" className="input" onChange={e => setValues({...values,idservice: e.target.value})}>
+                  <select id="idservice" name="idservice" className="input" onChange={setService}>
                       <option selected>Seleccionar</option>
                       <option value="2">Consulta Médica</option>
                       <option value="1">Grooming</option>
@@ -173,11 +240,13 @@ const handleSelect = (info) => {
                   <label for="dateappo" className="label">Fecha cita</label>
                   <input type="date" id="dateappo" className="input input-text" onChange={e => setValues({...values,dateappo: e.target.value})}/>
                   
-                  <label for="timeappo" className="label">Hora cita</label>
-                  <input type="time" id="timeappo" className="input input-text" onChange={e => setValues({...values,timeappo: e.target.value})}/>
+                  <label for="timeappo" className="label">Hora Inicio</label>
+                  <input type="time" id="timeappo" className="input input-text" onChange={e => setValues({...values,timeappo: e.target.value})} />
 
                   <label for="comment" className="label">Comentarios (Opcional)</label>
                   <input type="text" id="comment" className="input input-text" onChange={e => setValues({...values,comment: e.target.value})}/>
+                  
+                  <input type="number" id="duration" className="input input-text" onChange={e => setValues({...values,duration: e.target.value})}/>
                   
                   <div className="button-section">
                       <input type="submit" value="Guardar" className="button primary-button"/> 

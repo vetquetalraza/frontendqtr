@@ -527,14 +527,10 @@ nav {
 /* 3. Pets */
 
 /* 4. Appointments */
-
-.calendar {
-  width: 100%;
-  height: 400px;
-}
-
 .container-calendar {
-  height: 70%;
+  justify-content: center;
+  height: 80vh;
+  width: 100vh;
 }
 /* 5. Medical History */
 

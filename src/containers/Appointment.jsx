@@ -1,16 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import '../styles/global.scss';
 import Calendar from '../components/Calendar';
-import axios from 'axios';
 
 const Appointment = () => {
 
-    const [data, setData] = useState([])
-    useEffect(()=>{
-        axios.get('https://api-vet-2utn.onrender.com/api/v1/appointments')
-        .then(res => setData(Array.from(res.data)))
-        .catch(err => console.log(err));
-    }, [])
 
 return (
     <>
