@@ -404,7 +404,7 @@ return (
                             <select id="idvaccine" name="vaccine" className="input">
                                 <option selected>Seleccionar</option>
                                 {vaccine.map((vaccine,index) => {
-                                    return <option value={vaccine.idvaccine}>{vaccine.namevaccine}</option>
+                                    return <option value={vaccine.iddrug}>{vaccine.namedrug} - {vaccine.presentationdrug} {vaccine.quantityperpresentation}</option>
                                 })}     
                             </select>
                             <select name="numero-dosis" className="input" id="id-dosage">
@@ -440,7 +440,7 @@ return (
                                 </table>
                             </div>
                             <div>
-                                <label for="idvaccine" className="label">Últimas vacunas</label>
+                                <label for="idvaccine" className="label">Historial de Vacunación</label>
                                 <table className="table-inventory">
                                     <thead>
                                         <tr>
@@ -455,7 +455,7 @@ return (
                                     return <tr key={index}>
                                             <td>{index + 1}</td>
                                             <td>{history.numbervaccine}</td>
-                                            <td>{history.namevaccine}</td>
+                                            <td>{history.namedrug}</td>
                                             <td>{history.dateappointment}</td>
                                         </tr>
                                     })} 

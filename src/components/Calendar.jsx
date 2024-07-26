@@ -40,26 +40,6 @@ const getColor = (e) => {
   return color
 }
 
-const setService = (e) => {
-  setValues({...values,idservice: e.target.value})
-
-  let duration = 0;
-  switch (e.target.value) {
-      case "1":
-        duration = '59';
-        break;
-      case "2":
-        duration = '29';
-        break;
-      case "3":
-        duration = '29';
-        break;  
-    }
-
-  const durationApp = document.getElementById("duration")
-  durationApp.value = duration
-
-}
 const load = () => {
   axios.get('https://api-vet-2utn.onrender.com/api/v1/appointments')
   .then(res => {
@@ -89,15 +69,56 @@ const load = () => {
 
   console.log(events);
 }
+
 useEffect(()=>{
 
-  load()
+  load();
+  setNameClient({nameclient: "Nombre del",surnameclient: "Usuario"});
 
 }, [])
 
+//Listar nombres de cliente
+const [nameClient, setNameClient] = useState([])
+
+const getName = (e) =>{
+    if (e.target.value.length >= 8) {
+        setValues({...values,client: e.target.value})
+        axios.get('https://api-vet-2utn.onrender.com/api/v1/clients/' + e.target.value)
+        .then( res => {
+            if(res.data[0]){
+                setNameClient(res.data[0]);
+                getPets(e.target.value);
+            }
+            else{
+                setNameClient({nameclient: "Usuario",surnameclient: "Desconocido"});
+    }})
+        //.then(res => console.log((res.data[0])))
+        .catch(err => console.log(err));
+    }
+   else {
+      setNameClient({nameclient: "Nombre del",surnameclient: "Usuario"});
+   }
+}
+
+//Listar nombres de mascotas
+const [namePets, setNamePets] = useState([])
+
+const getPets = (id) =>{
+
+  axios.get('https://api-vet-2utn.onrender.com/api/v1/pets/client/' + id)
+  .then( res => setNamePets(Array.from(res.data)))
+  .catch(err => console.log(err));
+
+}
+
+
+//End nombre mascotas
+
 const handleSelect = (info) => {
     const { start, end } = info;
-
+    
+    setValues({...values,timeappo: moment(start).format("HH:mm"),dateappo: moment(start).format("yyyy-MM-DD")})
+   
     const popup = document.getElementById("btnPopup");
     popup.click()
 
@@ -105,7 +126,7 @@ const handleSelect = (info) => {
     dateApp.value = moment(start).format("yyyy-MM-DD")
 
     const timeApp = document.getElementById("timeappo")
-    timeApp.value = moment(start).format("hh:mm")
+    timeApp.value = moment(start).format("HH:mm")
 
     let nameAppo = document.getElementById("idservice"),
         selected = nameAppo.options[nameAppo.selectedIndex].text;
@@ -216,21 +237,21 @@ const handleSelect = (info) => {
               <form action="/" className="form" onSubmit={handleSubmit}>
                   
                   <label for="name" className="label">DNI Cliente</label>
-                  <input type="text" id="dni" placeholder="" className="input input-text"/>
+                  <input type="text" id="dni" placeholder="" className="input input-text" onChange={getName}/>
             
                   <label for="name" className="label">Cliente</label>
-                  <input type="text" id="name" placeholder="María Paz" className="input input-text" readonly/>
+                  <input type="text" id="name" disabled placeholder="Nombre del usuario" className="input input-text" value={nameClient.nameclient+ ' ' + nameClient.surnameclient}/>
 
                   <label for="idpet" className="label">Nombre mascota</label>
                   <select id="idpet" name="idpet" className="input" onChange={e => setValues({...values,idpet: e.target.value})}>
                       <option selected>Seleccionar</option>
-                      <option value="1">Gato: Arenita</option>
-                      <option value="2">Gato: Zeus</option>
-                      <option value="3">Perro: Wookie</option>
+                      {namePets.map((pet,index) => {
+                        return <option value={pet.idpet}>{pet.namepet}</option>
+                      })}
                   </select>
                   
                   <label for="idservice" className="label label-pet">Servicio</label>
-                  <select id="idservice" name="idservice" className="input" onChange={setService}>
+                  <select id="idservice" name="idservice" className="input" onChange={e => setValues({...values,idservice: e.target.value,duration: e.target.value === "1" ? 59: 29})}>
                       <option selected>Seleccionar</option>
                       <option value="2">Consulta Médica</option>
                       <option value="1">Grooming</option>
@@ -241,13 +262,11 @@ const handleSelect = (info) => {
                   <input type="date" id="dateappo" className="input input-text" onChange={e => setValues({...values,dateappo: e.target.value})}/>
                   
                   <label for="timeappo" className="label">Hora Inicio</label>
-                  <input type="time" id="timeappo" className="input input-text" onChange={e => setValues({...values,timeappo: e.target.value})} />
+                  <input type="time" id="timeappo" className="input input-text" onChange={e => setValues({...values,timeappo: e.target.value})}/>
 
                   <label for="comment" className="label">Comentarios (Opcional)</label>
                   <input type="text" id="comment" className="input input-text" onChange={e => setValues({...values,comment: e.target.value})}/>
-                  
-                  <input type="number" id="duration" className="input input-text" onChange={e => setValues({...values,duration: e.target.value})}/>
-                  
+                   
                   <div className="button-section">
                       <input type="submit" value="Guardar" className="button primary-button"/> 
                   </div>

@@ -12,7 +12,7 @@ const Header = () => {
                 <label for="logo">Que tal Raza - Clínica Veterinaria</label>
             </div>
             <div className="navbar-right">
-                <label for="">user@quetalraza.com</label>
+                <label for="">Admin Que tal Raza</label>
                 <div className="dropdown">
                     <button className="dropbtn"><img src={user} alt="usuario" className="nav-user"/></button>
                     <div className="dropdown-content">
