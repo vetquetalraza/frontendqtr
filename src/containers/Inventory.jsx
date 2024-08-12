@@ -51,7 +51,7 @@ const Inventory = () => {
         },
         {
             name: "Stock",
-            selector: (row) => 6
+            selector: (row) => row.total_batches - row.total_history
         },
         {
             name: "Acciones",

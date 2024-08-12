@@ -10,39 +10,40 @@ import inventario from '../assets/icons/verificar.png';
 import reporte from '../assets/icons/estadisticas.png';
 
 const Sidebar = () => {
+
     return (
 <>
 <div className="sidebar" >
             <ul>
-                <li>
+                <li className="option-menu">
                     <img src={inicio} alt="Inicio" className="icon-menu"/>
-                    <a href="/home">Inicio</a>
+                    <a href="/home" >Inicio</a>
                 </li>
-                <li>
+                <li className="option-menu">
                     <img src={cliente} alt="Clientes" className="icon-menu"/>
                     <a href="/clients">Clientes</a>
                 </li>
-                <li>
+                <li className="option-menu">
                     <img src={mascota} alt="Mascotas" className="icon-menu"/>
                     <a href="/pets">Mascotas</a>
                 </li>
-                <li>
+                <li className="option-menu">
                     <img src={cita} alt="Citas" className="icon-menu"/>
                     <a href="/appointment">Citas</a>
                 </li>
-                <li>
+                <li className="option-menu">
                     <img src={atencion} alt="Atenciones" className="icon-menu"/>
                     <a href="/care">Atenciones</a>
                 </li>
-                <li>
+                <li className="option-menu">
                     <img src={historial} alt="Historial Clínico" className="icon-menu"/>
                     <a href="/history">Historial Clínico</a>
                 </li>
-                <li>
+                <li className="option-menu">
                     <img src={inventario} alt="Inventario" className="icon-menu"/>
                     <a href="/inventory">Inventario</a>
                 </li>
-                <li>
+                <li className="option-menu">
                     <img src={reporte} alt="Reportes" className="icon-menu"/>
                     <a href="/reports">Reportes</a>
                 </li>

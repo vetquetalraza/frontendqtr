@@ -8,7 +8,6 @@ import Select from 'react-select'
 const Care = () => {
     
     const close = document.querySelector(".close");
-    const [dateCare, setDateCare] = useState("")
     const [data, setData] = useState([])
     const [vaccine , setVaccine] = useState([])
     const [vaccineSel, setVaccineSel] = useState([])
@@ -47,9 +46,10 @@ const Care = () => {
 
 
     //Actualizar lista de atenciones de acuerdo a la fecha de filtrado
-    const handleChange = (event) => {
-        setDateCare(event.target.value);
-        axios.get('https://api-vet-2utn.onrender.com/api/v1/care/'+event.target.value)
+    const handleChange = () => {
+        const start = document.getElementById('startDate').value;
+        const end = document.getElementById('endDate').value;
+        axios.get('https://api-vet-2utn.onrender.com/api/v1/care/'+start+"&"+end)
         .then(res => setData(Array.from(res.data)))
         .catch(err => console.log(err));
     };
@@ -104,8 +104,7 @@ const Care = () => {
 
     const loadData = () => {
         let date = moment().format("YYYY-MM-DD")
-        setDateCare(date);  
-        axios.get('https://api-vet-2utn.onrender.com/api/v1/care/'+date)
+        axios.get('https://api-vet-2utn.onrender.com/api/v1/care/'+date+'&'+date)
         .then(res => setData(Array.from(res.data)))
         .catch(err => console.log(err));
     }
@@ -267,8 +266,9 @@ return (
     <>
         <label for="" className="title">Atenciones</label>
         <div className="table-header">
-            <input className="input-inset" type="text" placeholder="Buscar"/> 
-            <input type="date" value={dateCare} onChange={handleChange} className="input input-text filter"/>
+            <label htmlFor="" className="label">Inicio:</label><input type="date" id="startDate" className="input input-text filter"/>
+            <label htmlFor="" className="label">Fin:</label><input type="date" id="endDate" className="input input-text filter"/>
+            <button onClick={handleChange} className="button button-edit">Filtrar</button>
         </div>
         <table className="table">
             <thead>
