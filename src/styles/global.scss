@@ -239,7 +239,7 @@ nav {
 .sidebar li  {
     padding: 10px;
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: center;
 }
 
@@ -468,7 +468,7 @@ nav {
 
   .header-delete {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     align-items: center;
   }
 
@@ -581,7 +581,7 @@ nav {
 
 .group-inventory {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
   gap: 10px;
   text-align: center;
@@ -639,7 +639,7 @@ nav {
 .contentPhotos {
   display: flex;
   justify-content: space-between;
-  align-items: start;
+  align-items: flex-start;
   width: 100%;
 }
 
@@ -678,7 +678,7 @@ nav {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 15px;
-  align-items: start;
+  align-items: flex-start;
 }
 
 .column2 {

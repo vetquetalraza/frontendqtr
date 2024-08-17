@@ -14,6 +14,7 @@ const Care = () => {
     const [history , setHistory] = useState([])
     const [symptoms , setSymptoms] = useState([])
     const [diagnosis , setDiagnosis] = useState([])
+    const [medicines , setMedicines] = useState([])
 
     const [medical, setMedical] = useState({
         idappo: '',
@@ -99,6 +100,11 @@ const Care = () => {
         .then(res => setDiagnosis(Array.from(res.data)))
         .catch(err => console.log(err));
 
+        //Listar símtomas
+        axios.get('https://api-vet-2utn.onrender.com/api/v1/drugs/med')
+        .then(res => setMedicines(Array.from(res.data)))
+        .catch(err => console.log(err));
+
     }
 
 
@@ -110,6 +116,36 @@ const Care = () => {
     }
 
     //CONSULTAS MÉDICAS
+    
+    //Tabla medicamentos e insumos utilizados
+    const [rows, setRows] = useState([]);
+
+    // Estado para los campos de entrada
+    const [newIdMaterial, setNewIdMaterial] = useState('');
+    const [newMaterial, setNewMaterial] = useState('');
+    const [newDosage, setNewDosage] = useState('');
+
+    // Función para manejar la eliminación de una fila
+    const handleDelete = (id) => {
+        setRows(rows.filter(row => row.id !== id));
+    };
+
+    // Función para manejar el agregado de una nueva fila
+    const handleAdd = () => {
+        if (newIdMaterial && newMaterial && newDosage) {
+        const newRow = {
+            id: newIdMaterial,
+            material: newMaterial,
+            dosis: parseInt(newDosage, 10)
+        };
+        setRows([...rows, newRow]);
+        // Limpiar los campos después de agregar
+        setNewIdMaterial('');
+        setNewMaterial('');
+        setNewDosage('');
+        }
+    };
+
     const handleSubmitMedic = (e) => {
         e.preventDefault();
         console.log(medical)
@@ -369,7 +405,7 @@ return (
                                 />
                                 <label for="diagnostico" className="label label-care">Diagnóstico</label>
                                 <Select
-                                    closeMenuOnSelect={false}
+                                    closeMenuOnSelect={true}
                                     id="diagnosis"
                                     className="label"
                                     placeholder="Seleccionar"
@@ -380,10 +416,48 @@ return (
                                         setMedical({...medical,diagnosis: values})
                                     }}
                                 />
+                                <label for="materials" className="label label-care">Medicamentos e insumos utilizados durante la atención</label>
+                                <select className="input" value={newMaterial} onChange={(e) => {
+                                    setNewIdMaterial(e.target.value);
+                                    setNewMaterial(e.target.selectedOptions[0].label)
+                                }}>
+                                    <option>Seleccionar</option>
+                                    {medicines.map((medicine,index) => {
+                                        return <option value={medicine.iddrug}>{medicine.namedrug} - {medicine.presentationdrug} {medicine.quantityperpresentation}</option>
+                                    })}  
+                                </select>
+                                <label for="dosage" className="label label-care">Dosis</label>
+                                <input type="number" value={newDosage} id="dosage" min="0" step="0.01" className="input input-text" onChange={(e) => setNewDosage(e.target.value)}/>
+                                <a onClick={handleAdd} className="button button-edit">Agregar</a>
+
+                                <table className="table-inventory">
+                                    <thead>
+                                    <tr>
+                                        <th>N°</th>
+                                        <th>Medicamento / Insumo</th>
+                                        <th>Dosis</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {rows.map( (row,index) => (
+                                        <tr key={row.id}>
+                                        <td>{index + 1}</td>
+                                        <td>{row.material}</td>
+                                        <td>{row.dosis}</td>
+                                        <td>
+                                            <button onClick={() => handleDelete(row.id)}>Eliminar</button>
+                                        </td>
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
                             </div> 
                         </div>  
                         <label for="treatment" className="label label-care">Tratamiento</label>
                         <textarea className="textarea" rows="3" id="treatment" onChange={e => setMedical({...medical,treatment: e.target.value})}></textarea>
+                        
+                        
                         <div className="button-section">
                                 <input type="submit" value="Guardar" className="button primary-button"/> 
                         </div>     
