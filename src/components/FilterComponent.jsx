@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import '../styles/global.scss';
+import '../styles/Datatable.scss';
 
 const ClearButton = styled.button`
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
-	border-top-right-radius: 5px;
+	border-top-right-radius: 10px;
 	border-bottom-right-radius: 5px;
 	height: 34px;
 	width: 32px;
@@ -13,14 +13,19 @@ const ClearButton = styled.button`
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	background-color:#525353;
+	color: #ffff;
 `;
 
 const FilterComponent = ({ filterText, onFilter, onClear }) => (
-	<>
-		<input class="input-inset" type="text" placeholder="Buscar" value={filterText} onChange={onFilter}/> 
+	<>	
+	<div className="custom-subheader">
+	<input class="input-inset" type="text" placeholder="Buscar" value={filterText} onChange={onFilter}/> 
 		<ClearButton type="button" onClick={onClear}>
 			X
 		</ClearButton>
+	</div>
+	
 		
 	</>
 );

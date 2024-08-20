@@ -135,6 +135,7 @@ nav {
     font-size: var(--lg);
     text-align: start;
     font-weight: bold;
+    margin-bottom: 10px;
   }
 
 .subtitle {
@@ -685,4 +686,11 @@ nav {
   display: grid;
   grid-template-rows: auto;
 
+}
+
+.errorMsg {
+  color: red;
+  font-size: var(--xs);
+  margin-top: -12px;
+  margin-bottom: 12px;
 }

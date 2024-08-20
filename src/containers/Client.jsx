@@ -143,10 +143,6 @@ const Client = () => {
     const validateForm = () => {
         const newErrors = {};
 
-        if (!values.dni) {
-            newErrors.dni = 'El DNI es requerido';
-        }
-
         if (values.dni.length < 8) {
             newErrors.dni = 'Registre un mínimo de 8 dígitos';
         }
@@ -183,11 +179,7 @@ const Client = () => {
     return (
         <>
         <label for="" class="title">Clientes</label>
-        <div class="table-header">
-            <input class="input-inset" type="text" placeholder="Buscar"/> 
-            <a class="button button-new" onClick={() => setIsReadOnly(false)}href="#popup1">Nuevo Cliente</a>
-        </div>
-        
+        <a class="button button-new" onClick={() => setIsReadOnly(false)} href="#popup1">Nuevo Cliente</a>
         <MyDataTable columns={columns} data={data} />
         <div id="popup1" className="overlay">
             <div className="popup">
@@ -200,11 +192,11 @@ const Client = () => {
         
                         <label for="dni" className="label">DNI</label>
                         <input type="text" id="dni" name="dni" className="input input-text" maxLength="12" onChange={validateNumberAndSet} value={values.dni} readOnly={isReadOnly} />
-                        {errors.dni && <label style={{ color: 'red' }}>{errors.dni}</label>}
+                        {errors.dni && <label className="errorMsg">{errors.dni}</label>}
 
                         <label for="name" className="label">Nombres </label>
                         <input type="text" id="name" name="name" className="input input-text" maxLength="100" onChange={validateTextAndSet} value={values.name} />
-                        {errors.name && <label style={{ color: 'red' }}>{errors.name}</label>}
+                        {errors.name && <label className="errorMsg">{errors.name}</label>}
 
                         <label for="surname" className="label">Apellidos</label>
                         <input type="text" id="surname" name="surname" className="input input-text" maxLength="100" onChange={validateTextAndSet} value={values.surname} />
@@ -214,11 +206,11 @@ const Client = () => {
         
                         <label for="email" className="label">Email</label>
                         <input type="text" id="email" placeholder="" name="email" className="input input-email" maxLength="250" onChange={e => setValues({...values,email: e.target.value})} value={values.email} />
-                        {errors.email && <label style={{ color: 'red' }}>{errors.email}</label>}
+                        {errors.email && <label className="errorMsg">{errors.email}</label>}
 
                         <label for="phone" className="label">N° de celular</label>
                         <input type="text" id="phone" placeholder="" name="phone" className="input input-text" maxLength="20" onChange={validateNumberAndSet} value={values.phone} />
-                        {errors.phone && <label style={{ color: 'red' }}>{errors.phone}</label>}
+                        {errors.phone && <label className="errorMsg">{errors.phone}</label>}
 
                         <div className="button-section">
                             <input type="submit" value="Guardar" className="button primary-button"/> 

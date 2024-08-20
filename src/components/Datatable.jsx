@@ -10,8 +10,7 @@ const MyDataTable = ({ columns, data }) => {
   const [filterText, setFilterText] = useState('');
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 
-
-// Configuración de traducciones al español
+  // Configuración de traducciones al español
   const localization = {
     rowsPerPageText: 'Filas por página',
     rangeSeparatorText: 'de',
@@ -21,18 +20,23 @@ const MyDataTable = ({ columns, data }) => {
     };
   const noDataMessage = 'No hay registros para mostrar';
 
-  const filteredItems = data.filter(
-      item => item.name && item.name.toLowerCase().includes(filterText.toLowerCase()),
-  );
+  const filteredItems = (array, texto) => {
+    return array.filter(objeto =>
+      Object.values(objeto).some(valor =>
+        String(valor).toLowerCase().includes(texto.toLowerCase())
+      )
+    );
+  };
 
+  const result = filteredItems(data, filterText);
 
-const subHeaderComponentMemo = React.useMemo(() => {
-const handleClear = () => {
-    if (filterText) {
-        setResetPaginationToggle(!resetPaginationToggle);
-        setFilterText('');
-    }
-};
+  const subHeaderComponentMemo = React.useMemo(() => {
+  const handleClear = () => {
+      if (filterText) {
+          setResetPaginationToggle(!resetPaginationToggle);
+          setFilterText('');
+      }
+  };
 
 return (
     <FilterComponent onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />
@@ -42,7 +46,7 @@ return (
   return (
     <DataTable
         columns={columns}
-        data={data}
+        data={result}
         pagination
         paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
         subHeader
