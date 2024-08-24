@@ -1,15 +1,4 @@
 @import 'vars';
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Poppins', sans-serif;
-}
 
 /* Header */
 nav {
@@ -151,6 +140,7 @@ nav {
     font-size: var(--sm);
     margin-bottom: 4px;
     color: black;
+    display: block;
 }
 
 .input {
@@ -473,45 +463,7 @@ nav {
     align-items: center;
   }
 
-  .popup-pet {
-    margin: 70px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 5px;
-    width: 50%;
-    position: relative;
-    transition: all 5s ease-in-out;
-  }
-
-  .group-data-pet {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .group-data-pet select,
-  .group-data-pet input {
-    width: 100%;
-  }
-
-  #photo {
-    display: none;
-  }
-
-  .photo-file {
-    background-color: var(--dark-color);
-    width: 100%;
-    font-size: var(--xs);
-    height: 20px;
-    text-align: center;
-    padding: 10px;
-  }
-
-  .photo-file img {
-    object-fit: contain;
-  }
-
+  
   .preview-pet {
     border: 1px solid var(--second-color);
     width: 100%;
@@ -526,8 +478,6 @@ nav {
   .preview-pet img{
     width: 30%;
   }
-
-/* 3. Pets */
 
 /* 4. Appointments */
 .container-calendar {

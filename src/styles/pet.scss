@@ -1,0 +1,64 @@
+@import 'vars';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+.popup-pet {
+    margin: 70px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    width: 50%;
+    position: relative;
+    transition: all 5s ease-in-out;
+  }
+
+  .group-data-pet {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5%;
+  }
+
+  .group-data-pet input, select, textarea {
+    width: 100%;
+  }
+  
+  .photo-file {
+    background-color: var(--dark-color);
+    width: auto;
+    height: auto;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: var(--xs);
+  }
+
+  input::file-selector-button {
+    background-color: var(--text-input-field);
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    color: #000000;
+    font-weight: var(--text);
+    font-size: var(--xs);
+    margin-bottom: 5px;
+  }
+  .button-file {
+    background-color: var(--dark-color);
+    padding: 6px;
+    border-radius: 8px;
+    font-size: var(--xs);
+  }
+
+  .photo-preview {
+    margin-top: 10px;
+    border: 1px solid var(--text-input-field);
+    align-items: center;
+  }
+  .photo-preview img{
+    width: 20%;
+    margin: 5px;
+  }
+
+  .group-photo {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/global.scss';
+import '../styles/pet.scss';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import MyDataTable from '../components/Datatable';
@@ -85,39 +85,40 @@ const Pet = () => {
         }
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
         const validationErrors = validateForm();
         if (Object.keys(validationErrors).length === 0) {
             const close = document.querySelector(".close");
-            axios.post(url,values)
-            .then(res => {
-                console.log(res);
-                close.click();
-                Swal.fire({
-                    position: "bottom-end",
-                    icon: "success",
-                    title: "Datos guardados correctamente.",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                //Limpiar campos
-                e.target.reset();
 
-                //Cargar lista de datos nuevamente
-                handleLoad()
-            })
-            .catch(err => {
-                console.log(err);
-                Swal.fire({
-                    position: "bottom-end",
-                    icon: "error",
-                    title: "Ha ocurrido un error.",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            })
+                axios.post(url,values)
+                .then(res => {
+                    console.log(res);
+                    close.click();
+                    Swal.fire({
+                        position: "bottom-end",
+                        icon: "success",
+                        title: "Datos guardados correctamente.",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    //Limpiar campos
+                    e.target.reset();
+    
+                    //Cargar lista de datos nuevamente
+                    handleLoad()
+                })
+                .catch(err => {
+                    console.log(err);
+                    Swal.fire({
+                        position: "bottom-end",
+                        icon: "error",
+                        title: "Ha ocurrido un error.",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                })
+
         } else {
             setErrors(validationErrors);
         }   
@@ -128,6 +129,7 @@ const Pet = () => {
         .then(res => {
             console.log(res.data);
             setNameClient({nameclient: res.data[0].nameclient,surnameclient: res.data[0].surnameclient});
+            setFilePath('https://api-vet-2utn.onrender.com' +res.data[0].photopet);
             setValues({...values,
                 idpet: res.data[0].idpet,
                 client: res.data[0].dniclient,
@@ -203,35 +205,36 @@ const Pet = () => {
 
     const onFileChange = (event) => {
         setFile(event.target.files[0]);
-      };
+    };
 
     const onUpload = async () => {
-        if (!file) {
-          alert('Por favor, selecciona un archivo primero.');
-          return;
+        if (file) {
+            const formData = new FormData();
+            formData.append('photo', file);
+            
+            try {
+              const response = await axios.post('https://api-vet-2utn.onrender.com/upload', formData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                },
+              });
+              
+              setFilePath('https://api-vet-2utn.onrender.com' +response.data.filePath);
+              setValues({...values, photo: response.data.filePath});
+              
+            } catch (error) {
+              console.error('Error al subir el archivo', error);
+              Swal.fire({
+                icon: "error",
+                title: "Ha ocurrido un error.",
+                text: "Error al subir el archivo",
+                showConfirmButton: false,
+                timer: 1500
+              });
+            }
         }
-    
-        const formData = new FormData();
-        formData.append('photo', file);
-        
-        console.log(formData);
 
-        try {
-          const response = await axios.post('https://api-vet-2utn.onrender.com/upload', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-          
-          setValues({...values,photo: response.data.filePath})
-
-          setFilePath(response.data.filePath);
-          alert('Archivo subido con éxito');
-        } catch (error) {
-          console.error('Error al subir el archivo', error);
-          alert('Error al subir el archivo');
-        }
-    };
+    }
 
     const validateForm = () => {
         const newErrors = {};
@@ -301,74 +304,91 @@ return (
 
                         <input type="text" id="idpet"  className="input input-text" onChange={e => setValues({...values,idpet: e.target.value})}  value={values.idpet} hidden />
 
-                        <label for="dni" className="label">DNI Cliente</label>
-                        <input type="text" id="dni" name="dni" onChange={getName} className="input input-text" value={values.client}/>
-                        {errors.dni && <label className="errorMsg">{errors.dni}</label>}
-                          
-                        <label for="name"  className="label">Cliente</label>
-                        <input type="text" disabled id="name" name="name" className="input input-text" value={nameClient.nameclient+ ' ' + nameClient.surnameclient}/>
-                        {errors.name && <label className="errorMsg">{errors.name}</label>}
-
-                        <label for="pet" className="label">Nombre mascota</label>
-                        <input type="text" id="pet" name="namepet" className="input input-name" onChange={e => setValues({...values,namepet: e.target.value})} value={values.namepet} />
-                        {errors.namepet && <label className="errorMsg">{errors.namepet}</label>}
-
                         <div className="group-data-pet">
-                            <div>
-                                <label for="specie" className="label label-pet">Especie</label>
-                                <select id="specie" name="specie" className="input" onChange={e => setValues({...values,idspecie: e.target.value})} value={values.idspecie}>
-                                    <option  selected>Seleccionar</option>
-                                    <option value="1">Gato</option>
-                                    <option value="2">Perro</option>
-                                </select>
-                                {errors.idspecie && <label className="errorMsg">{errors.idspecie}</label>}
-                            </div>
-                            <div>
-                                <label for="gender" className="label label-pet">Género</label>
-                                <select id="gender" name="gender" className="input" onChange={e => setValues({...values,idgender: e.target.value})} value={values.idgender}>
-                                    <option  selected>Seleccionar</option>
-                                    <option value="1">Hembra</option>
-                                    <option value="2">Macho</option>
-                                </select>
-                                {errors.idgender && <label className="errorMsg">{errors.idgender}</label>}
-                            </div>
-                            <div>
-                                <label for="origin" className="label label-pet">Procedencia</label>
-                                <select id="origin" name="origin" className="input" onChange={e => setValues({...values,idorigin: e.target.value})} value={values.idorigin}>
-                                    <option  selected>Seleccionar</option>
-                                    <option value="1">Costa</option>
-                                    <option value="2">Sierra</option>
-                                    <option value="3">Selva</option>
-                                </select>
-                                {errors.idorigin && <label className="errorMsg">{errors.idorigin}</label>}
-                            </div>
-                        </div>
-                        <div className="group-data-pet">
-                            <div>
-                                <label for="race" className="label label-pet">Raza</label>
-                                <input type="text" id="race" name="race" className="input input-name" onChange={e => setValues({...values,race: e.target.value})} value={values.race}/>
-                                {errors.race && <label className="errorMsg">{errors.race}</label>}
-                            </div>
-                            <div>
-                                <label for="color" className="label label-pet">Color</label>
-                                <input type="text" id="color" name ="color" className="input input-name" onChange={e => setValues({...values,color: e.target.value})} value={values.color}/>
-                                {errors.color && <label className="errorMsg">{errors.color}</label>}
-                            </div>
-                        </div>
-
-                        <label for="birthday" className="label">Fecha de Nacimiento</label>
-                        <input type="date" id="birthday" name="birthday" className="input input-name" onChange={e => setValues({...values,birthdate: e.target.value})} value={values.birthdate}/>
-                        {errors.birthdate && <label className="errorMsg">{errors.birthdate}</label>}
-
-                        <label for="description" className="label">Señas particulares</label>
-                        <textarea className="textarea" rows="3" id="description" onChange={e => setValues({...values,signs: e.target.value})} value={values.signs}></textarea>
                         
-                        <label for="" className="label">¿Deseas que conoscamos más a tu mascota?</label>
-                        <label for="photo" className="button photo-file">Sube una foto!</label>
-                        <input id="photo" type="file" onChange={onFileChange}/>
-                        <button className="button secondary-button" onClick={onUpload}>Subir</button>
-                        <div className="preview-pet">{filePath && <img src={`https://api-vet-2utn.onrender.com${filePath}`} alt="Uploaded"/>}</div>
-                            
+                            <div>
+                                <div>
+                                    <label for="dni" className="label">DNI Cliente</label>
+                                    <input type="text" id="dni" name="dni" onChange={getName} className="input input-text" value={values.client}/>
+                                    {errors.dni && <label className="errorMsg">{errors.dni}</label>}
+                                </div>
+
+
+                                <div>
+                                    <label for="pet" className="label">Nombre mascota</label>
+                                    <input type="text" id="pet" name="namepet" className="input input-name" onChange={e => setValues({...values,namepet: e.target.value})} value={values.namepet} />
+                                    {errors.namepet && <label className="errorMsg">{errors.namepet}</label>}
+                                </div>
+
+                                
+                                <div>
+                                    <label for="gender" className="label label-pet">Género</label>
+                                   <select id="gender" name="gender" className="input" onChange={e => setValues({...values,idgender: e.target.value})} value={values.idgender}>
+                                        <option  selected>Seleccionar</option>
+                                        <option value="1">Hembra</option>
+                                        <option value="2">Macho</option>
+                                    </select>
+                                    {errors.idgender && <label className="errorMsg">{errors.idgender}</label>}
+                                </div>
+                                <div>
+                                    <label for="birthday" className="label">Fecha de Nacimiento</label>
+                                    <input type="date" id="birthday" name="birthday" className="input input-name" onChange={e => setValues({...values,birthdate: e.target.value})} value={values.birthdate}/>
+                                    {errors.birthdate && <label className="errorMsg">{errors.birthdate}</label>}
+                                </div>
+                                <div>
+                                    <label for="color" className="label label-pet">Color</label>
+                                    <input type="text" id="color" name ="color" className="input input-name" onChange={e => setValues({...values,color: e.target.value})} value={values.color}/>
+                                    {errors.color && <label className="errorMsg">{errors.color}</label>}
+                                </div>
+                                <div>
+                                    <label for="description" className="label">Señas particulares</label>
+                                    <textarea className="textarea" rows="3" id="description" onChange={e => setValues({...values,signs: e.target.value})} value={values.signs}></textarea>                        
+                                </div>
+                            </div>  
+                            <div>
+                                <div>
+                                    <label for="name"  className="label">Cliente</label>
+                                    <input type="text" disabled id="name" name="name" className="input input-text" value={nameClient.nameclient+ ' ' + nameClient.surnameclient}/>
+                                    {errors.name && <label className="errorMsg">{errors.name}</label>}
+                                </div>
+                                <div>
+                                    <label for="specie" className="label label-pet">Especie</label>
+                                    <select id="specie" name="specie" className="input" onChange={e => setValues({...values,idspecie: e.target.value})} value={values.idspecie}>
+                                        <option  selected>Seleccionar</option>
+                                        <option value="1">Gato</option>
+                                        <option value="2">Perro</option>
+                                    </select>
+                                    {errors.idspecie && <label className="errorMsg">{errors.idspecie}</label>}
+                                </div>
+                                <div>
+                                    <label for="origin" className="label label-pet">Procedencia</label>
+                                    <select id="origin" name="origin" className="input" onChange={e => setValues({...values,idorigin: e.target.value})} value={values.idorigin}>
+                                        <option  selected>Seleccionar</option>
+                                        <option value="1">Costa</option>
+                                        <option value="2">Sierra</option>
+                                        <option value="3">Selva</option>
+                                    </select>
+                                    {errors.idorigin && <label className="errorMsg">{errors.idorigin}</label>}
+                                </div>
+
+                                <div>
+                                    <label for="race" className="label label-pet">Raza</label>
+                                    <input type="text" id="race" name="race" className="input input-name" onChange={e => setValues({...values,race: e.target.value})} value={values.race}/>
+                                    {errors.race && <label className="errorMsg">{errors.race}</label>}
+                                </div>
+
+                                <div>
+                                    <label for="" className="label">¿Deseas que conoscamos más a tu mascota?</label>
+                                    
+                                    <div className="group-photo">
+                                        <input id="photo" type="file" onChange={onFileChange}/>
+                                        <a className="button button-file" onClick={onUpload}>Subir</a>
+                                        
+                                    </div>
+                                    <div className="photo-preview"><img src={filePath}/></div>
+                                </div>
+                            </div>
+                        </div> 
                         <div className="button-section">
                             <input type="submit" value="Guardar" className="button primary-button"/> 
                         </div>
