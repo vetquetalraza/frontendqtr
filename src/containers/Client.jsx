@@ -66,7 +66,8 @@ const Client = () => {
                         title: "¡Eliminado!",
                         text: "El registro fue eliminado.",
                         icon: "success",
-                        showConfirmButton: false
+                        showConfirmButton: false,
+                        timer: 1500
                       });
                     handleLoad()
                 })
@@ -179,7 +180,10 @@ const Client = () => {
     return (
         <>
         <label for="" class="title">Clientes</label>
-        <a class="button button-new" onClick={() => setIsReadOnly(false)} href="#popup1">Nuevo Cliente</a>
+        <div className="popup-header">
+            <a class="button button-new" onClick={() => setIsReadOnly(false)} href="#popup1">Nuevo Cliente</a>
+        </div>
+        
         <MyDataTable columns={columns} data={data} />
         <div id="popup1" className="overlay">
             <div className="popup">
