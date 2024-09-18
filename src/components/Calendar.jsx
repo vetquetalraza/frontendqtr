@@ -3,7 +3,6 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction';
 import React, { useEffect, useState } from 'react';
 import EventItem from '../hooks/useGetEvent';
-import uuid from 'react-uuid';
 import axios from 'axios';
 import Swal from 'sweetalert2'
 import moment from 'moment'; 
@@ -13,7 +12,10 @@ export default function Calendar() {
 const close = document.querySelector(".close");
 
 const [events, setEvents] = useState([]);
-
+const [isReadOnly, setIsReadOnly] = useState(false);
+const [isDisabled, setIsDisabled] = useState(false);
+const [errors, setErrors] = useState({});
+const [dataClient, setDataClient] = useState('')
 const [values , setValues] = useState({
   idpet:'',
   idservice: '',
@@ -21,7 +23,7 @@ const [values , setValues] = useState({
   timeappo: '',
   duration: '',
   comment: '',
-  status: 'Agendado'
+  status: ''
 })
 
 const getColor = (e) => {
@@ -115,72 +117,122 @@ const getPets = (id) =>{
 //End nombre mascotas
 
 const handleSelect = (info) => {
-    const { start, end } = info;
+    const start = info.dateStr
     
-    setValues({...values,timeappo: moment(start).format("HH:mm"),dateappo: moment(start).format("yyyy-MM-DD")})
-   
+    setIsReadOnly(true)
+    setIsDisabled(true)
+    setValues({...values,timeappo: moment(start).format("HH:mm"),dateappo: moment(start).format("yyyy-MM-DD"),status:1,idpet:0})
+
     const popup = document.getElementById("btnPopup");
     popup.click()
 
-    const dateApp = document.getElementById("dateappo")
-    dateApp.value = moment(start).format("yyyy-MM-DD")
+    document.getElementById("dataclient").style.display = "block"
+    document.getElementById("resume").style.display = "none"
 
-    const timeApp = document.getElementById("timeappo")
-    timeApp.value = moment(start).format("HH:mm")
-
-    let nameAppo = document.getElementById("idservice"),
-        selected = nameAppo.options[nameAppo.selectedIndex].text;
-
-    let color = getColor();
-    
-    setEvents([
-        ...events,
-        {
-          title: selected,
-          id: uuid(),
-          start: start,
-          end: end,
-          rendering: 'background',
-          color:color
-        },
-    ]);
-
-    console.log(events)
   };
 
   const handleSubmit = (e) => {
-    //console.log(events);
-
       e.preventDefault();
-      axios.post('https://api-vet-2utn.onrender.com/api/v1/appointments/',values)
-      .then(res => {
-        console.log(res);
-        close.click();
-        Swal.fire({
-          position: "bottom-end",
-          icon: "success",
-          title: "Datos guardados correctamente.",
-          showConfirmButton: false,
-          timer: 1500
-        });
-        //Limpiar campos
-        e.target.reset();
-        //Actualizar vista
-        load()
-      }).catch(err => {
-        console.log(err);
-        Swal.fire({
-          position: "bottom-end",
-          icon: "error",
-          title: "Ha ocurrido un error.",
-          showConfirmButton: false,
-          timer: 1500
-        });
-      })
+      const validationErrors = validateForm();
+      if (Object.keys(validationErrors).length === 0) {
+        axios.post('https://api-vet-2utn.onrender.com/api/v1/appointments/',values)
+        .then(res => {
+          console.log(res);
+          close.click();
+          Swal.fire({
+            position: "bottom-end",
+            icon: "success",
+            title: "Datos guardados correctamente.",
+            showConfirmButton: false,
+            timer: 1500
+          });
+          //Limpiar campos
+          e.target.reset();
+          //Actualizar vista
+          load()
+        }).catch(err => {
+          console.log(err);
+          Swal.fire({
+            position: "bottom-end",
+            icon: "error",
+            title: "Ha ocurrido un error.",
+            showConfirmButton: false,
+            timer: 1500
+          });
+        })
+      } else {
+        setErrors(validationErrors);
+      }
 
-    console.log(values);
+     
 }
 
+const handleEventClick = (info) => {
+
+  document.getElementById("dataclient").style.display = "none"
+  document.getElementById("resume").style.display = "block"
+  setIsReadOnly(false)
+  setIsDisabled(false)
+
+  const popup = document.getElementById("btnPopup");
+  popup.click()
+
+  
+
+  axios.get("https://api-vet-2utn.onrender.com/api/v1/appointments/"+info.event.id)
+  .then(res => {
+      console.log(res.data)
+      setDataClient("Cliente: " + res.data[0].nameclient + " " + res.data[0].surnameclient + " // Mascota: " +res.data[0].namepet)
+      setValues({...values,
+          idpet: res.data[0].idpet,
+          idservice: res.data[0].idvetservices,
+          dateappo: res.data[0].dateappointment,
+          timeappo: res.data[0].timeappointment,
+          duration: res.data[0].durationappointment,
+          comment: res.data[0].commentappointment,
+          status: res.data[0].statusappointment});
+  }).catch(err => console.log(err))
+
+};
+
+const handleClear = () => {
+  setNameClient({nameclient: "Nombre del",surnameclient: "Usuario"});
+  setValues({...values,
+    idpet:'',
+    idservice: '',
+    dateappo: '',
+    timeappo: '',
+    duration: '',
+    comment: '',
+    status: ''
+  })
+}
+
+const validateForm = () => {
+  const newErrors = {};
+  
+  if (!values.idpet) {
+    newErrors.idpet = 'El nombre de mascota es requerido';
+  }
+  
+  if (!values.idservice) {
+    newErrors.idservice = 'El servicio requerido';
+  }
+
+  if (!values.dateappo) {
+    newErrors.dateappo = 'La fecha es requerida';
+  }
+
+  if (!values.timeappo) {
+    newErrors.timeappo = 'La hora es requerida';
+  }
+
+  if (!values.status) {
+    newErrors.status = 'El estado es requerido';
+  }
+
+  return newErrors;
+};
   return (
     <>
     <FullCalendar
@@ -213,7 +265,8 @@ const handleSelect = (info) => {
     selectable="true"
     editable="false"
     events={events}
-    select={handleSelect}
+    dateClick={handleSelect}
+    eventClick={handleEventClick}
     eventContent={(info) => <EventItem info={info} />}
     dayMaxEventRows="true"
     nowIndicator="true"
@@ -230,42 +283,63 @@ const handleSelect = (info) => {
       <div className="popup-pet">
           <div className="popup-header">
               <label className="title">Datos cita</label>
-              <a className="close" href="#">&times;</a>
+              <a className="close" href="#" onClick={handleClear}>&times;</a>
           </div>
           <div className="content">
 
               <form action="/" className="form" onSubmit={handleSubmit}>
-                  
-                  <label for="name" className="label">DNI Cliente</label>
-                  <input type="text" id="dni" placeholder="" className="input input-text" onChange={getName}/>
-            
-                  <label for="name" className="label">Cliente</label>
-                  <input type="text" id="name" disabled placeholder="Nombre del usuario" className="input input-text" value={nameClient.nameclient+ ' ' + nameClient.surnameclient}/>
 
-                  <label for="idpet" className="label">Nombre mascota</label>
-                  <select id="idpet" name="idpet" className="input" onChange={e => setValues({...values,idpet: e.target.value})}>
-                      <option selected>Seleccionar</option>
-                      {namePets.map((pet,index) => {
-                        return <option value={pet.idpet}>{pet.namepet}</option>
-                      })}
-                  </select>
+                <input type="text" id="idpet"  className="input input-text" onChange={e => setValues({...values,idpet: e.target.value})}  value={values.idpet} hidden />
                   
+                  <div id="dataclient">
+                    <label for="dni" className="label">DNI Cliente</label>
+                    <input type="text" id="dni" placeholder="" className="input input-text" onChange={getName} />
+                    {errors.dni && <label className="errorMsg">{errors.dni}</label>}
+              
+                    <label for="name" className="label">Cliente</label>
+                    <input type="text" id="name" disabled placeholder="Nombre del usuario" className="input input-text" value={nameClient.nameclient+ ' ' + nameClient.surnameclient}/>
+                    {errors.name && <label className="errorMsg">{errors.name}</label>}
+
+                    <label for="idpet" className="label">Nombre mascota</label>
+                    <select id="idpet" name="idpet" className="input" onChange={e => setValues({...values,idpet: e.target.value})}>
+                        <option selected>Seleccionar</option>
+                        {namePets.map((pet,index) => {
+                          return <option value={pet.idpet}>{pet.namepet}</option>
+                        })}
+                    </select>
+                    {errors.idpet && <label className="errorMsg">{errors.idpet}</label>}
+                  </div>
+
+                  <span id="resume" className="label resume">{dataClient}</span>
+
                   <label for="idservice" className="label label-pet">Servicio</label>
-                  <select id="idservice" name="idservice" className="input" onChange={e => setValues({...values,idservice: e.target.value,duration: e.target.value === "1" ? 59: 29})}>
+                  <select id="idservice" name="idservice" className="input" onChange={e => setValues({...values,idservice: e.target.value,duration: e.target.value === "1" ? 59: 29})} value={values.idservice}>
                       <option selected>Seleccionar</option>
                       <option value="2">Consulta Médica</option>
                       <option value="1">Grooming</option>
                       <option value="3">Plan de vacunación</option>
                   </select>
+                  {errors.idservice && <label className="errorMsg">{errors.idservice}</label>}
 
                   <label for="dateappo" className="label">Fecha cita</label>
-                  <input type="date" id="dateappo" className="input input-text" onChange={e => setValues({...values,dateappo: e.target.value})}/>
-                  
+                  <input type="date" id="dateappo" className="input input-text" onChange={e => setValues({...values,dateappo: e.target.value})} value={values.dateappo} readOnly={isReadOnly}/>
+                  {errors.dateappo && <label className="errorMsg">{errors.dateappo}</label>}
+
                   <label for="timeappo" className="label">Hora Inicio</label>
-                  <input type="time" id="timeappo" className="input input-text" onChange={e => setValues({...values,timeappo: e.target.value})}/>
+                  <input type="time" id="timeappo" className="input input-text" onChange={e => setValues({...values,timeappo: e.target.value})} value={values.timeappo} readOnly={isReadOnly}/>
+                  {errors.timeappo && <label className="errorMsg">{errors.timeappo}</label>}
+
+                  <label for="status" className="label label-pet">Acción</label>
+                  <select id="status" name="status" className="input" onChange={e => setValues({...values,status: e.target.value})} value={values.status} disabled={isDisabled}>
+                      <option selected>Seleccionar</option>
+                      <option value="1">Agendado</option>
+                      <option value="2">Atendido</option>
+                      <option value="3">Cancelado</option>
+                  </select>
+                  {errors.status && <label className="errorMsg">{errors.status}</label>}
 
                   <label for="comment" className="label">Comentarios (Opcional)</label>
-                  <input type="text" id="comment" className="input input-text" onChange={e => setValues({...values,comment: e.target.value})}/>
+                  <input type="text" id="comment" className="input input-text" onChange={e => setValues({...values,comment: e.target.value})} value={values.comment} />
                    
                   <div className="button-section">
                       <input type="submit" value="Guardar" className="button primary-button"/> 
