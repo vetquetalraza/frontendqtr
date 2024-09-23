@@ -17,6 +17,7 @@ const [isDisabled, setIsDisabled] = useState(false);
 const [errors, setErrors] = useState({});
 const [dataClient, setDataClient] = useState('')
 const [values , setValues] = useState({
+  idappo: '',
   idpet:'',
   idservice: '',
   dateappo: '',
@@ -121,7 +122,7 @@ const handleSelect = (info) => {
     
     setIsReadOnly(true)
     setIsDisabled(true)
-    setValues({...values,timeappo: moment(start).format("HH:mm"),dateappo: moment(start).format("yyyy-MM-DD"),status:1,idpet:0})
+    setValues({...values,timeappo: moment(start).format("HH:mm"),dateappo: moment(start).format("yyyy-MM-DD"),status:1,idappo:0})
 
     const popup = document.getElementById("btnPopup");
     popup.click()
@@ -133,6 +134,7 @@ const handleSelect = (info) => {
 
   const handleSubmit = (e) => {
       e.preventDefault();
+      console.log(values)
       const validationErrors = validateForm();
       if (Object.keys(validationErrors).length === 0) {
         axios.post('https://api-vet-2utn.onrender.com/api/v1/appointments/',values)
@@ -148,6 +150,7 @@ const handleSelect = (info) => {
           });
           //Limpiar campos
           e.target.reset();
+          handleClear();
           //Actualizar vista
           load()
         }).catch(err => {
@@ -162,9 +165,7 @@ const handleSelect = (info) => {
         })
       } else {
         setErrors(validationErrors);
-      }
-
-     
+      }  
 }
 
 const handleEventClick = (info) => {
@@ -177,13 +178,12 @@ const handleEventClick = (info) => {
   const popup = document.getElementById("btnPopup");
   popup.click()
 
-  
-
   axios.get("https://api-vet-2utn.onrender.com/api/v1/appointments/"+info.event.id)
   .then(res => {
       console.log(res.data)
       setDataClient("Cliente: " + res.data[0].nameclient + " " + res.data[0].surnameclient + " // Mascota: " +res.data[0].namepet)
       setValues({...values,
+          idappo: res.data[0].idappointment,
           idpet: res.data[0].idpet,
           idservice: res.data[0].idvetservices,
           dateappo: res.data[0].dateappointment,
@@ -198,6 +198,7 @@ const handleEventClick = (info) => {
 const handleClear = () => {
   setNameClient({nameclient: "Nombre del",surnameclient: "Usuario"});
   setValues({...values,
+    idappo: '',
     idpet:'',
     idservice: '',
     dateappo: '',
@@ -289,8 +290,9 @@ const validateForm = () => {
 
               <form action="/" className="form" onSubmit={handleSubmit}>
 
-                <input type="text" id="idpet"  className="input input-text" onChange={e => setValues({...values,idpet: e.target.value})}  value={values.idpet} hidden />
-                  
+                  <input type="text" id="idappo"  className="input input-text" onChange={e => setValues({...values,idappo: e.target.value})}  value={values.idappo} hidden />
+                  <input type="text" id="idpet"  className="input input-text" onChange={e => setValues({...values,idpet: e.target.value})}  value={values.idpet} hidden />
+
                   <div id="dataclient">
                     <label for="dni" className="label">DNI Cliente</label>
                     <input type="text" id="dni" placeholder="" className="input input-text" onChange={getName} />
