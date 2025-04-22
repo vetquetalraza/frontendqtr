@@ -8,6 +8,7 @@ import atencion from '../assets/icons/medical.png';
 import historial from '../assets/icons/historial-medico.png';
 import inventario from '../assets/icons/verificar.png';
 import reporte from '../assets/icons/estadisticas.png';
+import { Link } from 'react-router-dom';
 
 const Sidebar = () => {
 
@@ -17,35 +18,35 @@ const Sidebar = () => {
             <ul>
                 <li className="option-menu">
                     <img src={inicio} alt="Inicio" className="icon-menu"/>
-                    <a href="/home" >Inicio</a>
+                    <a href="/system/home" >Inicio</a>
                 </li>
                 <li className="option-menu">
                     <img src={cliente} alt="Clientes" className="icon-menu"/>
-                    <a href="/clients">Clientes</a>
+                    <a href="/system/clients">Clientes</a>
                 </li>
                 <li className="option-menu">
                     <img src={mascota} alt="Mascotas" className="icon-menu"/>
-                    <a href="/pets">Mascotas</a>
+                    <a href="/system/pets">Mascotas</a>
                 </li>
                 <li className="option-menu">
                     <img src={cita} alt="Citas" className="icon-menu"/>
-                    <a href="/appointment">Citas</a>
+                    <a href="/system/appointment">Citas</a>
                 </li>
                 <li className="option-menu">
                     <img src={atencion} alt="Atenciones" className="icon-menu"/>
-                    <a href="/care">Atenciones</a>
+                    <a href="/system/care">Atenciones</a>
                 </li>
                 <li className="option-menu">
                     <img src={historial} alt="Historial Clínico" className="icon-menu"/>
-                    <a href="/history">Historial Clínico</a>
+                    <a href="/system/history">Historial Clínico</a>
                 </li>
                 <li className="option-menu">
                     <img src={inventario} alt="Inventario" className="icon-menu"/>
-                    <a href="/inventory">Inventario</a>
+                    <a href="/system/inventory">Inventario</a>
                 </li>
                 <li className="option-menu">
                     <img src={reporte} alt="Reportes" className="icon-menu"/>
-                    <a href="/reports">Reportes</a>
+                    <a href="/system/reports">Reportes</a>
                 </li>
             </ul>
         </div>

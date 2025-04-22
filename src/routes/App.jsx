@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import PrivateRoute from '../containers/PrivateRoute';
 import Layout from '../containers/Layout';
 import Appointment from '../containers/Appointment';
 import Care from '../containers/Care';
@@ -15,22 +16,37 @@ import '../styles/global.css';
 const App = () => {
 
     return(
-            <BrowserRouter>
-                <Layout>
-                    <Routes>
-                        <Route exact path="/appointment" element={<Appointment/>}/>
-                        <Route exact path="/care" element={<Care/>}/>
-                        <Route exact path="/clients" element={<Client/>}/>
-                        <Route exact path="/history" element={<History/>}/>
-                        <Route exact path="/home" element={<Home/>}/>
-                        <Route exact path="/inventory" element={<Inventory/>}/>
-                        <Route exact path="/login" element={<Login/>}/>
-                        <Route exact path="/pets" element={<Pet/>}/>
-                        <Route exact path="/reports" element={<Report/>}/>
-                        <Route path="*" element={<Home/>}/> 
-                    </Routes>        
-                </Layout>
-            </BrowserRouter>
+        <BrowserRouter>
+          <Routes>
+            {/* Ruta pública */}
+            <Route path="/login" element={<Login />} />
+    
+            {/* Rutas protegidas bajo /system */}
+            <Route 
+              path="/system"
+              element={
+                <PrivateRoute>
+                  <Layout />
+                </PrivateRoute>
+              }
+            >
+              <Route path="home" element={<Home />} />
+              <Route path="appointment" element={<Appointment />} />
+              <Route path="care" element={<Care />} />
+              <Route path="clients" element={<Client />} />
+              <Route path="history" element={<History />} />
+              <Route path="inventory" element={<Inventory />} />
+              <Route path="pets" element={<Pet />} />
+              <Route path="reports" element={<Report />} />
+              {/* Ruta por defecto dentro de /system */}
+              <Route path="*" element={<Home />} />
+            </Route>
+  
+            {/* Fallback general fuera de /system */}
+            <Route path="*" element={<Login />} />
+          </Routes>
+        </BrowserRouter>
+
     );
 }
 
