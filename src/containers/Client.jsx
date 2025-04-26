@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/global.scss';
-import axios from 'axios';
 import Swal from 'sweetalert2'
 import MyDataTable from '../components/Datatable';
+import api from '../services/api';
 
 const Client = () => {
 
-    const url = 'https://api-vet-2utn.onrender.com/api/v1/clients/';
     const [data, setData] = useState([]);
 
     // Definimos las columnas para el DataTable
@@ -33,7 +32,7 @@ const Client = () => {
 
     const handleList = (id) => {
         setIsReadOnly(true)
-        axios.get(url+id)
+        api.get('/clients'+id)
         .then(res => {
             console.log(res.data);
       
@@ -59,7 +58,7 @@ const Client = () => {
             confirmButtonText: "Sí, eliminarlo."
           }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(url+id)
+                api.delete('/clients'+id)
                 .then(res => {
                     console.log(res);
                     Swal.fire({
@@ -90,7 +89,7 @@ const Client = () => {
         const validationErrors = validateForm();
         if (Object.keys(validationErrors).length === 0) {
             const close = document.querySelector(".close");
-            axios.post(url,values)
+            api.post('/clients',values)
             .then(res => {
                 console.log(res);
                 close.click();
@@ -132,7 +131,7 @@ const Client = () => {
     }
 
     const handleLoad = () => {
-        axios.get(url)
+        api.get('/clients')
         .then(res => setData(Array.from(res.data)))
         .catch(err => console.log(err));
     }
