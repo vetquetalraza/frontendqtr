@@ -4,6 +4,7 @@ import axios from 'axios';
 import moment from 'moment'; 
 import Swal from 'sweetalert2'
 import Select from 'react-select'
+import api from '../services/api';
 
 const Care = () => {
     
@@ -50,7 +51,7 @@ const Care = () => {
     const handleChange = () => {
         const start = document.getElementById('startDate').value;
         const end = document.getElementById('endDate').value;
-        axios.get('https://api-vet-2utn.onrender.com/api/v1/care/'+start+"&"+end)
+        api.get('/care/'+start+"&"+end)
         .then(res => setData(Array.from(res.data)))
         .catch(err => console.log(err));
     };
@@ -80,28 +81,28 @@ const Care = () => {
         setGrooming({...grooming,idappo: event.target.dataset.appo})
 
         //Listar vacunas con stock
-        axios.get('https://api-vet-2utn.onrender.com/api/v1/vaccines/filter')
+        api.get('/vaccines/filter')
         .then(res => setVaccine(Array.from(res.data)))
         .catch(err => console.log(err));
 
         //Listar historial de vacunas de la mascota
         var pet = event.target.dataset.pet;
-        axios.get('https://api-vet-2utn.onrender.com/api/v1/plan/'+pet)
+        api.get('/plan/'+pet)
         .then(res => setHistory(Array.from(res.data)))
         .catch(err => console.log(err));
 
         //Listar símtomas
-        axios.get('https://api-vet-2utn.onrender.com/api/v1/symptoms')
+        api.get('/symptoms')
         .then(res => setSymptoms(Array.from(res.data)))
         .catch(err => console.log(err));
 
-        //Listar símtomas
-        axios.get('https://api-vet-2utn.onrender.com/api/v1/diagnosis')
+        //Listar diagnostico
+        api.get('/diagnosis')
         .then(res => setDiagnosis(Array.from(res.data)))
         .catch(err => console.log(err));
 
-        //Listar símtomas
-        axios.get('https://api-vet-2utn.onrender.com/api/v1/drugs/med')
+        //Listar medicamentos
+        api.get('/drugs/med')
         .then(res => setMedicines(Array.from(res.data)))
         .catch(err => console.log(err));
 
@@ -110,7 +111,7 @@ const Care = () => {
 
     const loadData = () => {
         let date = moment().format("YYYY-MM-DD")
-        axios.get('https://api-vet-2utn.onrender.com/api/v1/care/'+date+'&'+date)
+        api.get('/care/'+date+'&'+date)
         .then(res => setData(Array.from(res.data)))
         .catch(err => console.log(err));
     }
@@ -149,7 +150,7 @@ const Care = () => {
     const handleSubmitMedic = (e) => {
         e.preventDefault();
         console.log(medical)
-        axios.post('https://api-vet-2utn.onrender.com/api/v1/medical',medical)
+        api.post('/medical/',medical)
         .then(res => {
             console.log(res);
             close.click();
@@ -181,7 +182,7 @@ const Care = () => {
         e.preventDefault();
         setValues({...values,idvaccine: vaccineSel});
         console.log(values)
-        axios.post('https://api-vet-2utn.onrender.com/api/v1/plan',values)
+        api.post('/plan/',values)
         .then(res => {
             console.log(res);
             close.click();
@@ -271,7 +272,7 @@ const Care = () => {
     const handleSubmitGrooming = (e) => {
         e.preventDefault();
         console.log(grooming)
-        axios.post('https://api-vet-2utn.onrender.com/api/v1/grooming',grooming)
+        api.post('/grooming/',grooming)
         .then(res => {
             console.log(res);
             close.click();
@@ -328,7 +329,7 @@ return (
                         <td>{care.namepet}</td>
                         <td>{care.namespeciepet}</td>
                         <td>{care.namevetservices}</td>
-                        <td className="text-wait"> {care.statusappointment}</td>
+                        <td className="text-wait"> {care.statusappointment == '1' ? 'Agendado' : 'Cancelado'}</td>
                         <td> 
                             <a className="button button-edit" data-appo={care.idappointment} data-pet={care.idpet} onClick={handleOpen} href={selectForm(care.idvetservices)}>Atender</a>
                         </td>

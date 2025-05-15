@@ -32,7 +32,7 @@ const Client = () => {
 
     const handleList = (id) => {
         setIsReadOnly(true)
-        api.get('/clients'+id)
+        api.get('/clients/'+id)
         .then(res => {
             console.log(res.data);
       
@@ -58,7 +58,7 @@ const Client = () => {
             confirmButtonText: "Sí, eliminarlo."
           }).then((result) => {
             if (result.isConfirmed) {
-                api.delete('/clients'+id)
+                api.delete('/clients/'+id)
                 .then(res => {
                     console.log(res);
                     Swal.fire({

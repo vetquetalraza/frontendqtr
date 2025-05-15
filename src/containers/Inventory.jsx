@@ -3,6 +3,7 @@ import DataTable from "react-data-table-component"
 import '../styles/global.scss';
 import axios from 'axios';
 import Swal from 'sweetalert2'
+import api from '../services/api';
 
 const Inventory = () => {
     const [data, setData] = useState([])
@@ -64,7 +65,7 @@ const Inventory = () => {
         e.preventDefault();
         console.log(values);
         const close = document.querySelector(".close");
-        axios.post('https://api-vet-2utn.onrender.com/api/v1/drugs',values)
+        api.post('/drugs/',values)
         .then(res => {
             console.log(res);
             close.click();
@@ -94,7 +95,7 @@ const Inventory = () => {
         e.preventDefault();
         console.log(income);
         const close = document.querySelector(".close");
-        axios.post('https://api-vet-2utn.onrender.com/api/v1/batch',income)
+        api.post('/batch/',income)
         .then(res => {
             console.log(res);
             close.click();
@@ -121,7 +122,7 @@ const Inventory = () => {
     }
     
     useEffect(()=>{
-        axios.get('https://api-vet-2utn.onrender.com/api/v1/drugs')
+        api.get('/drugs')
         .then(res => setData(Array.from(res.data)))
         .catch(err => console.log(err));
     }, [])

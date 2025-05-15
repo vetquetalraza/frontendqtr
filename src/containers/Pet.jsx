@@ -3,10 +3,9 @@ import '../styles/pet.scss';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import MyDataTable from '../components/Datatable';
+import api from '../services/api';
 
 const Pet = () => {
-
-    const url='https://api-vet-2utn.onrender.com/api/v1/pets/'
 
     const [data, setData] = useState([])
     const [nameClient, setNameClient] = useState([])
@@ -38,7 +37,7 @@ const Pet = () => {
     })
 
     const handleLoad = () => {
-        axios.get(url)
+        api.get("/pets/")
         .then(res => setData(Array.from(res.data)))
         .catch(err => console.log(err));
     }
@@ -72,7 +71,7 @@ const Pet = () => {
     const getName = (e) =>{
         if (e.target.value.length >= 8) {
             setValues({...values,client: e.target.value})
-            axios.get('https://api-vet-2utn.onrender.com/api/v1/clients/' + e.target.value)
+            api.get('/clients/' + e.target.value)
             .then( res => {
                 if(res.data[0]){
                     setNameClient(res.data[0])
@@ -91,7 +90,7 @@ const Pet = () => {
         if (Object.keys(validationErrors).length === 0) {
             const close = document.querySelector(".close");
 
-                axios.post(url,values)
+                api.post("/pets/",values)
                 .then(res => {
                     console.log(res);
                     close.click();
@@ -125,7 +124,7 @@ const Pet = () => {
     }
 
     const handleList = (id) => {
-        axios.get(url+id)
+        api.get("/pets/"+id)
         .then(res => {
             console.log(res.data);
             setNameClient({nameclient: res.data[0].nameclient,surnameclient: res.data[0].surnameclient});
@@ -157,7 +156,7 @@ const Pet = () => {
             confirmButtonText: "Sí, eliminarlo."
           }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(url+id)
+                api.delete("/pets/"+id)
                 .then(res => {
                     console.log(res);
                     Swal.fire({

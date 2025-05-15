@@ -6,6 +6,7 @@ import EventItem from '../hooks/useGetEvent';
 import axios from 'axios';
 import Swal from 'sweetalert2'
 import moment from 'moment'; 
+import api from '../services/api';
 
 export default function Calendar() {
 
@@ -44,7 +45,7 @@ const getColor = (e) => {
 }
 
 const load = () => {
-  axios.get('https://api-vet-2utn.onrender.com/api/v1/appointments')
+  api.get('/appointments')
   .then(res => {
     
     var data = Array.from(res.data);
@@ -86,7 +87,7 @@ const [nameClient, setNameClient] = useState([])
 const getName = (e) =>{
     if (e.target.value.length >= 8) {
         setValues({...values,client: e.target.value})
-        axios.get('https://api-vet-2utn.onrender.com/api/v1/clients/' + e.target.value)
+        api.get('/clients/' + e.target.value)
         .then( res => {
             if(res.data[0]){
                 setNameClient(res.data[0]);
@@ -108,7 +109,7 @@ const [namePets, setNamePets] = useState([])
 
 const getPets = (id) =>{
 
-  axios.get('https://api-vet-2utn.onrender.com/api/v1/pets/client/' + id)
+  api.get('/pets/client/' + id)
   .then( res => setNamePets(Array.from(res.data)))
   .catch(err => console.log(err));
 
@@ -137,7 +138,7 @@ const handleSelect = (info) => {
       console.log(values)
       const validationErrors = validateForm();
       if (Object.keys(validationErrors).length === 0) {
-        axios.post('https://api-vet-2utn.onrender.com/api/v1/appointments/',values)
+        api.post('/appointments/',values)
         .then(res => {
           console.log(res);
           close.click();
@@ -178,7 +179,7 @@ const handleEventClick = (info) => {
   const popup = document.getElementById("btnPopup");
   popup.click()
 
-  axios.get("https://api-vet-2utn.onrender.com/api/v1/appointments/"+info.event.id)
+  api.get("/appointments/"+info.event.id)
   .then(res => {
       console.log(res.data)
       setDataClient("Cliente: " + res.data[0].nameclient + " " + res.data[0].surnameclient + " // Mascota: " +res.data[0].namepet)
