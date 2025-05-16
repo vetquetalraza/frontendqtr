@@ -34,7 +34,7 @@ const Client = () => {
         setIsReadOnly(true)
         api.get('/clients/'+id)
         .then(res => {
-            console.log(res.data);
+            //console.log(res.data);
       
             setValues({...values,
                 dni:res.data[0].dniclient,

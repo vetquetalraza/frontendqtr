@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import DataTable from "react-data-table-component"
 import '../styles/global.scss';
-import axios from 'axios';
 import Swal from 'sweetalert2'
 import api from '../services/api';
 
@@ -56,7 +55,7 @@ const Inventory = () => {
         },
         {
             name: "Acciones",
-            cell: row => <><a class="button button-edit" href="#popup2" data-drug={row.iddrug} onClick={e => setIncome({...income,iddrug: e.target.dataset.drug})}>Agregar</a><a class="button button-delete" href="#popup">Editar</a></>,
+            cell: row => <><a class="button button-edit" href="#popup2" data-drug={row.iddrug} onClick={e => setIncome({...income,iddrug: e.target.dataset.drug})}>Agregar</a><a class="button button-delete" href="#popup" onClick={() => handleList(row.iddrug)}>Editar</a></>,
             wrap: true
         },
     ]
@@ -77,6 +76,7 @@ const Inventory = () => {
                 timer: 1500
               });
             //Limpiar campos
+            handleLoad();
             e.target.reset();
         })
         .catch(err => {
@@ -108,6 +108,7 @@ const Inventory = () => {
               });
             //Limpiar campos
             e.target.reset();
+            handleLoad();
         })
         .catch(err => {
             console.log(err);
@@ -120,11 +121,29 @@ const Inventory = () => {
               });
         })
     }
-    
-    useEffect(()=>{
+
+    const handleList = (id) => {
+        api.get('/drugs/'+id)
+        .then(res => {   
+            console.log(res.data)   
+            setValues({...values,
+                name:res.data[0].namedrug,
+                description:res.data[0].descriptiondrug,
+                brand:res.data[0].branddrug,
+                presentation:res.data[0].presentationdrug,
+                quantity:res.data[0].quantityperpresentation,
+                category:res.data[0].categorydrug,});
+        }).catch(err => console.log(err))
+    }
+
+    const handleLoad = () => {
         api.get('/drugs')
         .then(res => setData(Array.from(res.data)))
         .catch(err => console.log(err));
+    }
+    
+    useEffect(()=>{
+        handleLoad()
     }, [])
 
 
@@ -152,16 +171,16 @@ return (
                     <form action="/" className="form" onSubmit={handleSubmit} >
 
                         <label for="name" className="label">Nombre Medicina</label>
-                        <input type="text" id="name" placeholder=""  onChange={e => setValues({...values,name: e.target.value})} className="input input-text"/>
+                        <input type="text" id="name" placeholder=""  value={values.name} onChange={e => setValues({...values,name: e.target.value})} className="input input-text"/>
                            
                         <label for="description" className="label">Descripcion Medicina</label>
-                        <input type="text" id="description" placeholder=""   onChange={e => setValues({...values,description: e.target.value})} className="input input-text"/>
+                        <input type="text" id="description" placeholder=""  value={values.description} onChange={e => setValues({...values,description: e.target.value})} className="input input-text"/>
                         
                         <label for="brand" className="label">Marca Medicina </label>
-                        <input type="text" id="brand" placeholder=""  onChange={e => setValues({...values,brand: e.target.value})} className="input input-text"/>
+                        <input type="text" id="brand" placeholder="" value={values.brand} onChange={e => setValues({...values,brand: e.target.value})} className="input input-text"/>
         
                         <label for="presentation" className="label">Presentación</label>
-                        <select id="presentation" name="specie" className="input" onChange={e => setValues({...values,presentation: e.target.value})}>
+                        <select id="presentation" name="specie" className="input" value={values.presentation} onChange={e => setValues({...values,presentation: e.target.value})}>
                             <option disabled selected>Seleccionar</option>
                             <option value="Gel Ml">Gel Ml</option>
                             <option value="Gel Mg">Gel Mg</option>
@@ -174,10 +193,10 @@ return (
                         </select>
         
                         <label for="quantity" className="label">Cantidad por presentación</label>
-                        <input type="text" id="quantity" placeholder=""  onChange={e => setValues({...values,quantity: e.target.value})} className="input input-text"/>
+                        <input type="text" id="quantity" placeholder=""  value={values.quantity} onChange={e => setValues({...values,quantity: e.target.value})} className="input input-text"/>
 
                         <label for="category" className="label">Categoría</label>
-                        <select id="specie" name="category" className="input" onChange={e => setValues({...values,category: e.target.value})}>
+                        <select id="specie" name="category" className="input" value={values.category} onChange={e => setValues({...values,category: e.target.value})}>
                             <option disabled selected>Seleccionar</option>
                             <option value="Anestesicos y Tranquilizantes">Anestesicos y Tranquilizantes</option>
                             <option value="Antibióticos y Antiinflamatorios">Antibióticos y Antiinflamatorios</option>

@@ -144,6 +144,7 @@ const Care = () => {
         setNewIdMaterial('');
         setNewMaterial('');
         setNewDosage('');
+        
         }
     };
 
@@ -418,7 +419,7 @@ return (
                                     }}
                                 />
                                 <label for="materials" className="label label-care">Medicamentos e insumos utilizados durante la atención</label>
-                                <select className="input" value={newMaterial} onChange={(e) => {
+                                <select className="input" onChange={(e) => {
                                     setNewIdMaterial(e.target.value);
                                     setNewMaterial(e.target.selectedOptions[0].label)
                                 }}>
