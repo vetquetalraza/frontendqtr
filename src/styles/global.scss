@@ -436,13 +436,32 @@ nav {
     border: 1px solid var(--hover-color);
   }
 
-  .filter {
-    margin-right: 10px;
-    margin-left: 5px;
-  }
+
   
   .table-header {
     margin-top: 10px;
+  }
+
+  .table-header-history {
+    margin-top: 10px;
+    display: flex;
+    justify-content: start;
+    gap: 15px;
+    align-items: center;
+    border-style: solid;
+    border-color: #c3c6ca;
+    border-width: 1px;
+    border-radius: 10px;
+    padding: 15px;
+    width: fit-content;
+  }
+
+  .table-header-history  button{
+    width: 100px; 
+  }
+
+  .table-header-history  input, .table-header-history  select{
+    width: 200px;
   }
   /* popup */
   .overlay {
@@ -562,14 +581,22 @@ nav {
   grid-template-columns: auto auto auto;
 }
 
-.popup-care {
+.popup {
   margin: 70px auto;
   padding: 20px;
   background: #fff;
   border-radius: 5px;
-  width: 65%;
   position: relative;
   transition: all 5s ease-in-out;
+
+}
+
+.popup-medical {
+  width: 65%;
+}
+
+.popup-care{
+  width: 50%;
 }
 
 .label-care {
@@ -603,13 +630,21 @@ nav {
   width: 100%;
   margin-top: 10px;
   margin-bottom: 10px;
-
+  border-radius: 8px;
 }
 
-.table-inventory td {
-  border: 1px solid #ddd;
+.table-inventory thead {
+  background-color: #525353;
+  color: #fff;
 }
 
+.table-inventory tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.table-inventory th, .table-inventory td {
+  padding: 8px 10px;
+}
 
 .input-table
 {
@@ -659,25 +694,41 @@ nav {
 
 .options-vaccine  {
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  width: 60%;
+  justify-content: start;
+  gap: 15px;
+  align-items: center;
+  width: fit-content;
 }
 
-.options-vaccine select {
-  width: 70%;
-  margin-right: 10px;
+.options-vaccine  input, .options-vaccine  select{
+  width: 200px;
+}
+
+.options-vaccine-second {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.options-vaccine-second .col {
+  flex: 1 1 300px; /* ancho mínimo y flexible */
+}
+
+.options-vaccine-second input,
+.options-vaccine-second textarea {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .tables-data-vaccine {
   margin-top: 10px;
-  display: flex;
-  justify-content: space-between;
+  display: block;
   gap: 10px;
   margin-bottom: 10px;
 }
 .tables-data-vaccine div {
-  width: 80%;
+  width: 100%;
 }
 
 //Consulta médica

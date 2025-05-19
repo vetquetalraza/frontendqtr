@@ -3,7 +3,6 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction';
 import React, { useEffect, useState } from 'react';
 import EventItem from '../hooks/useGetEvent';
-import axios from 'axios';
 import Swal from 'sweetalert2'
 import moment from 'moment'; 
 import api from '../services/api';

@@ -4,7 +4,9 @@ import axios from 'axios';
 import moment from 'moment'; 
 import Swal from 'sweetalert2'
 import Select from 'react-select'
+import MyDataTable from '../components/Datatable';
 import api from '../services/api';
+
 
 const Care = () => {
     
@@ -17,6 +19,18 @@ const Care = () => {
     const [diagnosis , setDiagnosis] = useState([])
     const [medicines , setMedicines] = useState([])
 
+    // Definimos las columnas para el DataTable
+    const columns = [
+        { name: "N°", cell: (row, index) => index + 1},
+        { name: 'Fecha y Hora', selector: row => row.dateappointment + " " + row.timeappointment, sortable: true },
+        { name: 'Cliente', selector: row => row.nameclient + " " + row.surnameclient, sortable: true },
+        { name: 'Mascota', selector: row => row.namepet, sortable: true },
+        { name: 'Especie', selector: row => row.namespeciepet, sortable: true },
+        { name: 'Servicio', selector: row => row.namevetservices, sortable: true },
+        { name: 'Estado', selector: row => <><label className="text-wait">{row.statusappointment == '1' ? 'Agendado' : ''}</label></>, sortable: true },
+        { name: 'Acciones', cell: row => <><a className="button button-edit" data-appo={row.idappointment} data-pet={row.idpet} onClick={handleOpen} href={selectForm(row.idvetservices)}>Atender</a></>}
+    ];
+    
     const [medical, setMedical] = useState({
         idappo: '',
         anamnesis: '',
@@ -303,43 +317,21 @@ const Care = () => {
 return (
     <>
         <label for="" className="title">Atenciones</label>
-        <div className="table-header">
-            <label htmlFor="" className="label">Inicio:</label><input type="date" id="startDate" className="input input-text filter"/>
-            <label htmlFor="" className="label">Fin:</label><input type="date" id="endDate" className="input input-text filter"/>
-            <button onClick={handleChange} className="button button-edit">Filtrar</button>
+        <div className="table-header-history">
+            <div>
+                <label htmlFor="" className="label">Inicio</label>
+                <input type="date" id="startDate" className="input input-text"/>
+            </div>
+            <div>
+                <label htmlFor="" className="label">Fin</label>
+                <input type="date" id="endDate" className="input input-text"/>
+            </div>
+            <button onClick={handleChange} className="button primary-button">Filtrar</button>
         </div>
-        <table className="table">
-            <thead>
-                <tr>
-                    <th>N°</th>
-                    <th>Fecha y Hora</th>
-                    <th>Cliente</th>
-                    <th>Mascota</th>
-                    <th>Especie</th>
-                    <th>Servicio</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {data.map((care,index) => {
-                return <tr key={index}>
-                        <td>{index + 1}</td>
-                        <td>{care.dateappointment} {care.timeappointment}</td>
-                        <td>{care.nameclient} {care.surnameclient}</td>
-                        <td>{care.namepet}</td>
-                        <td>{care.namespeciepet}</td>
-                        <td>{care.namevetservices}</td>
-                        <td className="text-wait"> {care.statusappointment == '1' ? 'Agendado' : 'Cancelado'}</td>
-                        <td> 
-                            <a className="button button-edit" data-appo={care.idappointment} data-pet={care.idpet} onClick={handleOpen} href={selectForm(care.idvetservices)}>Atender</a>
-                        </td>
-                    </tr>
-                })}  
-            </tbody>
-        </table>
+        <MyDataTable columns={columns} data={data} />
+
         <div id="popup1" className="overlay">
-                <div className="popup-care">
+                <div className="popup popup-care">
                     <div className="popup-header">
                         <label className="title">Datos grooming</label>
                         <a className="close" href="#">&times;</a>
@@ -373,7 +365,7 @@ return (
                 </div>
         </div>
         <div id="popup2" className="overlay">
-            <div className="popup-care">
+            <div className="popup popup-medical">
                 <div className="popup-header">
                     <label className="title">Datos atención médica</label>
                     <a className="close" href="#">&times;</a>
@@ -468,30 +460,36 @@ return (
              </div>
         </div>
         <div id="popup3" className="overlay">
-            <div className="popup-care">
+            <div className="popup popup-care">
                 <div className="popup-header">
                     <label className="title">Datos Vacunación</label>
                     <a className="close" href="#">&times;</a>
                 </div>
                 <div className="content">
                     <form action="/" className="form" onSubmit={handleSubmitVaccine}>
-                        <label for="idvaccine" className="label">Seleccione vacuna y número de dosis:</label>
+                        
                         <div className="options-vaccine">
-                            <select id="idvaccine" name="vaccine" className="input">
-                                <option selected>Seleccionar</option>
-                                {vaccine.map((vaccine,index) => {
-                                    return <option value={vaccine.iddrug}>{vaccine.namedrug} - {vaccine.presentationdrug} {vaccine.quantityperpresentation}</option>
-                                })}     
-                            </select>
-                            <select name="numero-dosis" className="input" id="id-dosage">
-                                <option selected>Seleccionar</option>
-                                <option value="1">Primera dosis</option>
-                                <option value="2">Segunda dosis</option>
-                                <option value="3">Tercera dosis </option>
-                                <option value="4">Cuarta dosis</option>
-                                <option value="5">Quinta dosis</option>
-                            </select>
-                            <div><a onClick={handleAddRow} className="button button-edit">Agregar</a></div>
+                            <div>
+                                <label for="idvaccine" className="label">Seleccione vacuna</label>
+                                <select id="idvaccine" name="vaccine" className="input">
+                                    <option selected>Seleccionar</option>
+                                    {vaccine.map((vaccine,index) => {
+                                        return <option value={vaccine.iddrug}>{vaccine.namedrug} - {vaccine.presentationdrug} {vaccine.quantityperpresentation}</option>
+                                    })}     
+                                </select>
+                            </div>
+                            <div>
+                                <label for="idvaccine" className="label">Seleccione dosis</label>
+                                <select name="numero-dosis" className="input" id="id-dosage">
+                                    <option selected>Seleccionar</option>
+                                    <option value="1">Primera dosis</option>
+                                    <option value="2">Segunda dosis</option>
+                                    <option value="3">Tercera dosis </option>
+                                    <option value="4">Cuarta dosis</option>
+                                    <option value="5">Quinta dosis</option>
+                                </select>    
+                            </div>
+                            <a onClick={handleAddRow} className="button button-edit">Agregar</a>
                         </div>
                         <div className="tables-data-vaccine">
                             <div>
@@ -540,21 +538,23 @@ return (
                             </div>
                         </div>
                         
-                        
-                        <div>
-                            <div>
-                                <label for="temperature" className="label">Temperatura (c°) <input type="number" id="temperature" className="input input-text" min="0" step="0.1" onChange={e => setValues({...values,temperature: e.target.value})}/></label>
-                                
+                        <div className="options-vaccine-second">
+                            <div className="col">
+                                <div>
+                                    <label for="temperature" className="label">Temperatura (c°) </label>
+                                    <input type="number" id="temperature" className="input input-text" min="0" step="0.1" onChange={e => setValues({...values,temperature: e.target.value})}/> 
+                                </div>
+                                <div>
+                                    <label for="weight" className="label">Peso (kg) </label>
+                                    <input type="number" id="weight" className="input input-text" min="0" step="0.1" onChange={e => setValues({...values,weight: e.target.value})}/>
+                                </div>
                             </div>
-                            <div>
-                                <label for="weight" className="label">Peso (kg) <input type="number" id="weight" className="input input-text" min="0" step="0.1" onChange={e => setValues({...values,weight: e.target.value})}/></label>
-                                
+                            <div className="col">
+                                <label for="comments" className="label">Observaciones</label>
+                                <textarea className="textarea" rows="3" id="comments" onChange={e => setValues({...values,comments: e.target.value})}></textarea>
                             </div>
                         </div>
-                        
-                        <label for="anamnesis" className="label">Observaciones</label>
-                        <textarea className="textarea" rows="3" id="comments" onChange={e => setValues({...values,comments: e.target.value})}></textarea>
-            
+
                         <div className="button-section">
                             <input type="submit" value="Guardar" className="button primary-button"/> 
                         </div>

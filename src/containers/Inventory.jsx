@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import DataTable from "react-data-table-component"
 import '../styles/global.scss';
 import Swal from 'sweetalert2'
+import MyDataTable from '../components/Datatable';
 import api from '../services/api';
 
 const Inventory = () => {
@@ -24,41 +25,16 @@ const Inventory = () => {
         duedate: '',
     })
 
+    // Definimos las columnas para el DataTable
     const columns = [
-        {
-            name: "N°",
-            cell: (row, index) => index + 1
-        },
-        {
-            name: "Nombre",
-            selector: (row) => row.namedrug,
-            wrap: true
-        },
-        {
-            name: "Marca",
-            selector: (row) => row.branddrug,
-            wrap: true
-        },
-        {
-            name: "Descripción",
-            selector: (row) => row.descriptiondrug,
-            wrap: true
-        },
-        {
-            name: "Presentación",
-            selector: (row) => row.presentationdrug + " " + row.quantityperpresentation,
-            wrap: true
-        },
-        {
-            name: "Stock",
-            selector: (row) => row.total_batches - row.total_history
-        },
-        {
-            name: "Acciones",
-            cell: row => <><a class="button button-edit" href="#popup2" data-drug={row.iddrug} onClick={e => setIncome({...income,iddrug: e.target.dataset.drug})}>Agregar</a><a class="button button-delete" href="#popup" onClick={() => handleList(row.iddrug)}>Editar</a></>,
-            wrap: true
-        },
-    ]
+        { name: "N°", cell: (row, index) => index + 1},
+        { name: 'Nombre', selector: row => row.namedrug, sortable: true },
+        { name: 'Marca', selector: row => row.branddrug, sortable: true },
+        { name: 'Descripción', selector: row => row.descriptiondrug, sortable: true },
+        { name: 'Presentación', selector: row => row.presentationdrug + " " + row.quantityperpresentation, sortable: true },
+        { name: 'Stock', selector: row => row.total_batches - row.total_history, sortable: true },
+        { name: 'Acciones', cell: row => <><a class="button button-edit" href="#popup2" data-drug={row.iddrug} onClick={e => setIncome({...income,iddrug: e.target.dataset.drug})}>Agregar</a><a class="button button-delete" href="#popup" onClick={() => handleList(row.iddrug)}>Editar</a></>}
+    ];
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -152,15 +128,10 @@ return (
         <label for="" class="title">Medicamentos e Insumos</label>
         <div class="table-header">
             <div class="group-inventory">
-                <input class="input-inset" type="text" placeholder="Buscar"/> 
                 <a class="button button-new" href="#popup">Nuevo ingreso</a>
             </div>      
         </div>
-        <DataTable
-          columns={columns}
-          data={data}
-          pagination
-        />
+        <MyDataTable columns={columns} data={data} />
         <div id="popup" className="overlay">
             <div className="popup">
                 <div className="popup-header">
