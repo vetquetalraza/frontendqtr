@@ -21,9 +21,10 @@ const FilterComponent = ({ filterText, onFilter, onClear }) => (
 	<>	
 	<div className="custom-subheader">
 	<input class="input-inset" type="text" placeholder="Buscar" value={filterText} onChange={onFilter}/> 
-		<ClearButton type="button" onClick={onClear}>
+	
+		{/* <ClearButton type="button" onClick={onClear}>
 			X
-		</ClearButton>
+		</ClearButton> */}
 	</div>
 	
 		

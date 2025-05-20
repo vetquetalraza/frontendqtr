@@ -328,6 +328,7 @@ return (
             </div>
             <button onClick={handleChange} className="button primary-button">Filtrar</button>
         </div>
+        
         <MyDataTable columns={columns} data={data} />
 
         <div id="popup1" className="overlay">

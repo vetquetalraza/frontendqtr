@@ -409,7 +409,6 @@ nav {
   border-radius: 8px;
   font-size: var(--sm);
   text-decoration: none;
-  margin-left: 10px;
 }
 
 .input-inset{
@@ -454,6 +453,7 @@ nav {
     border-radius: 10px;
     padding: 15px;
     width: fit-content;
+    margin-bottom: 15px;
   }
 
   .table-header-history  button{
@@ -506,6 +506,15 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+
+  .popup-header-tables {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: flex-start;
+    align-items: start;
+    margin-bottom: 15px;
   }
 
   .close {
@@ -694,7 +703,7 @@ nav {
 
 .options-vaccine  {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   gap: 15px;
   align-items: center;
   width: fit-content;
@@ -760,4 +769,30 @@ nav {
 
 #dataclient input {
   width: 100%;
+}
+
+//History
+
+.report-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  border-style: solid;
+  border-color: #c3c6ca;
+  border-width: 1px;
+  border-radius: 10px;
+  padding: 15px;
+  width: 100%;
+
+}
+
+.content-photos {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.column-photo {
+  width: 50%;
 }

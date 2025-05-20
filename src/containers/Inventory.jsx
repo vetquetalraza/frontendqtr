@@ -125,11 +125,9 @@ const Inventory = () => {
 
 return (
     <>
-        <label for="" class="title">Medicamentos e Insumos</label>
-        <div class="table-header">
-            <div class="group-inventory">
-                <a class="button button-new" href="#popup">Nuevo ingreso</a>
-            </div>      
+        <div class="popup-header-tables">
+            <label for="" class="title">Medicamentos e Insumos</label>
+            <a class="button button-new" href="#popup">Nuevo ingreso</a>
         </div>
         <MyDataTable columns={columns} data={data} />
         <div id="popup" className="overlay">

@@ -178,12 +178,14 @@ const Client = () => {
     
     return (
         <>
-        <label for="" class="title">Clientes</label>
-        <div className="popup-header">
+        
+        <div className="popup-header-tables">
+            <label for="" class="title">Clientes</label>
             <a class="button button-new" onClick={() => setIsReadOnly(false)} href="#popup1">Nuevo Cliente</a>
         </div>
         
         <MyDataTable columns={columns} data={data} />
+        
         <div id="popup1" className="overlay">
             <div className="popup">
                 <div className="popup-header">

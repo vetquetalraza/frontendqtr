@@ -284,8 +284,8 @@ const Pet = () => {
 
 return (
     <>
-        <label for="" class="title">Mascotas</label>
-        <div class="popup-header">
+        <div class="popup-header-tables">
+            <label for="" class="title">Mascotas</label>
             <a class="button button-new" href="#popup1" onClick={e => setValues({...values,idpet: 0})}>Nueva Mascota</a>
         </div>
 
