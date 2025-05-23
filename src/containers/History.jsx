@@ -13,7 +13,7 @@ const History = () => {
         { name: 'Fecha y Hora', selector: row => row.dateappointment + " " + row.timeappointment, sortable: true },
         { name: 'Servicio', selector: row => row.namevetservices, sortable: true },
         { name: 'Estado', selector: row => row.statusappointment === '3' ? 'Atendido' : '', sortable: true },
-        { name: 'Acciones', cell: row => row.idvetservices === 1 ? <><a className="button button-edit" onClick={getGrooming(row.idappointment)} href="#popup1">Ver detalles</a></> : row.idvetservices === 2  ? <><a className="button button-edit" onClick={getMedical(row.idappointment)} href="#popup2">Ver detalles</a></> : <><a className="button button-edit" onClick={getPlan(row.idappointment)} href="#popup3">Ver detalles</a></> }
+        { name: 'Acciones', cell: row => row.idvetservices === 1 ? <><a className="button button-edit" onClick={() => getGrooming(row.idappointment)} href="#popup1">Ver detalles</a></> : row.idvetservices === 2  ? <><a className="button button-edit" onClick={ () => getMedical(row.idappointment)} href="#popup2">Ver detalles</a></> : <><a className="button button-edit" onClick={ () => getPlan(row.idappointment)} href="#popup3">Ver detalles</a></> }
     ];
 
     useEffect(()=>{
@@ -88,12 +88,14 @@ const History = () => {
     //Obtener detalles de Consulta Medica
 
     const [medical, setMedical] = useState({
+        idpetcare: '',
         idappo: '',
         anamnesis: '',
         weight: '',
         temperature: '',
         symptoms: [],
         diagnosis: [],
+        medicines: [],
         treatment: '',
         date: ''
     })
@@ -101,40 +103,51 @@ const History = () => {
     const getMedical = (id) => {
         api.get('/history/medical/'+id)
         .then(res => {
-            //console.log(res.data);
-      
+            console.log(res.data);
+            
             setMedical({...medical,
+                idpetcare: res.data[0].idpetcare,
                 idappo:res.data[0].idappointment,
                 anamnesis:res.data[0].anamnesispetcare,
                 weight:res.data[0].weightpetcare,
                 temperature:res.data[0].temperaturepetcare,
                 treatment:res.data[0].treatmentpetcare,
-                date: res.data[0].createat});
+                date: res.data[0].createat,
+                symptoms: res.data[0].symptoms,
+                diagnosis: res.data[0].diagnosis,
+                medicines: res.data[0].medicines});
         }).catch(err => console.log(err))
+
     }
 
     //Obtener detalles de Plan de vacunación
     const [plan, setPlan] = useState({
+        idschedule: '',
         idappo: '',
-        idvaccine: [],
         weight: '',
         temperature: '',
         comments: '',
-        date: ''
+        date: '',
+        vaccines: []
     })
 
+    const [vaccines, setVaccine] = useState([])
+
     const getPlan = (id) => {
-        api.get('/history/plan/'+id)
+         api.get('/history/plan/'+id)
         .then(res => {
             //console.log(res.data);
       
             setPlan({...plan,
+                idschedule: res.data[0].idvaccinescheduling,
                 idappo:res.data[0].idappointment,
                 weight:res.data[0].weigthvaccine,
                 temperature:res.data[0].temperaturevaccine,
                 comments:res.data[0].commentsvaccine,
-                date: res.data[0].createat});
-        }).catch(err => console.log(err))
+                date: res.data[0].createat,
+                vaccines: res.data[0].vaccines})
+        
+        }).catch(err => console.log(err))  
     }
 
 return (
@@ -171,72 +184,61 @@ return (
                     <a className="close" href="#">&times;</a>
                 </div>
                 <div className="report-content">
-                    <div>
-                        <label htmlFor="" className="label">Fecha y Hora Atención: {grooming.date}</label>
-                    </div>
+                    <label htmlFor="" className="label">1. Fecha y Hora Atención: {grooming.date}</label>
                     <div className="content-photos">
                          <div className="column-photo">
-                            <label for="before" className="label">Foto del antes!</label>
+                            <label for="before" className="label">2. Foto del antes!</label>
                             <div className="preview-pet"><img src={grooming.before} alt=""></img></div>
                             <label id="label_before"></label>
                         </div>
                         <div className="column-photo">
-                            <label for="after" className="label">Foto de ahora!</label>
+                            <label for="after" className="label">3. Foto de ahora!</label>
                             <div className="preview-pet"><img src={grooming.after} alt=""></img></div>
                         </div>
                     </div>
-                    <div>
-                        <label for="comment" className="label">Observaciones: {grooming.comment}</label>
-                    </div>
+                    <label for="comment" className="label">4. Observaciones: {grooming.comment}</label>
                 </div>
             </div>
         </div>
         <div id="popup2" className="overlay">
-            <div className="popup popup-medical">
+            <div className="popup popup-care">
                 <div className="popup-header">
                     <label className="title">Datos atención médica</label>
                     <a className="close" href="#">&times;</a>
                 </div>
                 <div className="report-content"> 
-                    <label className="label">Fecha y Hora Atención: {medical.date}</label>
-                    <div className="column1">  
-                        <div className="column2">
-                            <p className="label label-care">Anamnesis: {medical.anamnesis}</p>
-                            <label for="temperature" className="label">Temperatura: {medical.temperature} (c°)</label>
-                           
-                            <label for="weight" className="label">Peso: {medical.weight} (kg)</label>
-                      
-                        </div>
-                        <div className="column2">
-                            <label for="sintomas" className="label label-care">Síntomas</label>
-           
-                            <label for="diagnostico" className="label label-care">Diagnóstico</label>
-                                       
-                            <label for="materials" className="label label-care">Medicamentos e insumos utilizados durante la atención: </label>
-        
-                            <table className="table-inventory">
-                                <thead>
-                                <tr>
-                                    <th>N°</th>
-                                    <th>Medicamento / Insumo</th>
-                                    <th>Dosis</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {/* {rows.map( (row,index) => (
-                                    <tr key={row.id}>
-                                    <td>{index + 1}</td>
-                                    <td>{row.material}</td>
-                                    <td>{row.dosis}</td>
-                                    </tr>
-                                ))} */}
-                                </tbody>
-                            </table>
-                        </div> 
-                    </div> 
-
-                    <p className="label label-care">Tratamiento: {medical.treatment}</p>
-
+                    <label className="label">1. Fecha y Hora Atención: {medical.date}</label>
+                    <p className="label">2. Anamnesis: {medical.anamnesis}</p>
+                    <label for="temperature" className="label">3. Temperatura: {medical.temperature} (c°)</label>
+                    <label for="weight" className="label">4. Peso: {medical.weight} (kg)</label>
+                    <label className="label">5. Síntomas: </label>
+                    <ul className="label">
+                        {medical.symptoms.map((row,index) => ( <li>{row.name}</li>))}
+                    </ul>
+                    <label className="label">6. Diagnóstico:</label>
+                    <ul className="label">
+                        {medical.diagnosis.map((row,index) => ( <li>{row.name}</li>))}
+                    </ul>      
+                    <label className="label">7. Medicamentos e insumos utilizados durante la atención: </label>
+                    <table className="table-inventory">
+                        <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Medicamento / Insumo</th>
+                            <th>Dosis</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {medical.medicines.map( (row,index) => (
+                            <tr key={row.id}>
+                            <td>{index + 1}</td>
+                            <td>{row.name + " "+ row.presentation}</td>
+                            <td>{row.dosage}</td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                    <p className="label">8. Tratamiento: {medical.treatment}</p>
                 </div>
             </div>
         </div>
@@ -247,46 +249,29 @@ return (
                     <a className="close" href="#">&times;</a>
                 </div>
                 <div className="report-content">
-                    <label className="label">Fecha y Hora Atención: {plan.date}</label>
-                    <div>
-                        <label for="idvaccine" className="label">Vacunas aplicadas en la cita:</label>
-                        <table className="table-inventory">
-                            <thead>
-                                <tr>
-                                    <th>N°</th> 
-                                    <th>Número de dosis</th>
-                                    <th>Nombre vacuna</th>
-                                    <th>Fecha aplicación</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {/* {history.map((history,index) => {
-                            return <tr key={index}>
-                                    <td>{index + 1}</td>
-                                    <td>{history.numbervaccine}</td>
-                                    <td>{history.namedrug}</td>
-                                    <td>{history.dateappointment}</td>
-                                </tr>
-                            })}  */}
-                            </tbody> 
-                        </table>
-                    </div>
-
-                    <div className="col">
-                        <div>
-                            <label for="temperature" className="label">Temperatura: {plan.temperature} (c°) </label>
-                           
-                        </div>
-                        <div>
-                            <label for="weight" className="label">Peso: {plan.weight} (kg) </label>
-                            
-                        </div>
-                    </div>
-                    <div className="col">
-                        <p className="label">Observaciones: {plan.comments}</p>
-                    </div>
- 
-
+                    <label className="label">1. Fecha y Hora Atención: {plan.date}</label>
+                    <label for="idvaccine" className="label">2. Vacunas aplicadas en la cita:</label>
+                    <table className="table-inventory">
+                        <thead>
+                            <tr>
+                                <th>N°</th> 
+                                <th>Número de dosis</th>
+                                <th>Nombre vacuna</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {plan.vaccines.map((vaccine,index) => {
+                        return <tr key={index}>
+                                <td>{index + 1}</td>
+                                <td>{vaccine.number}</td>
+                                <td>{vaccine.name + " "+ vaccine.presentation }</td>
+                            </tr>
+                        })} 
+                        </tbody> 
+                    </table>
+                    <label for="temperature" className="label">3. Temperatura: {plan.temperature} (c°) </label>
+                    <label for="weight" className="label">4. Peso: {plan.weight} (kg) </label>
+                    <p className="label">5. Observaciones: {plan.comments}</p>
                 </div>
             </div>
         </div>
