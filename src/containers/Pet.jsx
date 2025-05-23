@@ -242,7 +242,6 @@ const Pet = () => {
               });
             }
         }
-
     }
 
     const validateForm = () => {
@@ -391,8 +390,6 @@ return (
                                     
                                     <div className="group-photo">
                                         <input id="photo" type="file" onChange={onFileChange}/>
-                                        <a className="button button-file" onClick={onUpload}>Subir</a>
-                                        
                                     </div>
                                     <div className="photo-preview"><img accept=".jpg, .jpeg, .png" src={filePath}/></div>
                                 </div>

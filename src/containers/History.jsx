@@ -71,10 +71,13 @@ const History = () => {
         date: ''
     })
 
+    const [filePath, setFilePath] = useState('');
+    const [filePath2, setFilePath2] = useState('');
+    
     const getGrooming = (id) => {
         api.get('/history/grooming/'+id)
         .then(res => {
-            //console.log(res.data);
+            console.log(res.data);
       
             setGrooming({...grooming,
                 idappo:res.data[0].idappointment,
@@ -82,7 +85,20 @@ const History = () => {
                 after:res.data[0].photoaftergroomingpet,
                 comment:res.data[0].commentsgroomingpet,
                 date:res.data[0].createat,});
+            
+            setFilePath('https://api-vet-2utn.onrender.com' +"/uploads/"+res.data[0].photobeforegroomingpet);
+            setFilePath2('https://api-vet-2utn.onrender.com' +"/uploads/"+res.data[0].photoaftergroomingpet);
         }).catch(err => console.log(err))
+    }
+
+    const handleClearGrooming = () => {
+        setGrooming({...grooming,
+            idappo: '',
+            before: '',
+            after: '',
+            comment: '',
+            date: ''
+        })
     }
 
     //Obtener detalles de Consulta Medica
@@ -120,6 +136,21 @@ const History = () => {
 
     }
 
+    const handleClearMedical = () => {
+        setMedical({...medical,
+            idpetcare: '',
+            idappo: '',
+            anamnesis: '',
+            weight: '',
+            temperature: '',
+            symptoms: [],
+            diagnosis: [],
+            medicines: [],
+            treatment: '',
+            date: ''
+        })
+    }
+
     //Obtener detalles de Plan de vacunación
     const [plan, setPlan] = useState({
         idschedule: '',
@@ -130,8 +161,6 @@ const History = () => {
         date: '',
         vaccines: []
     })
-
-    const [vaccines, setVaccine] = useState([])
 
     const getPlan = (id) => {
          api.get('/history/plan/'+id)
@@ -148,6 +177,18 @@ const History = () => {
                 vaccines: res.data[0].vaccines})
         
         }).catch(err => console.log(err))  
+    }
+
+    const handleClearPlan = () => {
+        setPlan({...plan,
+            idschedule: '',
+            idappo: '',
+            weight: '',
+            temperature: '',
+            comments: '',
+            date: '',
+            vaccines: []
+        })
     }
 
 return (
@@ -181,19 +222,19 @@ return (
             <div className="popup popup-care">
                 <div className="popup-header">
                     <label className="title">Datos grooming</label>
-                    <a className="close" href="#">&times;</a>
+                    <a className="close" href="#" onClick={handleClearGrooming}>&times;</a>
                 </div>
                 <div className="report-content">
                     <label htmlFor="" className="label">1. Fecha y Hora Atención: {grooming.date}</label>
                     <div className="content-photos">
                          <div className="column-photo">
                             <label for="before" className="label">2. Foto del antes!</label>
-                            <div className="preview-pet"><img src={grooming.before} alt=""></img></div>
+                            <div className="preview-pet"><img src={filePath} alt=""></img></div>
                             <label id="label_before"></label>
                         </div>
                         <div className="column-photo">
                             <label for="after" className="label">3. Foto de ahora!</label>
-                            <div className="preview-pet"><img src={grooming.after} alt=""></img></div>
+                            <div className="preview-pet"><img src={filePath2} alt=""></img></div>
                         </div>
                     </div>
                     <label for="comment" className="label">4. Observaciones: {grooming.comment}</label>
@@ -204,7 +245,7 @@ return (
             <div className="popup popup-care">
                 <div className="popup-header">
                     <label className="title">Datos atención médica</label>
-                    <a className="close" href="#">&times;</a>
+                    <a className="close" href="#" onClick={handleClearMedical}>&times;</a>
                 </div>
                 <div className="report-content"> 
                     <label className="label">1. Fecha y Hora Atención: {medical.date}</label>
@@ -246,7 +287,7 @@ return (
             <div className="popup popup-care">
                 <div className="popup-header">
                     <label className="title">Datos Vacunación</label>
-                    <a className="close" href="#">&times;</a>
+                    <a className="close" href="#" onClick={handleClearPlan}>&times;</a>
                 </div>
                 <div className="report-content">
                     <label className="label">1. Fecha y Hora Atención: {plan.date}</label>
