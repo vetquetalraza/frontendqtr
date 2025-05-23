@@ -344,14 +344,14 @@ return (
                             <div className="contentPhotos">
                                 <div className="columnPhoto">
                                     <label for="before" className="button photo-file">Sube una foto del antes!</label>
-                                    <input id="before" type="file" onChange={handlePreview}/>
-                                    <div className="preview-pet"><img src={filePreview} alt="" accept=".jpg, .jpeg, .png" ></img></div>
+                                    <input id="before" type="file" onChange=""/>
+                                    <div className="preview-pet"><img src="" alt="" accept=".jpg, .jpeg, .png" ></img></div>
                                     <label id="label_before"></label>
                                 </div>
                                 <div className="columnPhoto">
                                     <label for="after" className="button photo-file">Sube una foto de ahora!</label>
-                                    <input id="after" type="file" placeholder="" onChange={handlePreviewA}/>
-                                    <div className="preview-pet"><img src={filePreviewA} alt="" accept=".jpg, .jpeg, .png"></img></div>
+                                    <input id="after" type="file" placeholder="" onChange=""/>
+                                    <div className="preview-pet"><img src="" alt="" accept=".jpg, .jpeg, .png"></img></div>
                                 </div>
                             </div>
                             <label for="comment" className="label">Observaciones</label>

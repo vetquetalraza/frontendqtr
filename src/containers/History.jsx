@@ -213,11 +213,11 @@ return (
                     <label for="weight" className="label">4. Peso: {medical.weight} (kg)</label>
                     <label className="label">5. Síntomas: </label>
                     <ul className="label">
-                        {medical.symptoms.map((row,index) => ( <li>{row.name}</li>))}
+                        { medical.symptoms ? medical.symptoms.map((row,index) => ( <li>{row.name}</li>)) : ""}
                     </ul>
                     <label className="label">6. Diagnóstico:</label>
                     <ul className="label">
-                        {medical.diagnosis.map((row,index) => ( <li>{row.name}</li>))}
+                        { medical.diagnosis ? medical.diagnosis.map((row,index) => ( <li>{row.name}</li>)): ""}
                     </ul>      
                     <label className="label">7. Medicamentos e insumos utilizados durante la atención: </label>
                     <table className="table-inventory">
@@ -229,13 +229,13 @@ return (
                         </tr>
                         </thead>
                         <tbody>
-                        {medical.medicines.map( (row,index) => (
+                        { medical.medicines ? medical.medicines.map( (row,index) => (
                             <tr key={row.id}>
                             <td>{index + 1}</td>
                             <td>{row.name + " "+ row.presentation}</td>
                             <td>{row.dosage}</td>
                             </tr>
-                        ))}
+                        )) : ""}
                         </tbody>
                     </table>
                     <p className="label">8. Tratamiento: {medical.treatment}</p>

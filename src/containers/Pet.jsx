@@ -101,6 +101,10 @@ const Pet = () => {
                         showConfirmButton: false,
                         timer: 1500
                     });
+
+                    //Subida de foto
+                    onUpload();
+
                     //Limpiar campos
                     e.target.reset();
     
@@ -128,7 +132,7 @@ const Pet = () => {
         .then(res => {
             console.log(res.data);
             setNameClient({nameclient: res.data[0].nameclient,surnameclient: res.data[0].surnameclient});
-            setFilePath('https://api-vet-2utn.onrender.com' +res.data[0].photopet);
+            setFilePath('https://api-vet-2utn.onrender.com' +"/uploads/"+res.data[0].photopet);
             setValues({...values,
                 idpet: res.data[0].idpet,
                 client: res.data[0].dniclient,
@@ -140,7 +144,7 @@ const Pet = () => {
                 color: res.data[0].colorpet,
                 birthdate: res.data[0].birthdatepet,
                 signs: res.data[0].particularsignspet,
-                photo: res.data[0].photopet,});
+                photo: "/uploads/"+res.data[0].photopet,});
         }).catch(err => console.log(err))
     }
 
@@ -203,24 +207,30 @@ const Pet = () => {
     const [filePath, setFilePath] = useState('');
 
     const onFileChange = (event) => {
-        setFile(event.target.files[0]);
+        const file = event.target.files[0];
+        setFile(file);
+        const extension = file.name.split('.').pop().toLowerCase();
+        const photoname = `foto_${Date.now()}.${extension}`;
+        setValues({...values, photo: photoname});
+        setFilePath(URL.createObjectURL(file))
+
     };
 
     const onUpload = async () => {
         if (file) {
+
             const formData = new FormData();
-            formData.append('photo', file);
+            console.log(values.photo)
+            formData.append('photo', file, values.photo);
             
             try {
-              const response = await axios.post('https://api-vet-2utn.onrender.com/upload', formData, {
+                const response = await axios.post('https://api-vet-2utn.onrender.com/upload', formData, {
                 headers: {
                   'Content-Type': 'multipart/form-data',
                 },
               });
-              
-              setFilePath('https://api-vet-2utn.onrender.com' +response.data.filePath);
-              setValues({...values, photo: response.data.filePath});
-              
+
+              console.log(response)
             } catch (error) {
               console.error('Error al subir el archivo', error);
               Swal.fire({
@@ -384,7 +394,7 @@ return (
                                         <a className="button button-file" onClick={onUpload}>Subir</a>
                                         
                                     </div>
-                                    <div className="photo-preview"><img src={filePath}/></div>
+                                    <div className="photo-preview"><img accept=".jpg, .jpeg, .png" src={filePath}/></div>
                                 </div>
                             </div>
                         </div> 
