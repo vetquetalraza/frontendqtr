@@ -1,0 +1,36 @@
+@import 'vars';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+.container-services {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.container-services img {
+    width: 70%;
+    margin: 10px;
+}
+
+h3 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.container-services p {
+    font-size: var(--sm);
+    margin-bottom: 4px;
+    color: black;
+    display: block;
+    margin: 5px;
+}
+
+.card-service {
+    border: 1px solid #adacac;
+    border-radius: 10px;
+    height: 400px;
+
+}

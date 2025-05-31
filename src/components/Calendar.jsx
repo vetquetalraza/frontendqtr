@@ -22,7 +22,7 @@ const [values , setValues] = useState({
   idservice: '',
   dateappo: '',
   timeappo: '',
-  duration: '',
+  timeendappo: '',
   comment: '',
   status: ''
 })
@@ -51,7 +51,7 @@ const load = () => {
     var lista = [];
     data.map((element, index) => {
       let varStart = element.dateappointment + " " + element.timeappointment
-      let varEnd = moment(varStart).add(element.durationappointment, 'm').format("yyyy-MM-DD HH:mm");
+      let varEnd = element.dateappointment + " " + element.timeaendppointment
       let color = getColor(element.idvetservices);
 
       lista.push(
@@ -119,7 +119,6 @@ const getPets = (id) =>{
 
 const handleSelect = (info) => {
     const start = info.dateStr
-    
     setIsReadOnly(true)
     setIsDisabled(true)
     setValues({...values,timeappo: moment(start).format("HH:mm"),dateappo: moment(start).format("yyyy-MM-DD"),status:1,idappo:0})
@@ -139,20 +138,28 @@ const handleSelect = (info) => {
       if (Object.keys(validationErrors).length === 0) {
         api.post('/appointments/',values)
         .then(res => {
-          console.log(res);
-          close.click();
-          Swal.fire({
-            position: "bottom-end",
-            icon: "success",
-            title: "Datos guardados correctamente.",
-            showConfirmButton: false,
-            timer: 1500
-          });
-          //Limpiar campos
-          e.target.reset();
-          handleClear();
-          //Actualizar vista
-          load()
+          //console.log(res.data[0].agendar_cita);
+          const result = res.data[0].agendar_cita;
+          if (result == 66 ) {
+            close.click();
+            Swal.fire({
+              position: "bottom-end",
+              icon: "success",
+              title: "Datos guardados correctamente.",
+              showConfirmButton: false,
+              timer: 1500
+            });
+            //Limpiar campos
+            e.target.reset();
+            handleClear();
+            //Actualizar vista
+            load()
+          } else if (result == 99 ) {
+              Swal.fire("No se puede agendar en fechas anteriores");
+          } else if (result == 88 ) {
+              Swal.fire("El paciente ya tiene una cita en ese horario");
+          }
+
         }).catch(err => {
           console.log(err);
           Swal.fire({
@@ -188,7 +195,7 @@ const handleEventClick = (info) => {
           idservice: res.data[0].idvetservices,
           dateappo: res.data[0].dateappointment,
           timeappo: res.data[0].timeappointment,
-          duration: res.data[0].durationappointment,
+          timeendappo: res.data[0].timeaendppointment,
           comment: res.data[0].commentappointment,
           status: res.data[0].statusappointment});
   }).catch(err => console.log(err))
@@ -203,7 +210,7 @@ const handleClear = () => {
     idservice: '',
     dateappo: '',
     timeappo: '',
-    duration: '',
+    timeendappo: '',
     comment: '',
     status: ''
   })
@@ -225,7 +232,11 @@ const validateForm = () => {
   }
 
   if (!values.timeappo) {
-    newErrors.timeappo = 'La hora es requerida';
+    newErrors.timeappo = 'La hora inicio es requerida';
+  }
+
+  if (!values.timeendappo) {
+    newErrors.timeendappo = 'La hora fin es requerida';
   }
 
   if (!values.status) {
@@ -315,13 +326,16 @@ const validateForm = () => {
                   <span id="resume" className="label resume">{dataClient}</span>
 
                   <label for="idservice" className="label label-pet">Servicio</label>
-                  <select id="idservice" name="idservice" className="input" onChange={e => setValues({...values,idservice: e.target.value,duration: e.target.value === "1" ? 59: 29})} value={values.idservice}>
+                  <select id="idservice" name="idservice" className="input" onChange={e => setValues({...values,idservice: e.target.value})} value={values.idservice}>
                       <option selected>Seleccionar</option>
                       <option value="2">Consulta Médica</option>
                       <option value="1">Grooming</option>
                       <option value="3">Plan de vacunación</option>
                   </select>
                   {errors.idservice && <label className="errorMsg">{errors.idservice}</label>}
+                  
+                  <label for="" className="label">Personal Médico</label>
+                  <label for="" className="label">Nombres y apellidos médico</label>
 
                   <label for="dateappo" className="label">Fecha cita</label>
                   <input type="date" id="dateappo" className="input input-text" onChange={e => setValues({...values,dateappo: e.target.value})} value={values.dateappo} readOnly={isReadOnly}/>
@@ -330,6 +344,10 @@ const validateForm = () => {
                   <label for="timeappo" className="label">Hora Inicio</label>
                   <input type="time" id="timeappo" className="input input-text" onChange={e => setValues({...values,timeappo: e.target.value})} value={values.timeappo} readOnly={isReadOnly}/>
                   {errors.timeappo && <label className="errorMsg">{errors.timeappo}</label>}
+
+                  <label for="timeappo" className="label">Hora Fin</label>
+                  <input type="time" id="timeendappo" className="input input-text" onChange={e => setValues({...values,timeendappo: e.target.value})} value={values.timeendappo}/>
+                  {errors.timeendappo && <label className="errorMsg">{errors.timeendappo}</label>}
 
                   <label for="status" className="label label-pet">Acción</label>
                   <select id="status" name="status" className="input" onChange={e => setValues({...values,status: e.target.value})} value={values.status} disabled={isDisabled}>
