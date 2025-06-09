@@ -226,18 +226,19 @@ return (
                 </div>
                 <div className="report-content">
                     <label htmlFor="" className="label">1. Fecha y Hora Atención: {grooming.date}</label>
+                    <label for="dcotor" className="label">2. Personal: Valeria Campos Ramos</label>
                     <div className="content-photos">
                          <div className="column-photo">
-                            <label for="before" className="label">2. Foto del antes!</label>
+                            <label for="before" className="label">3. Foto del antes!</label>
                             <div className="preview-pet"><img src={filePath} alt=""></img></div>
                             <label id="label_before"></label>
                         </div>
                         <div className="column-photo">
-                            <label for="after" className="label">3. Foto de ahora!</label>
+                            <label for="after" className="label">4. Foto de ahora!</label>
                             <div className="preview-pet"><img src={filePath2} alt=""></img></div>
                         </div>
                     </div>
-                    <label for="comment" className="label">4. Observaciones: {grooming.comment}</label>
+                    <label for="comment" className="label">5. Observaciones: {grooming.comment}</label>
                 </div>
             </div>
         </div>
@@ -249,18 +250,19 @@ return (
                 </div>
                 <div className="report-content"> 
                     <label className="label">1. Fecha y Hora Atención: {medical.date}</label>
-                    <p className="label">2. Anamnesis: {medical.anamnesis}</p>
-                    <label for="temperature" className="label">3. Temperatura: {medical.temperature} (c°)</label>
-                    <label for="weight" className="label">4. Peso: {medical.weight} (kg)</label>
-                    <label className="label">5. Síntomas: </label>
+                    <label for="dcotor" className="label">2. Médico: Juan Huamaní Gómez</label>
+                    <p className="label">3. Anamnesis: {medical.anamnesis}</p>
+                    <label for="temperature" className="label">4. Temperatura: {medical.temperature} (c°)</label>
+                    <label for="weight" className="label">5. Peso: {medical.weight} (kg)</label>
+                    <label className="label">6. Síntomas: </label>
                     <ul className="label">
                         { medical.symptoms ? medical.symptoms.map((row,index) => ( <li>{row.name}</li>)) : ""}
                     </ul>
-                    <label className="label">6. Diagnóstico:</label>
+                    <label className="label">7. Diagnóstico:</label>
                     <ul className="label">
                         { medical.diagnosis ? medical.diagnosis.map((row,index) => ( <li>{row.name}</li>)): ""}
                     </ul>      
-                    <label className="label">7. Medicamentos e insumos utilizados durante la atención: </label>
+                    <label className="label">8. Medicamentos e insumos utilizados durante la atención: </label>
                     <table className="table-inventory">
                         <thead>
                         <tr>
@@ -279,7 +281,7 @@ return (
                         )) : ""}
                         </tbody>
                     </table>
-                    <p className="label">8. Tratamiento: {medical.treatment}</p>
+                    <p className="label">9. Tratamiento: {medical.treatment}</p>
                 </div>
             </div>
         </div>
@@ -291,7 +293,8 @@ return (
                 </div>
                 <div className="report-content">
                     <label className="label">1. Fecha y Hora Atención: {plan.date}</label>
-                    <label for="idvaccine" className="label">2. Vacunas aplicadas en la cita:</label>
+                    <label for="dcotor" className="label">2. Médico: Juan Huamaní Gómez</label>
+                    <label for="idvaccine" className="label">3. Vacunas aplicadas en la cita:</label>
                     <table className="table-inventory">
                         <thead>
                             <tr>
@@ -310,9 +313,9 @@ return (
                         })} 
                         </tbody> 
                     </table>
-                    <label for="temperature" className="label">3. Temperatura: {plan.temperature} (c°) </label>
-                    <label for="weight" className="label">4. Peso: {plan.weight} (kg) </label>
-                    <p className="label">5. Observaciones: {plan.comments}</p>
+                    <label for="temperature" className="label">4. Temperatura: {plan.temperature} (c°) </label>
+                    <label for="weight" className="label">5. Peso: {plan.weight} (kg) </label>
+                    <p className="label">6. Observaciones: {plan.comments}</p>
                 </div>
             </div>
         </div>

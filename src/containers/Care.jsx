@@ -18,6 +18,7 @@ const Care = () => {
     const [symptoms , setSymptoms] = useState([])
     const [diagnosis , setDiagnosis] = useState([])
     const [medicines , setMedicines] = useState([])
+    const [errors, setErrors] = useState({});
 
     // Definimos las columnas para el DataTable
     const columns = [
@@ -55,11 +56,6 @@ const Care = () => {
         temperature: '',
         comments: ''
     })
-
-    //Vista Previa de imágenes
-    const [ filePreview, setFilePreview] = useState("");
-    const [ filePreviewA, setFilePreviewA] = useState("");
-
 
     //Actualizar lista de atenciones de acuerdo a la fecha de filtrado
     const handleChange = () => {
@@ -162,66 +158,132 @@ const Care = () => {
         }
     };
 
+    const validateMedical= () => {
+
+        const newErrorsMed = {};
+
+        if (!medical.anamnesis) {
+          newErrorsMed.anamnesis = '*Anamnesis es un dato requerido';
+        }
+
+        if (!medical.weight) {
+          newErrorsMed.weightm = '*El peso es requerido';
+        }
+
+        if (!medical.temperature) {
+          newErrorsMed.temperaturem = '*La temperatura es requerida';
+        }
+
+        if (medical.symptoms.length === 0) {
+          newErrorsMed.symptoms = '*Síntomas es un dato requerido';
+        }
+        
+        if (medical.diagnosis.length === 0) {
+          newErrorsMed.diagnosis = '*Diagnóstico es un dato requerido';
+        }
+
+        if (!medical.treatment) {
+          newErrorsMed.treatment = '*Tratamiento es un dato requerido';
+        }
+
+        return newErrorsMed;
+    };
+
     const handleSubmitMedic = (e) => {
         e.preventDefault();
-        console.log(medical)
-        api.post('/medical/',medical)
-        .then(res => {
-            console.log(res);
-            close.click();
-            Swal.fire({
-                position: "bottom-end",
-                icon: "success",
-                title: "Datos guardados correctamente.",
-                showConfirmButton: false,
-                timer: 1500
-            });
-            //Limpiar campos
-            e.target.reset();
-            loadData();
-        })
-        .catch(err => {
-            console.log(err);
-            Swal.fire({
-                position: "bottom-end",
-                icon: "error",
-                title: "Ha ocurrido un error.",
-                showConfirmButton: false,
-                timer: 1500
-              });
-        })
+
+        const validationErrors = validateMedical();
+        if (Object.keys(validationErrors).length === 0) {
+
+            //console.log(medical)
+            api.post('/medical/',medical)
+            .then(res => {
+                console.log(res);
+                close.click();
+                Swal.fire({
+                    position: "bottom-end",
+                    icon: "success",
+                    title: "Datos guardados correctamente.",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                //Limpiar campos
+                e.target.reset();
+                loadData();
+            })
+            .catch(err => {
+                console.log(err);
+                Swal.fire({
+                    position: "bottom-end",
+                    icon: "error",
+                    title: "Ha ocurrido un error.",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            })
+        } else {
+          setErrors(validationErrors);
+        }   
     }
 
     //PLAN DE VACUNACIÓN
+
+    const validatePlan= () => {
+
+        const newErrorsPlan = {};
+
+        if (values.idvaccine.length === 0) {
+          newErrorsPlan.idvaccine = '*La vacuna es requerida';
+        }
+
+        if (!values.weight) {
+          newErrorsPlan.weight = '*El peso es requerido';
+        }
+
+        if (!values.temperature) {
+          newErrorsPlan.temperature = '*La temperatura es requerida';
+        }
+
+        return newErrorsPlan;
+    };
+
     const handleSubmitVaccine = (e) => {
         e.preventDefault();
-        setValues({...values,idvaccine: vaccineSel});
-        console.log(values)
-        api.post('/plan/',values)
-        .then(res => {
-            console.log(res);
-            close.click();
-            Swal.fire({
-                position: "bottom-end",
-                icon: "success",
-                title: "Datos guardados correctamente.",
-                showConfirmButton: false,
-                timer: 1500
-            });
-            //Limpiar campos
-            e.target.reset();
-            loadData()
-        })
-        .catch(err => {
-            console.log(err);
-            Swal.fire({
-                position: "bottom-end",
-                icon: "error",
-                title: "Ha ocurrido un error.",
-                showConfirmButton: false,
-                timer: 1500
-              });
-        })
+
+        const validationErrors = validatePlan();
+        if (Object.keys(validationErrors).length === 0) {
+
+            setValues({...values,idvaccine: vaccineSel});
+            //console.log(values)
+            api.post('/plan/',values)
+            .then(res => {
+                console.log(res);
+                close.click();
+                Swal.fire({
+                    position: "bottom-end",
+                    icon: "success",
+                    title: "Datos guardados correctamente.",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                //Limpiar campos
+                e.target.reset();
+                loadData()
+            })
+            .catch(err => {
+                console.log(err);
+                Swal.fire({
+                    position: "bottom-end",
+                    icon: "error",
+                    title: "Ha ocurrido un error.",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            })
+        } else {
+          setErrors(validationErrors);
+        }   
+
     }
     
     const handleAddRow = () => {
@@ -254,6 +316,63 @@ const Care = () => {
     }
 
     //GROOMING
+    const validateGrooming= () => {
+
+        const newErrorsGro = {};
+
+        if (!grooming.before) {
+          newErrorsGro.before = '*La foto de antes es requerida';
+        }
+
+        if (!grooming.after) {
+          newErrorsGro.after = '*La foto del después es requerida';
+        }
+
+        return newErrorsGro;
+    };
+
+    const handleSubmitGrooming = (e) => {
+        e.preventDefault();
+        //console.log(grooming)
+
+        const validationErrors = validateGrooming();
+        if (Object.keys(validationErrors).length === 0) {
+            api.post('/grooming/',grooming)
+            .then(res => {
+                console.log(res);
+                close.click();
+                Swal.fire({
+                    position: "bottom-end",
+                    icon: "success",
+                    title: "Datos guardados correctamente.",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+                onUpload(file,grooming.before)
+                onUpload(file2,grooming.after)
+
+                //Limpiar campos
+                e.target.reset();
+                loadData();
+            })
+            .catch(err => {
+                console.log(err);
+                Swal.fire({
+                    position: "bottom-end",
+                    icon: "error",
+                    title: "Ha ocurrido un error.",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            })
+
+        } else {
+          setErrors(validationErrors);
+        }      
+    }
+
+    //GROOMING PHOTO
 
     const [file, setFile] = useState(null);
     const [file2, setFile2] = useState(null);
@@ -267,8 +386,6 @@ const Care = () => {
         const photoname = `foto_${Date.now()}.${extension}`;
         setGrooming({...grooming, before: photoname}) 
         setFilePath(URL.createObjectURL(file))
-  
-
     };
 
     const onFileChange2 = (event) => {
@@ -305,40 +422,6 @@ const Care = () => {
         }
     }
 
-    const handleSubmitGrooming = (e) => {
-        e.preventDefault();
-        console.log(grooming)
-        api.post('/grooming/',grooming)
-        .then(res => {
-            console.log(res);
-            close.click();
-            Swal.fire({
-                position: "bottom-end",
-                icon: "success",
-                title: "Datos guardados correctamente.",
-                showConfirmButton: false,
-                timer: 1500
-            });
-
-            onUpload(file,grooming.before)
-            onUpload(file2,grooming.after)
-
-            //Limpiar campos
-            e.target.reset();
-            loadData();
-        })
-        .catch(err => {
-            console.log(err);
-            Swal.fire({
-                position: "bottom-end",
-                icon: "error",
-                title: "Ha ocurrido un error.",
-                showConfirmButton: false,
-                timer: 1500
-            });
-        })
-    }
-
 return (
     <>
         <label for="" className="title">Atenciones</label>
@@ -371,12 +454,13 @@ return (
                                     <label for="before" className="button photo-file">Sube una foto del antes!</label>
                                     <input id="before" type="file" onChange={onFileChange}/>
                                     <div className="preview-pet"><img src={filePath} alt="" accept=".jpg, .jpeg, .png" ></img></div>
-                                    <label id="label_before"></label>
+                                    {errors.before && <label className="errorMsg">{errors.before}</label>}
                                 </div>
                                 <div className="columnPhoto">
                                     <label for="after" className="button photo-file">Sube una foto de ahora!</label>
                                     <input id="after" type="file" placeholder="" onChange={onFileChange2}/>
                                     <div className="preview-pet"><img src={filePath2} alt="" accept=".jpg, .jpeg, .png"></img></div>
+                                    {errors.after && <label className="errorMsg">{errors.after}</label>}
                                 </div>
                             </div>
                             <label for="comment" className="label">Observaciones</label>
@@ -400,17 +484,24 @@ return (
                     <form action="/" className="form" onSubmit={handleSubmitMedic}>    
                         <div className="column1">  
                             <div className="column2">
+
                                 <label for="anamnesis" className="label label-care">Anamnesis</label>
                                 <label for="" className="label label-care">¿Ha tenido algún problema de salud que necesitara tratamiento? , ¿Está al día con las vacunas?, 
                                 ¿Cuándo se realizó la última desparasitación? , ¿Tomo actualmente alguna medicación?, ¿Cómo es la alimentación de tu mascota?, ¿Qué hábitos tiene tu mascota?</label>
                                 <textarea className="textarea" rows="3" id="anamnesis" onChange={e => setMedical({...medical,anamnesis: e.target.value})}></textarea>
+                                {errors.anamnesis && <label className="errorMsg">{errors.anamnesis}</label>}
+
                                 <label for="temperature" className="label">Temperatura (c°)</label>
                                 <input type="number" id="temperature" min="0" step="0.1" className="input input-text" onChange={e => setMedical({...medical,temperature: e.target.value})}/>
+                                {errors.temperaturem && <label className="errorMsg">{errors.temperaturem}</label>}
+
                                 <label for="weight" className="label">Peso (kg)</label>
                                 <input type="number" id="weight" min="0" step="0.1" className="input input-text" onChange={e => setMedical({...medical,weight: e.target.value})}/>
+                                {errors.weightm && <label className="errorMsg">{errors.weightm}</label>}
+
                             </div>
                             <div className="column2">
-                                <label for="sintomas" className="label label-care">Síntomas</label>
+                                <label for="sintomas" className="label label-care">Síntomas</label>{errors.symptoms && <label className="errorMsg">{errors.symptoms}</label>}
                                 <Select
                                     closeMenuOnSelect={false}
                                     id="simptoms"
@@ -423,7 +514,8 @@ return (
                                         setMedical({...medical,symptoms: values})
                                     }}
                                 />
-                                <label for="diagnostico" className="label label-care">Diagnóstico</label>
+                        
+                                <label for="diagnostico" className="label label-care">Diagnóstico</label>{errors.diagnosis && <label className="errorMsg">{errors.diagnosis}</label>}
                                 <Select
                                     closeMenuOnSelect={true}
                                     id="diagnosis"
@@ -436,6 +528,7 @@ return (
                                         setMedical({...medical,diagnosis: values})
                                     }}
                                 />
+
                                 <label for="materials" className="label label-care">Medicamentos e insumos utilizados durante la atención</label>
                                 <select className="input" onChange={(e) => {
                                     setNewIdMaterial(e.target.value);
@@ -472,11 +565,12 @@ return (
                                     ))}
                                     </tbody>
                                 </table>
+                                {errors.medicines && <label className="errorMsg">{errors.medicines}</label>}
                             </div> 
                         </div>  
                         <label for="treatment" className="label label-care">Tratamiento</label>
                         <textarea className="textarea" rows="3" id="treatment" onChange={e => setMedical({...medical,treatment: e.target.value})}></textarea>
-                        
+                        {errors.treatment && <label className="errorMsg">{errors.treatment}</label>}
                         
                         <div className="button-section">
                                 <input type="submit" value="Guardar" className="button primary-button"/> 
@@ -538,6 +632,7 @@ return (
                                     })} 
                                     </tbody> 
                                 </table>
+                                {errors.idvaccine && <label className="errorMsg">{errors.idvaccine}</label>}
                             </div>
                             <div>
                                 <label for="idvaccine" className="label">Historial de Vacunación</label>
@@ -569,10 +664,12 @@ return (
                                 <div>
                                     <label for="temperature" className="label">Temperatura (c°) </label>
                                     <input type="number" id="temperature" className="input input-text" min="0" step="0.1" onChange={e => setValues({...values,temperature: e.target.value})}/> 
+                                    {errors.temperature && <label className="errorMsg">{errors.temperature}</label>}
                                 </div>
                                 <div>
                                     <label for="weight" className="label">Peso (kg) </label>
                                     <input type="number" id="weight" className="input input-text" min="0" step="0.1" onChange={e => setValues({...values,weight: e.target.value})}/>
+                                    {errors.weight && <label className="errorMsg">{errors.weight}</label>}
                                 </div>
                             </div>
                             <div className="col">

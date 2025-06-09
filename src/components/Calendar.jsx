@@ -15,7 +15,8 @@ const [events, setEvents] = useState([]);
 const [isReadOnly, setIsReadOnly] = useState(false);
 const [isDisabled, setIsDisabled] = useState(false);
 const [errors, setErrors] = useState({});
-const [dataClient, setDataClient] = useState('')
+const [dataClient, setDataClient] = useState('');
+const [doctor, setDoctor] = useState('');
 const [values , setValues] = useState({
   idappo: '',
   idpet:'',
@@ -216,6 +217,21 @@ const handleClear = () => {
   })
 }
 
+const convertirAHoras = (hora) => {
+  const [h, m] = hora.split(':');
+  return parseInt(h) * 60 + parseInt(m);
+};
+
+const changeService = (value) => {
+  setValues({...values,idservice: value })
+  console.log(value)
+  if (value == 1) {
+    setDoctor("Valeria Campos Ramos")
+  } else {
+    setDoctor("Juan Huamaní Gómez")
+  }
+}
+
 const validateForm = () => {
   const newErrors = {};
   
@@ -242,6 +258,17 @@ const validateForm = () => {
   if (!values.status) {
     newErrors.status = 'El estado es requerido';
   }
+
+  if (values.timeendappo && values.timeappo) {
+    const inicio = convertirAHoras(values.timeappo);
+    const fin = convertirAHoras(values.timeendappo);
+
+    if (fin < inicio) {
+      newErrors.timeendappo = 'La hora de fin no puede ser menor que la hora de inicio';
+    }
+
+  }
+
 
   return newErrors;
 };
@@ -326,7 +353,7 @@ const validateForm = () => {
                   <span id="resume" className="label resume">{dataClient}</span>
 
                   <label for="idservice" className="label label-pet">Servicio</label>
-                  <select id="idservice" name="idservice" className="input" onChange={e => setValues({...values,idservice: e.target.value})} value={values.idservice}>
+                  <select id="idservice" name="idservice" className="input" onChange={(e) => changeService(e.target.value)} value={values.idservice}>
                       <option selected>Seleccionar</option>
                       <option value="2">Consulta Médica</option>
                       <option value="1">Grooming</option>
@@ -334,8 +361,8 @@ const validateForm = () => {
                   </select>
                   {errors.idservice && <label className="errorMsg">{errors.idservice}</label>}
                   
-                  <label for="" className="label">Personal Médico</label>
-                  <label for="" className="label">Nombres y apellidos médico</label>
+                  <label for="doctor" className="label">Personal Médico</label>
+                  <input type="text" id="doctor" placeholder="" className="input input-text" value={doctor} disabled/>
 
                   <label for="dateappo" className="label">Fecha cita</label>
                   <input type="date" id="dateappo" className="input input-text" onChange={e => setValues({...values,dateappo: e.target.value})} value={values.dateappo} readOnly={isReadOnly}/>
@@ -345,7 +372,7 @@ const validateForm = () => {
                   <input type="time" id="timeappo" className="input input-text" onChange={e => setValues({...values,timeappo: e.target.value})} value={values.timeappo} readOnly={isReadOnly}/>
                   {errors.timeappo && <label className="errorMsg">{errors.timeappo}</label>}
 
-                  <label for="timeappo" className="label">Hora Fin</label>
+                  <label for="timeendappo" className="label">Hora Fin</label>
                   <input type="time" id="timeendappo" className="input input-text" onChange={e => setValues({...values,timeendappo: e.target.value})} value={values.timeendappo}/>
                   {errors.timeendappo && <label className="errorMsg">{errors.timeendappo}</label>}
 
