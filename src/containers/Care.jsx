@@ -39,6 +39,7 @@ const Care = () => {
         temperature: '',
         symptoms: [],
         diagnosis: [],
+        materials: [],
         treatment: ''
     })
 
@@ -129,7 +130,7 @@ const Care = () => {
     //CONSULTAS MÉDICAS
     
     //Tabla medicamentos e insumos utilizados
-    const [rows, setRows] = useState([]);
+    const [materials, setMaterials] = useState([]);
 
     // Estado para los campos de entrada
     const [newIdMaterial, setNewIdMaterial] = useState('');
@@ -138,7 +139,7 @@ const Care = () => {
 
     // Función para manejar la eliminación de una fila
     const handleDelete = (id) => {
-        setRows(rows.filter(row => row.id !== id));
+        setMaterials(materials.filter(row => row.id !== id));
     };
 
     // Función para manejar el agregado de una nueva fila
@@ -147,15 +148,21 @@ const Care = () => {
         const newRow = {
             id: newIdMaterial,
             material: newMaterial,
-            dosis: parseInt(newDosage, 10)
+            dosis: newDosage
         };
-        setRows([...rows, newRow]);
+        setMedical({
+        ...medical,
+        materials: [...medical.materials, [parseInt(newRow.id), newRow.dosis]]
+        });
+        setMaterials([...materials, newRow]);
+        
         // Limpiar los campos después de agregar
         setNewIdMaterial('');
         setNewMaterial('');
         setNewDosage('');
         
         }
+        console.log(medical)
     };
 
     const validateMedical= () => {
@@ -195,7 +202,7 @@ const Care = () => {
         const validationErrors = validateMedical();
         if (Object.keys(validationErrors).length === 0) {
 
-            //console.log(medical)
+            console.log(medical)
             api.post('/medical/',medical)
             .then(res => {
                 console.log(res);
@@ -303,7 +310,7 @@ const Care = () => {
             for(let i=0; i<tableRows.length; i++) {
                 const row = tableRows[i];
                 const number = row.querySelector('.number').innerHTML;
-                console.log(number)
+                //console.log(number)
                 const id = row.querySelector('.id-vaccine').value;
                 
                 list.push({idvaccine : parseInt(id), dosage : parseInt(number)});
@@ -553,7 +560,7 @@ return (
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {rows.map( (row,index) => (
+                                    {materials.map( (row,index) => (
                                         <tr key={row.id}>
                                         <td>{index + 1}</td>
                                         <td>{row.material}</td>
