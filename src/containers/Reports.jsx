@@ -14,6 +14,11 @@ const Reports = () => {
 return (
     <>
         <label for="" className="title">Reportes</label>
+
+        <a class="button button-new" href="#">Generar reporte clientes</a>
+        <a class="button button-new" href="#">Generar reporte mascotas</a>
+        <a class="button button-new" href="#">Generar reporte citas</a>
+        <a class="button button-new" href="#">Generar reporte inventario</a>
     </>
 );
 
