@@ -568,7 +568,12 @@ nav {
 .container-calendar {
   justify-content: center;
   height: 80vh;
-  width: 100vh;
+  //width: 100vh;
+  width: 100%;
+}
+
+.container-calendar :nth-child(1) {
+  height: 80vh;
 }
 /* 5. Medical History */
 
