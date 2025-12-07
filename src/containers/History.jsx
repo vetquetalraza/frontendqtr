@@ -240,6 +240,9 @@ return (
                     </div>
                     <label for="comment" className="label">5. Observaciones: {grooming.comment}</label>
                 </div>
+                <div className="button-section">
+                    <input type="submit" value="Imprimir" className="button print-button"/> 
+                </div>
             </div>
         </div>
         <div id="popup2" className="overlay">
@@ -283,6 +286,9 @@ return (
                     </table>
                     <p className="label">9. Tratamiento: {medical.treatment}</p>
                 </div>
+                <div className="button-section">
+                    <input type="submit" value="Imprimir" className="button print-button"/> 
+                </div>
             </div>
         </div>
         <div id="popup3" className="overlay">
@@ -316,6 +322,9 @@ return (
                     <label for="temperature" className="label">4. Temperatura: {plan.temperature} (c°) </label>
                     <label for="weight" className="label">5. Peso: {plan.weight} (kg) </label>
                     <p className="label">6. Observaciones: {plan.comments}</p>
+                </div>
+                <div className="button-section">
+                    <input type="submit" value="Imprimir" className="button print-button"/> 
                 </div>
             </div>
         </div>

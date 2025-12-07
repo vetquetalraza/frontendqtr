@@ -175,6 +175,24 @@ const Client = () => {
         const numberOnlyValue = value.replace(/[^0-9]/g, '');
         setValues({...values,[name]: numberOnlyValue,})
     };
+
+    const buscarDNI = async () => {
+        if (values.dni.length < 8) {
+            setErrors({...errors, dni: "Ingrese un número de identificación válido"})
+            return;
+        }
+
+        try {
+            const response = await api.get(`/dni/${values.dni}`);
+
+            console.log(response)
+            
+            setValues({...values, surname: `${response.data.apellidoPaterno} ${response.data.apellidoMaterno}`,name: response.data.nombres});            
+        
+        } catch (e) {
+            setErrors({...errors, dni: "No se encontró la información"})
+        }
+    };
     
     return (
         <>
@@ -196,7 +214,7 @@ const Client = () => {
                     <form action="/" className="form" onSubmit={handleSubmit}>
         
                         <label for="dni" className="label">DNI</label>
-                        <input type="text" id="dni" name="dni" className="input input-text" maxLength="12" onChange={validateNumberAndSet} value={values.dni} readOnly={isReadOnly} />
+                        <input type="text" id="dni" name="dni" className="input input-text" maxLength="12" onChange={validateNumberAndSet} value={values.dni} readOnly={isReadOnly} onKeyDown={(e) => e.key === "ArrowDown" && (e.preventDefault(), buscarDNI())}/>
                         {errors.dni && <label className="errorMsg">{errors.dni}</label>}
 
                         <label for="name" className="label">Nombres </label>

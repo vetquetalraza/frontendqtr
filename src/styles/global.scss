@@ -193,6 +193,14 @@ nav {
     font-size: var(--sm);
   }
 
+  .print-button {
+    background-color: var(--light-color);
+    width: 30%;
+    height: 40px;
+    border-radius: 8px;
+    font-size: var(--sm);
+  }
+
   .secondary-button {
     background-color: var(--dark-color);
     width: 40%;
@@ -411,6 +419,32 @@ nav {
   text-decoration: none;
 }
 
+.button-report {
+  width: 250px;
+  height: auto;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: var(--sm);
+  text-decoration: none;
+  margin-top: 10px;
+}
+
+.print-1 {
+  background-color: #F5276C;
+}
+
+.print-2 {
+  background-color: #F54927;
+}
+
+.print-3 {
+  background-color: #F5B027;
+}
+
+.print-4 {
+  background-color: #3EE061;
+}
+
 .input-inset{
   font-size: var(--sm);
   line-height: 1.5;
@@ -572,7 +606,7 @@ nav {
   width: 100%;
 }
 
-.container-calendar div:first-of-type {
+.container-calendar:nth-child(1) {
   height: 80vh;
 }
 /* 5. Medical History */

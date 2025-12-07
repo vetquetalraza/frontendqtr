@@ -4,6 +4,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import MyDataTable from '../components/Datatable';
 import api from '../services/api';
+import Select from 'react-select'
 
 const Pet = () => {
 
@@ -291,6 +292,87 @@ const Pet = () => {
         setNameClient({nameclient: "",surnameclient: ""});
     }, [])
 
+    const colorOptions = [
+        { value: "NEGRO", label: "NEGRO" },
+        { value: "BLANCO", label: "BLANCO" },
+        { value: "MARRÓN", label: "MARRÓN" },
+        { value: "BEIGE", label: "BEIGE" },
+        { value: "GRIS", label: "GRIS" },
+        { value: "AMARILLO", label: "AMARILLO" },
+        { value: "DORADO", label: "DORADO" },
+        { value: "CREMA", label: "CREMA" },
+        { value: "ATIGRADO", label: "ATIGRADO" },      
+        { value: "NARANJA", label: "NARANJA" },               
+        { value: "BICOLOR", label: "BICOLOR" },      
+        { value: "TRICOLOR", label: "TRICOLOR" },       
+        { value: "AZUL", label: "AZUL" },             
+        { value: "VERDE", label: "VERDE" },             
+        { value: "ROJO", label: "ROJO" },             
+        { value: "PLOMO", label: "PLOMO" },             
+        { value: "MOTEADO", label: "MOTEADO" },         
+        { value: "MANCHADO", label: "MANCHADO" }       
+    ];
+
+    const catOptions = [
+        { value: "PERSA", label: "PERSA" },
+        { value: "SIAMES", label: "SIAMES" },
+        { value: "MAINE COON", label: "MAINE COON" },
+        { value: "BENGALÍ", label: "BENGALÍ" },
+        { value: "ANGORA", label: "ANGORA" },
+        { value: "AZUL RUSO", label: "AZUL RUSO" },
+        { value: "SPHYNX", label: "SPHYNX" },
+        { value: "BRITISH SHORTHAIR", label: "BRITISH SHORTHAIR" },
+        { value: "ABISINIO", label: "ABISINIO" },
+        { value: "COMUN EUROPEO", label: "COMUN EUROPEO" },
+        { value: "PELO CORTO EUROPEO", label: "PELO CORTO EUROPEO" },
+        { value: "CALICO", label: "CALICO" },
+        { value: "CRIOLLO", label: "CRIOLLO" },
+        { value: "MESTIZO", label: "MESTIZO" },
+        { value: "TABBY", label: "TABBY" }
+    ];
+
+    const dogOptions = [
+        { value: "LABRADOR", label: "LABRADOR" },
+        { value: "GOLDEN RETRIEVER", label: "GOLDEN RETRIEVER" },
+        { value: "PUG", label: "PUG" },
+        { value: "PITBULL", label: "PITBULL" },
+        { value: "PASTOR ALEMAN", label: "PASTOR ALEMAN" },
+        { value: "ROTTWEILER", label: "ROTTWEILER" },
+        { value: "SHIH TZU", label: "SHIH TZU" },
+        { value: "BEAGLE", label: "BEAGLE" },
+        { value: "BULLDOG FRANCÉS", label: "BULLDOG FRANCÉS" },
+        { value: "CHIHUAHUA", label: "CHIHUAHUA" },
+        { value: "CRIOLLO", label: "CRIOLLO" },
+        { value: "MESTIZO", label: "MESTIZO" },
+        { value: "PEQUINES", label: "PEQUINES" },
+        { value: "SCHNAUZER", label: "SCHNAUZER" },
+        { value: "SHIH TZU", label: "SHIH TZU" },
+        { value: "VIRINGO", label: "VIRINGO" }
+    ];
+
+    const birdOptions = [
+        { value: "PERIQUITO", label: "PERIQUITO" },
+        { value: "CANARIO", label: "CANARIO" },
+        { value: "COTORRA", label: "COTORRA" },
+        { value: "AGAPORNIS", label: "AGAPORNIS" },
+        { value: "LORO", label: "LORO" }
+    ];
+
+    const otherOptions = [
+        { value: "HÁMSTER", label: "HÁMSTER" }
+    ];
+
+    const raceOptions =
+    values.idspecie === "1"
+      ? catOptions
+      : values.idspecie === "2"
+      ? dogOptions
+      : values.idspecie === "3"
+      ? birdOptions
+      : values.idspecie === "4"
+      ? otherOptions
+      : [];
+
 return (
     <>
         <div class="popup-header-tables">
@@ -345,7 +427,18 @@ return (
                                 </div>
                                 <div>
                                     <label for="color" className="label label-pet">Color</label>
-                                    <input type="text" id="color" name ="color" className="input input-name" onChange={e => setValues({...values,color: e.target.value})} value={values.color}/>
+                                    <Select
+                                        closeMenuOnSelect={true}
+                                        id="color"
+                                        className="label"
+                                        placeholder="Seleccionar"
+                                        options={colorOptions}
+                                        value={colorOptions.find(opt => opt.value === values.color) || null}
+                                        onChange={option => {
+                                            setValues({ ...values, color: option ? option.value : "" });
+                                        }}
+                                    />
+                                    {/* <input type="text" id="color" name ="color" className="input input-name" onChange={e => setValues({...values,color: e.target.value})} value={values.color}/> */}
                                     {errors.color && <label className="errorMsg">{errors.color}</label>}
                                 </div>
                                 <div>
@@ -365,6 +458,8 @@ return (
                                         <option  selected>Seleccionar</option>
                                         <option value="1">Gato</option>
                                         <option value="2">Perro</option>
+                                        <option value="3">Ave</option>
+                                        <option value="4">Otro</option>
                                     </select>
                                     {errors.idspecie && <label className="errorMsg">{errors.idspecie}</label>}
                                 </div>
@@ -375,13 +470,25 @@ return (
                                         <option value="1">Costa</option>
                                         <option value="2">Sierra</option>
                                         <option value="3">Selva</option>
+                                        <option value="4">Extranjera</option>
                                     </select>
                                     {errors.idorigin && <label className="errorMsg">{errors.idorigin}</label>}
                                 </div>
 
                                 <div>
                                     <label for="race" className="label label-pet">Raza</label>
-                                    <input type="text" id="race" name="race" className="input input-name" onChange={e => setValues({...values,race: e.target.value})} value={values.race}/>
+                                    <Select
+                                        closeMenuOnSelect={true}
+                                        id="race"
+                                        className="label"
+                                        placeholder="Seleccionar"
+                                        options={raceOptions}
+                                        value={raceOptions.find(opt => opt.value === values.race) || null}
+                                        onChange={option => {
+                                            setValues({ ...values, race: option ? option.value : "" });
+                                        }}
+                                    />
+                                    {/* <input type="text" id="race" name="race" className="input input-name" onChange={e => setValues({...values,race: e.target.value})} value={values.race}/> */}
                                     {errors.race && <label className="errorMsg">{errors.race}</label>}
                                 </div>
 

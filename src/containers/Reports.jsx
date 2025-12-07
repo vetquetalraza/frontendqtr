@@ -15,10 +15,10 @@ return (
     <>
         <label for="" className="title">Reportes</label>
 
-        <a class="button button-new" href="#">Generar reporte clientes</a>
-        <a class="button button-new" href="#">Generar reporte mascotas</a>
-        <a class="button button-new" href="#">Generar reporte citas</a>
-        <a class="button button-new" href="#">Generar reporte inventario</a>
+        <a class="button button-report print-1" href="#">Generar reporte clientes</a>
+        <a class="button button-report print-2" href="#">Generar reporte mascotas</a>
+        <a class="button button-report print-3" href="#">Generar reporte citas</a>
+        <a class="button button-report print-4" href="#">Generar reporte inventario</a>
     </>
 );
 
