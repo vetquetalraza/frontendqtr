@@ -19,7 +19,7 @@ const descargarExcel = async () => {
 
     const link = document.createElement("a");
     link.href = url;
-    link.download = "inventario.xlsx"; // 👈 nombre del archivo
+    link.download = "inventario.xlsx"; 
     link.click();
 
     window.URL.revokeObjectURL(url);
