@@ -1,24 +1,53 @@
 //import React, { useEffect, useState } from 'react';
 import '../styles/global.scss';
-//import axios from 'axios';
+import api from '../services/api';
 
 const Reports = () => {
 
-    // const [data, setData] = useState([])
-    // useEffect(()=>{
-    //     axios.get('https://api-vet-2utn.onrender.com/api/v1/reports')
-    //     .then(res => setData(Array.from(res.data)))
-    //     .catch(err => console.log(err));
-    // }, [])
+const descargarExcel = async () => {
+  try {
+    const response = await api.get(
+      "/report4/reporte-inventario",
+      { responseType: "blob" }
+    );
+
+    const blob = new Blob([response.data], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    });
+
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "inventario.xlsx"; // 👈 nombre del archivo
+    link.click();
+
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Error al descargar el Excel:", error);
+  }
+};
 
 return (
     <>
         <label for="" className="title">Reportes</label>
 
-        <a class="button button-report print-1" href="#">Generar reporte clientes</a>
-        <a class="button button-report print-2" href="#">Generar reporte mascotas</a>
-        <a class="button button-report print-3" href="#">Generar reporte citas</a>
-        <a class="button button-report print-4" href="#">Generar reporte inventario</a>
+        <div className="table-header-history">
+            <div>
+                <label htmlFor="" className="label">Inicio</label>
+                <input type="date" id="startDate" className="input input-text"/>
+            </div>
+            <div>
+                <label htmlFor="" className="label">Fin</label>
+                <input type="date" id="endDate" className="input input-text"/>
+            </div>
+            <button className="button primary-button">Filtrar</button>
+        </div>
+
+        <button className="button button-report print-1">Descargar clientes</button>
+        <button className="button button-report print-2">Descargar mascotas</button>
+        <button className="button button-report print-3">Descargar citas</button>
+        <button onClick={descargarExcel} className="button button-report print-4">Descargar inventario</button>
     </>
 );
 
