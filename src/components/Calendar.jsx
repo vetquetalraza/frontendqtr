@@ -226,9 +226,9 @@ const changeService = (value) => {
   setValues({...values,idservice: value })
   console.log(value)
   if (value == 1) {
-    setDoctor("Valeria Campos Ramos")
+    setDoctor("VALERIA CAMPOS RAMOS")
   } else {
-    setDoctor("Juan Huamaní Gómez")
+    setDoctor("OSCAR MARAVÍ RIVEROS")
   }
 }
 
