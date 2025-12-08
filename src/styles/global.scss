@@ -601,14 +601,16 @@ nav {
 /* 4. Appointments */
 .container-calendar {
   justify-content: center;
-  height: 80vh;
+  //height: 80vh;
   //width: 100vh;
   width: 100%;
 }
 
-.container-calendar:nth-child(1) {
+.container-calendar > div:nth-child(1) {
   height: 80vh;
 }
+
+
 /* 5. Medical History */
 
 .label-check {
