@@ -240,9 +240,9 @@ return (
                     </div>
                     <label for="comment" className="label">5. Observaciones: {grooming.comment}</label>
                 </div>
-                <div className="button-section">
+                {/* <div className="button-section">
                     <input type="submit" value="Imprimir" className="button print-button"/> 
-                </div>
+                </div> */}
             </div>
         </div>
         <div id="popup2" className="overlay">
@@ -253,7 +253,7 @@ return (
                 </div>
                 <div className="report-content"> 
                     <label className="label">1. Fecha y Hora Atención: {medical.date}</label>
-                    <label for="dcotor" className="label">2. Médico: Juan Huamaní Gómez</label>
+                    <label for="dcotor" className="label">2. Médico: OSCAR MARAVI RIVEROS</label>
                     <p className="label">3. Anamnesis: {medical.anamnesis}</p>
                     <label for="temperature" className="label">4. Temperatura: {medical.temperature} (c°)</label>
                     <label for="weight" className="label">5. Peso: {medical.weight} (kg)</label>
@@ -286,9 +286,9 @@ return (
                     </table>
                     <p className="label">9. Tratamiento: {medical.treatment}</p>
                 </div>
-                <div className="button-section">
+                {/* <div className="button-section">
                     <input type="submit" value="Imprimir" className="button print-button"/> 
-                </div>
+                </div> */}
             </div>
         </div>
         <div id="popup3" className="overlay">
@@ -299,7 +299,7 @@ return (
                 </div>
                 <div className="report-content">
                     <label className="label">1. Fecha y Hora Atención: {plan.date}</label>
-                    <label for="dcotor" className="label">2. Médico: Juan Huamaní Gómez</label>
+                    <label for="dcotor" className="label">2. Médico: OSCAR MARAVI RIVEROS</label>
                     <label for="idvaccine" className="label">3. Vacunas aplicadas en la cita:</label>
                     <table className="table-inventory">
                         <thead>
@@ -323,9 +323,9 @@ return (
                     <label for="weight" className="label">5. Peso: {plan.weight} (kg) </label>
                     <p className="label">6. Observaciones: {plan.comments}</p>
                 </div>
-                <div className="button-section">
+                {/* <div className="button-section">
                     <input type="submit" value="Imprimir" className="button print-button"/> 
-                </div>
+                </div> */}
             </div>
         </div>
     </>
