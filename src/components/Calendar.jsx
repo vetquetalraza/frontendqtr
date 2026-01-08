@@ -16,7 +16,7 @@ const [isReadOnly, setIsReadOnly] = useState(false);
 const [isDisabled, setIsDisabled] = useState(false);
 const [errors, setErrors] = useState({});
 const [dataClient, setDataClient] = useState('');
-const [doctor, setDoctor] = useState('');
+// const [doctor, setDoctor] = useState('');
 const [values , setValues] = useState({
   idappo: '',
   idpet:'',
@@ -196,11 +196,11 @@ const handleEventClick = (info) => {
           idservice: res.data[0].idvetservices,
           dateappo: res.data[0].dateappointment,
           timeappo: res.data[0].timeappointment,
-          timeendappo: res.data[0].timeaendppointment,
+          timeendappo: res.data[0].timeendappointment,
           comment: res.data[0].commentappointment,
           status: res.data[0].statusappointment});
   }).catch(err => console.log(err))
-
+  
 };
 
 const handleClear = () => {
@@ -222,15 +222,15 @@ const convertirAHoras = (hora) => {
   return parseInt(h) * 60 + parseInt(m);
 };
 
-const changeService = (value) => {
-  setValues({...values,idservice: value })
-  console.log(value)
-  if (value == 1) {
-    setDoctor("VALERIA CAMPOS RAMOS")
-  } else {
-    setDoctor("OSCAR MARAVÍ RIVEROS")
-  }
-}
+// const changeService = (value) => {
+//   setValues({...values,idservice: value })
+//   console.log(value)
+//   if (value == 1) {
+//     setDoctor("VALERIA CAMPOS RAMOS")
+//   } else {
+//     setDoctor("OSCAR MARAVÍ RIVEROS")
+//   }
+// }
 
 const validateForm = () => {
   const newErrors = {};
@@ -240,7 +240,7 @@ const validateForm = () => {
   }
   
   if (!values.idservice) {
-    newErrors.idservice = 'El servicio requerido';
+    newErrors.idservice = 'El servicio es requerido';
   }
 
   if (!values.dateappo) {
@@ -353,7 +353,8 @@ const validateForm = () => {
                   <span id="resume" className="label resume">{dataClient}</span>
 
                   <label for="idservice" className="label label-pet">Servicio</label>
-                  <select id="idservice" name="idservice" className="input" onChange={(e) => changeService(e.target.value)} value={values.idservice}>
+                  <select id="idservice" name="idservice" className="input"  onChange={e => setValues({...values,idservice: e.target.value})} value={values.idservice}>
+                  {/* <select id="idservice" name="idservice" className="input" onChange={(e) => changeService(e.target.value)} value={values.idservice}></select> */}
                       <option selected>Seleccionar</option>
                       <option value="2">Consulta Médica</option>
                       <option value="1">Grooming</option>
@@ -361,8 +362,8 @@ const validateForm = () => {
                   </select>
                   {errors.idservice && <label className="errorMsg">{errors.idservice}</label>}
                   
-                  <label for="doctor" className="label">Personal Médico</label>
-                  <input type="text" id="doctor" placeholder="" className="input input-text" value={doctor} disabled/>
+                  {/* <label for="doctor" className="label">Personal Médico</label>
+                  <input type="text" id="doctor" placeholder="" className="input input-text" value={doctor} disabled/> */}
 
                   <label for="dateappo" className="label">Fecha cita</label>
                   <input type="date" id="dateappo" className="input input-text" onChange={e => setValues({...values,dateappo: e.target.value})} value={values.dateappo} readOnly={isReadOnly}/>
@@ -389,7 +390,7 @@ const validateForm = () => {
                   <input type="text" id="comment" className="input input-text" onChange={e => setValues({...values,comment: e.target.value})} value={values.comment} />
                    
                   <div className="button-section">
-                      <input type="submit" value="Guardar" className="button primary-button"/> 
+                    {String(values.status) !== "2" && ( <input id="btnSave" type="submit" value="Guardar" className="button primary-button"/> )}
                   </div>
                   
               </form>

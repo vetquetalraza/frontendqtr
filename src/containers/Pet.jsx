@@ -363,13 +363,13 @@ const Pet = () => {
     ];
 
     const raceOptions =
-    values.idspecie === "1"
+    values.idspecie === 1
       ? catOptions
-      : values.idspecie === "2"
+      : values.idspecie === 2
       ? dogOptions
-      : values.idspecie === "3"
+      : values.idspecie === 3
       ? birdOptions
-      : values.idspecie === "4"
+      : values.idspecie === 4
       ? otherOptions
       : [];
 
@@ -413,7 +413,7 @@ return (
                                 
                                 <div>
                                     <label for="gender" className="label label-pet">Género</label>
-                                   <select id="gender" name="gender" className="input" onChange={e => setValues({...values,idgender: e.target.value})} value={values.idgender}>
+                                   <select id="gender" name="gender" className="input" onChange={e => setValues({...values,idgender: Number(e.target.value)})} value={values.idgender}>
                                         <option  selected>Seleccionar</option>
                                         <option value="1">Hembra</option>
                                         <option value="2">Macho</option>
@@ -454,7 +454,7 @@ return (
                                 </div>
                                 <div>
                                     <label for="specie" className="label label-pet">Especie</label>
-                                    <select id="specie" name="specie" className="input" onChange={e => setValues({...values,idspecie: e.target.value})} value={values.idspecie}>
+                                    <select id="specie" name="specie" className="input" onChange={e => setValues({...values,idspecie: Number(e.target.value)})} value={values.idspecie}>
                                         <option  selected>Seleccionar</option>
                                         <option value="1">Gato</option>
                                         <option value="2">Perro</option>
@@ -465,7 +465,7 @@ return (
                                 </div>
                                 <div>
                                     <label for="origin" className="label label-pet">Procedencia</label>
-                                    <select id="origin" name="origin" className="input" onChange={e => setValues({...values,idorigin: e.target.value})} value={values.idorigin}>
+                                    <select id="origin" name="origin" className="input" onChange={e => setValues({...values,idorigin: Number(e.target.value)})} value={values.idorigin}>
                                         <option  selected>Seleccionar</option>
                                         <option value="1">Costa</option>
                                         <option value="2">Sierra</option>
