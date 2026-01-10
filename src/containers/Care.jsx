@@ -13,7 +13,6 @@ const Care = () => {
     const close = document.querySelector(".close");
     const [data, setData] = useState([])
     const [vaccine , setVaccine] = useState([])
-    const [vaccineSel, setVaccineSel] = useState([])
     const [history , setHistory] = useState([])
     const [symptoms , setSymptoms] = useState([])
     const [diagnosis , setDiagnosis] = useState([])
@@ -93,7 +92,10 @@ const Care = () => {
 
         //Listar vacunas con stock
         api.get('/vaccines/filter')
-        .then(res => setVaccine(Array.from(res.data)))
+        .then(res => {
+            setVaccine(Array.from(res.data));
+            console.log(res.data);
+        })
         .catch(err => console.log(err));
 
         //Listar historial de vacunas de la mascota
@@ -131,8 +133,6 @@ const Care = () => {
     
     //Tabla medicamentos e insumos utilizados
     const [materials, setMaterials] = useState([]);
-
-    // Estado para los campos de entrada
     const [newIdMaterial, setNewIdMaterial] = useState('');
     const [newMaterial, setNewMaterial] = useState('');
     const [newDosage, setNewDosage] = useState('');
@@ -162,7 +162,7 @@ const Care = () => {
         setNewDosage('');
         
         }
-        console.log(medical)
+        //console.log(medical)
     };
 
     const validateMedical= () => {
@@ -170,27 +170,27 @@ const Care = () => {
         const newErrorsMed = {};
 
         if (!medical.anamnesis) {
-          newErrorsMed.anamnesis = '*Anamnesis es un dato requerido';
+          newErrorsMed.anamnesis = 'Anamnesis es un dato requerido';
         }
 
         if (!medical.weight) {
-          newErrorsMed.weightm = '*El peso es requerido';
+          newErrorsMed.weightm = 'El peso es requerido';
         }
 
         if (!medical.temperature) {
-          newErrorsMed.temperaturem = '*La temperatura es requerida';
+          newErrorsMed.temperaturem = 'La temperatura es requerida';
         }
 
         if (medical.symptoms.length === 0) {
-          newErrorsMed.symptoms = '*Síntomas es un dato requerido';
+          newErrorsMed.symptoms = 'Síntomas es un dato requerido';
         }
         
         if (medical.diagnosis.length === 0) {
-          newErrorsMed.diagnosis = '*Diagnóstico es un dato requerido';
+          newErrorsMed.diagnosis = 'Diagnóstico es un dato requerido';
         }
 
         if (!medical.treatment) {
-          newErrorsMed.treatment = '*Tratamiento es un dato requerido';
+          newErrorsMed.treatment = 'Tratamiento es un dato requerido';
         }
 
         return newErrorsMed;
@@ -199,10 +199,11 @@ const Care = () => {
     const handleSubmitMedic = (e) => {
         e.preventDefault();
 
+        console.log(medical)
         const validationErrors = validateMedical();
         if (Object.keys(validationErrors).length === 0) {
 
-            console.log(medical)
+            //console.log(medical)
             api.post('/medical/',medical)
             .then(res => {
                 console.log(res);
@@ -240,15 +241,15 @@ const Care = () => {
         const newErrorsPlan = {};
 
         if (values.idvaccine.length === 0) {
-          newErrorsPlan.idvaccine = '*La vacuna es requerida';
+          newErrorsPlan.idvaccine = 'La vacuna es requerida';
         }
 
         if (!values.weight) {
-          newErrorsPlan.weight = '*El peso es requerido';
+          newErrorsPlan.weight = 'El peso es requerido';
         }
 
         if (!values.temperature) {
-          newErrorsPlan.temperature = '*La temperatura es requerida';
+          newErrorsPlan.temperature = 'La temperatura es requerida';
         }
 
         return newErrorsPlan;
@@ -256,11 +257,10 @@ const Care = () => {
 
     const handleSubmitVaccine = (e) => {
         e.preventDefault();
-
+        //console.log(values)
         const validationErrors = validatePlan();
         if (Object.keys(validationErrors).length === 0) {
 
-            setValues({...values,idvaccine: vaccineSel});
             //console.log(values)
             api.post('/plan/',values)
             .then(res => {
@@ -293,33 +293,36 @@ const Care = () => {
 
     }
     
-    const handleAddRow = () => {
-        var selected = document.getElementById("idvaccine"),
-            text = selected.options[selected.selectedIndex].text,
-            val = selected.value;
+    const [vaccines, setVaccines] = useState([]);
+    const [newIdVaccine, setNewIdVaccine] = useState('');
+    const [newVaccine, setNewVaccine] = useState('');
+    const [newNumber, setNewNumber] = useState('');
 
-        const dosage = document.getElementById("id-dosage").value;
+    // Función para manejar la eliminación de una fila
+    const handleDeleteVaccine = (id) => {
+        setVaccines(vaccines.filter(row => row.id !== id));
+    };
 
-        setVaccineSel([...vaccineSel, {id : val, name : text, dosage: dosage}])
+    const handleAddVaccine = () => {
+
+        if (newIdVaccine && newVaccine && newNumber) {
+        const newRow = {
+            id: newIdVaccine,
+            name: newVaccine,
+            dosis: newNumber
+        };
+        setValues({
+        ...values,
+        idvaccine: [...values.idvaccine, [parseInt(newRow.id), newRow.dosis]]
+        });
+        setVaccines([...vaccines, newRow]);
         
-        setTimeout(() => {
-
-            const tableRows = document.querySelectorAll('#table-vaccine tbody tr');
-            var list = [];
-
-            for(let i=0; i<tableRows.length; i++) {
-                const row = tableRows[i];
-                const number = row.querySelector('.number').innerHTML;
-                //console.log(number)
-                const id = row.querySelector('.id-vaccine').value;
-                
-                list.push({idvaccine : parseInt(id), dosage : parseInt(number)});
-            }
-
-            setValues({...values,idvaccine: list});
-
-        }, 500);
-
+        // Limpiar los campos después de agregar
+        setNewIdVaccine('');
+        setNewVaccine('');
+        setNewNumber('');
+        
+        }
     }
 
     //GROOMING
@@ -328,11 +331,11 @@ const Care = () => {
         const newErrorsGro = {};
 
         if (!grooming.before) {
-          newErrorsGro.before = '*La foto de antes es requerida';
+          newErrorsGro.before = 'La foto de antes es requerida';
         }
 
         if (!grooming.after) {
-          newErrorsGro.after = '*La foto del después es requerida';
+          newErrorsGro.after = 'La foto del después es requerida';
         }
 
         return newErrorsGro;
@@ -535,18 +538,19 @@ return (
                                         setMedical({...medical,diagnosis: values})
                                     }}
                                 />
-
-                                <label for="materials" className="label label-care">Medicamentos e insumos utilizados durante la atención</label>
-                                <select className="input" onChange={(e) => {
-                                    setNewIdMaterial(e.target.value);
-                                    setNewMaterial(e.target.selectedOptions[0].label)
-                                }}>
-                                    <option>Seleccionar</option>
-                                    {medicines.map((medicine,index) => {
-                                        return <option value={medicine.iddrug}>{medicine.namedrug} - {medicine.presentationdrug} {medicine.quantityperpresentation}</option>
-                                    })}  
-                                </select>
-                                <label for="dosage" className="label label-care">Dosis</label>
+                               
+                                <label for="materials" className="label label-care">Medicamentos</label>
+                                <Select
+                                closeMenuOnSelect={true}
+                                placeholder="Seleccionar"
+                                options={medicines}
+                                value={medicines.find(opt => opt.value === newIdMaterial) || null}
+                                onChange={(option) => {
+                                    setNewIdMaterial(option.value);      // ID
+                                    setNewMaterial(option.label);        // Texto
+                                }}
+                                />
+                                <label for="dosage" className="label label-care">Cantidad</label>
                                 <input type="number" value={newDosage} id="dosage" min="0" step="0.01" className="input input-text" onChange={(e) => setNewDosage(e.target.value)}/>
                                 <a onClick={handleAdd} className="button button-edit">Agregar</a>
 
@@ -554,8 +558,8 @@ return (
                                     <thead>
                                     <tr>
                                         <th>N°</th>
-                                        <th>Medicamento / Insumo</th>
-                                        <th>Dosis</th>
+                                        <th>Medicamento</th>
+                                        <th>Cantidad</th>
                                         <th>Acciones</th>
                                     </tr>
                                     </thead>
@@ -598,25 +602,24 @@ return (
                         <div className="options-vaccine">
                             <div>
                                 <label for="idvaccine" className="label">Seleccione vacuna</label>
-                                <select id="idvaccine" name="vaccine" className="input">
-                                    <option selected>Seleccionar</option>
-                                    {vaccine.map((vaccine,index) => {
-                                        return <option value={vaccine.iddrug}>{vaccine.namedrug} - {vaccine.presentationdrug} {vaccine.quantityperpresentation}</option>
-                                    })}     
-                                </select>
+                                <Select
+                                closeMenuOnSelect={true}
+                                placeholder="Seleccionar"
+                                options={vaccine}
+                                value={vaccine.find(opt => opt.value === newIdVaccine) || null}
+                                onChange={(option) => {
+                                    setNewIdVaccine(option.value);      // ID
+                                    setNewVaccine(option.label);        // Texto
+                                }}
+                                />
                             </div>
                             <div>
-                                <label for="idvaccine" className="label">Seleccione dosis</label>
-                                <select name="numero-dosis" className="input" id="id-dosage">
-                                    <option selected>Seleccionar</option>
-                                    <option value="1">Primera dosis</option>
-                                    <option value="2">Segunda dosis</option>
-                                    <option value="3">Tercera dosis </option>
-                                    <option value="4">Cuarta dosis</option>
-                                    <option value="5">Quinta dosis</option>
-                                </select>    
+                                <label for="idvaccine" className="label">Número dosis</label>
+                                <input name="numero" type="number" value={newNumber} id="dosage" min="0" step="1" className="input input-text" onChange={(e) => setNewNumber(e.target.value)}/>
+                                
+
                             </div>
-                            <a onClick={handleAddRow} className="button button-edit">Agregar</a>
+                            <a onClick={handleAddVaccine} className="button button-edit">Agregar</a>
                         </div>
                         <div className="tables-data-vaccine">
                             <div>
@@ -627,14 +630,18 @@ return (
                                             <th>N°</th> 
                                             <th>Número de dosis</th>
                                             <th>Nombre vacuna</th>
+                                            <th>Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {vaccineSel.map((vaccine,index) => {
+                                    {vaccines.map((vaccine,index) => {
                                     return <tr key={index}>
                                             <td>{index + 1}</td>
-                                            <td><label className="number">{vaccine.dosage}</label></td>
-                                            <td><input type="number" value={vaccine.id} className="id-vaccine" hidden/>{vaccine.name}</td>
+                                            <td>{vaccine.name}</td>
+                                            <td>{vaccine.dosis}</td>
+                                            <td>
+                                                <button onClick={() => handleDeleteVaccine(vaccine.id)}>Eliminar</button>
+                                            </td>
                                         </tr>
                                     })} 
                                     </tbody> 

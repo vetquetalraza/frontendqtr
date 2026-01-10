@@ -91,7 +91,7 @@ const Client = () => {
             const close = document.querySelector(".close");
             api.post('/clients',values)
             .then(res => {
-                console.log(res);
+                //console.log(res);
                 close.click();
                 Swal.fire({
                     position: "bottom-end",
@@ -102,7 +102,7 @@ const Client = () => {
                   });
     
                 handleClear();
-                handleLoad()
+                handleLoad();
             })
             .catch(err => {
                 console.log(err);

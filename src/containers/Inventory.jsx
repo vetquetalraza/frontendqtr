@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import DataTable from "react-data-table-component"
 import '../styles/global.scss';
 import Swal from 'sweetalert2'
 import MyDataTable from '../components/Datatable';
@@ -9,6 +8,7 @@ const Inventory = () => {
     const [data, setData] = useState([])
     const [errors, setErrors] = useState({});
     const [values, setValues] = useState({
+        iddrug: null,
         name: '',
         description: '',
         presentation: '',
@@ -62,6 +62,19 @@ const Inventory = () => {
         return newErrors;
     };
 
+    const handleClear = () => {
+        setValues({...values,
+            iddrug: '',
+            name: '',
+            description: '',
+            presentation: '',
+            quantity: '',
+            category: '',
+            brand: ''
+        })
+    }
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -69,31 +82,62 @@ const Inventory = () => {
         if (Object.keys(validationErrors).length === 0) {
             //console.log(values);
             const close = document.querySelector(".close");
-            api.post('/drugs/',values)
-            .then(res => {
-                console.log(res);
-                close.click();
-                Swal.fire({
-                    position: "bottom-end",
-                    icon: "success",
-                    title: "Datos guardados correctamente.",
-                    showConfirmButton: false,
-                    timer: 1500
+
+            if (values.iddrug) {
+                api.patch('/drugs/'+values.iddrug,values)
+                .then(res => {
+                    console.log(res);
+                    close.click();
+                    Swal.fire({
+                        position: "bottom-end",
+                        icon: "success",
+                        title: "Datos guardados correctamente.",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    //Limpiar campos
+                    handleLoad();
+                    handleClear();
+                })
+                .catch(err => {
+                    console.log(err);
+                    Swal.fire({
+                        position: "bottom-end",
+                        icon: "error",
+                        title: "Ha ocurrido un error.",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
                 });
-                //Limpiar campos
-                handleLoad();
-                e.target.reset();
-            })
-            .catch(err => {
-                console.log(err);
-                Swal.fire({
-                    position: "bottom-end",
-                    icon: "error",
-                    title: "Ha ocurrido un error.",
-                    showConfirmButton: false,
-                    timer: 1500
+              } else {
+                api.post('/drugs/',values)
+                .then(res => {
+                    console.log(res);
+                    close.click();
+                    Swal.fire({
+                        position: "bottom-end",
+                        icon: "success",
+                        title: "Datos guardados correctamente.",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    //Limpiar campos
+                    handleLoad();
+                    handleClear();
+                })
+                .catch(err => {
+                    console.log(err);
+                    Swal.fire({
+                        position: "bottom-end",
+                        icon: "error",
+                        title: "Ha ocurrido un error.",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
                 });
-            })
+            }
+            
+
         } else {
           setErrors(validationErrors);
         }  
@@ -166,6 +210,7 @@ const Inventory = () => {
         .then(res => {   
             console.log(res.data)   
             setValues({...values,
+                iddrug: id,
                 name:res.data[0].namedrug,
                 description:res.data[0].descriptiondrug,
                 brand:res.data[0].branddrug,
@@ -209,6 +254,19 @@ return (
                         <label for="description" className="label">Descripcion Medicina</label>
                         <input type="text" id="description" placeholder=""  value={values.description} onChange={e => setValues({...values,description: e.target.value})} className="input input-text"/>
                         
+                        <label for="category" className="label">Categoría</label>
+                        <select id="specie" name="category" className="input" value={values.category} onChange={e => setValues({...values,category: e.target.value})}>
+                            <option  selected>Seleccionar</option>
+                            <option value="Anestesicos y Tranquilizantes">Anestesicos y Tranquilizantes</option>
+                            <option value="Antibióticos y Antiinflamatorios">Antibióticos y Antiinflamatorios</option>
+                            <option value="Antiparasitario">Antiparasitario</option>
+                            <option value="Espectorantes">Espectorantes</option>
+                            <option value="Insumo">Insumo</option>
+                            <option value="Vacuna">Vacuna</option>
+                            <option value="Vitaminas, aminoácidos y minerales">Vitaminas, aminoácidos y minerales</option>
+                        </select>
+                        {errors.category && <label className="errorMsg">{errors.category}</label>}
+
                         <label for="brand" className="label">Marca Medicina </label>
                         <input type="text" id="brand" placeholder="" value={values.brand} onChange={e => setValues({...values,brand: e.target.value})} className="input input-text"/>
                         {errors.brand && <label className="errorMsg">{errors.brand}</label>}
@@ -231,18 +289,6 @@ return (
                         <input type="text" id="quantity" placeholder=""  value={values.quantity} onChange={e => setValues({...values,quantity: e.target.value})} className="input input-text"/>
                         {errors.quantity && <label className="errorMsg">{errors.quantity}</label>}
 
-                        <label for="category" className="label">Categoría</label>
-                        <select id="specie" name="category" className="input" value={values.category} onChange={e => setValues({...values,category: e.target.value})}>
-                            <option  selected>Seleccionar</option>
-                            <option value="Anestesicos y Tranquilizantes">Anestesicos y Tranquilizantes</option>
-                            <option value="Antibióticos y Antiinflamatorios">Antibióticos y Antiinflamatorios</option>
-                            <option value="Antiparasitario">Antiparasitario</option>
-                            <option value="Espectorantes">Espectorantes</option>
-                            <option value="Insumo">Insumo</option>
-                            <option value="Vacuna">Vacuna</option>
-                            <option value="Vitaminas, aminoácidos y minerales">Vitaminas, aminoácidos y minerales</option>
-                        </select>
-                        {errors.category && <label className="errorMsg">{errors.category}</label>}
                         <div className="button-section">
                             <input type="submit" value="Guardar" className="button primary-button"/> 
                         </div>
