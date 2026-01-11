@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../styles/global.scss';
 import Swal from 'sweetalert2'
 import MyDataTable from '../components/Datatable';

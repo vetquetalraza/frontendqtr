@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../styles/global.scss';
 import MyDataTable from '../components/Datatable';
 import api from '../services/api';
@@ -10,7 +10,6 @@ const History = () => {
     const [data, setData] = useState([]);
     const [errors, setErrors] = useState({});
     const [idpet, setPet] = useState("");
-    const [searched, setSearched] = useState(false);
 
     // Definimos las columnas para el DataTable
     const columns = [
@@ -128,9 +127,8 @@ const History = () => {
                 after:res.data[0].photoaftergroomingpet,
                 comment:res.data[0].commentsgroomingpet,
                 date:res.data[0].createat,});
-            
-            setFilePath('https://api-vet-2utn.onrender.com' +"/uploads/"+res.data[0].photobeforegroomingpet);
-            setFilePath2('https://api-vet-2utn.onrender.com' +"/uploads/"+res.data[0].photoaftergroomingpet);
+            setFilePath(res.data[0].photobeforegroomingpet);
+            setFilePath2(res.data[0].photoaftergroomingpet);
         }).catch(err => console.log(err))
     }
 

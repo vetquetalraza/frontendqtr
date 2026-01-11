@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../styles/pet.scss';
-import axios from 'axios';
 import Swal from 'sweetalert2';
 import MyDataTable from '../components/Datatable';
 import api from '../services/api';
@@ -87,41 +86,55 @@ const Pet = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         const validationErrors = validateForm();
+    
         if (Object.keys(validationErrors).length === 0) {
+
             const close = document.querySelector(".close");
 
-                api.post("/pets/",values)
-                .then(res => {
-                    console.log(res);
-                    close.click();
-                    Swal.fire({
-                        position: "bottom-end",
-                        icon: "success",
-                        title: "Datos guardados correctamente.",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+            const formData = new FormData();
+            Object.entries(values).forEach(([key, value]) => {
+            if (key !== "photo" && value !== null && value !== undefined) {
+                formData.append(key, value);
+            }
+            });
 
-                    //Subida de foto
-                    onUpload();
+            if (file) {
+                formData.append('photoFile', file);
+            }
 
-                    //Limpiar campos
-                    e.target.reset();
-    
-                    //Cargar lista de datos nuevamente
-                    handleLoad()
-                })
-                .catch(err => {
-                    console.log(err);
-                    Swal.fire({
-                        position: "bottom-end",
-                        icon: "error",
-                        title: "Ha ocurrido un error.",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                })
+            //console.log(formData);
+
+            api.post("/pets/",formData)
+            .then(res => {
+                console.log(res);
+                close.click();
+                Swal.fire({
+                    position: "bottom-end",
+                    icon: "success",
+                    title: "Datos guardados correctamente.",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                //Subida de foto
+                //onUpload();
+                //Limpiar campos
+                e.target.reset();
+
+                //Cargar lista de datos nuevamente
+                handleLoad()
+            })
+            .catch(err => {
+                console.log(err);
+                Swal.fire({
+                    position: "bottom-end",
+                    icon: "error",
+                    title: "Ha ocurrido un error.",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            })
 
         } else {
             setErrors(validationErrors);
@@ -131,9 +144,9 @@ const Pet = () => {
     const handleList = (id) => {
         api.get("/pets/"+id)
         .then(res => {
-            console.log(res.data);
+            //console.log(res.data);
             setNameClient({nameclient: res.data[0].nameclient,surnameclient: res.data[0].surnameclient});
-            setFilePath('https://api-vet-2utn.onrender.com' +"/uploads/"+res.data[0].photopet);
+            setFilePath(res.data[0].photopet);
             setValues({...values,
                 idpet: res.data[0].idpet,
                 client: res.data[0].dniclient,
@@ -145,7 +158,7 @@ const Pet = () => {
                 color: res.data[0].colorpet,
                 birthdate: res.data[0].birthdatepet,
                 signs: res.data[0].particularsignspet,
-                photo: "/uploads/"+res.data[0].photopet,});
+                photo: res.data[0].photopet,});
         }).catch(err => console.log(err))
     }
 
@@ -210,40 +223,8 @@ const Pet = () => {
     const onFileChange = (event) => {
         const file = event.target.files[0];
         setFile(file);
-        const extension = file.name.split('.').pop().toLowerCase();
-        const photoname = `foto_${Date.now()}.${extension}`;
-        setValues({...values, photo: photoname});
         setFilePath(URL.createObjectURL(file))
-
     };
-
-    const onUpload = async () => {
-        if (file) {
-
-            const formData = new FormData();
-            console.log(values.photo)
-            formData.append('photo', file, values.photo);
-            
-            try {
-                const response = await axios.post('https://api-vet-2utn.onrender.com/upload', formData, {
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                },
-              });
-
-              console.log(response)
-            } catch (error) {
-              console.error('Error al subir el archivo', error);
-              Swal.fire({
-                icon: "error",
-                title: "Ha ocurrido un error.",
-                text: "Error al subir el archivo",
-                showConfirmButton: false,
-                timer: 1500
-              });
-            }
-        }
-    }
 
     const validateForm = () => {
         const newErrors = {};

@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../styles/global.scss';
-import axios from 'axios';
 import moment from 'moment'; 
 import Swal from 'sweetalert2'
 import Select from 'react-select'
 import MyDataTable from '../components/Datatable';
 import api from '../services/api';
-
 
 const Care = () => {
     
@@ -27,7 +25,7 @@ const Care = () => {
         { name: 'Mascota', selector: row => row.namepet, sortable: true },
         { name: 'Especie', selector: row => row.namespeciepet, sortable: true },
         { name: 'Servicio', selector: row => row.namevetservices, sortable: true },
-        { name: 'Estado', selector: row => <><label className="text-wait">{row.statusappointment == '1' ? 'Agendado' : ''}</label></>, sortable: true },
+        { name: 'Estado', selector: row => <><label className="text-wait">{row.statusappointment === '1' ? 'Agendado' : ''}</label></>, sortable: true },
         { name: 'Acciones', cell: row => <><a className="button button-edit" data-appo={row.idappointment} data-pet={row.idpet} onClick={handleOpen} href={selectForm(row.idvetservices)}>Atender</a></>}
     ];
     
@@ -94,7 +92,7 @@ const Care = () => {
         api.get('/vaccines/filter')
         .then(res => {
             setVaccine(Array.from(res.data));
-            console.log(res.data);
+            //console.log(res.data);
         })
         .catch(err => console.log(err));
 
@@ -199,14 +197,14 @@ const Care = () => {
     const handleSubmitMedic = (e) => {
         e.preventDefault();
 
-        console.log(medical)
+        //console.log(medical)
         const validationErrors = validateMedical();
         if (Object.keys(validationErrors).length === 0) {
 
             //console.log(medical)
             api.post('/medical/',medical)
             .then(res => {
-                console.log(res);
+                //console.log(res);
                 close.click();
                 Swal.fire({
                     position: "bottom-end",
@@ -220,7 +218,7 @@ const Care = () => {
                 loadData();
             })
             .catch(err => {
-                console.log(err);
+                //console.log(err);
                 Swal.fire({
                     position: "bottom-end",
                     icon: "error",
@@ -264,7 +262,7 @@ const Care = () => {
             //console.log(values)
             api.post('/plan/',values)
             .then(res => {
-                console.log(res);
+                //console.log(res);
                 close.click();
                 Swal.fire({
                     position: "bottom-end",
@@ -278,7 +276,7 @@ const Care = () => {
                 loadData()
             })
             .catch(err => {
-                console.log(err);
+                //console.log(err);
                 Swal.fire({
                     position: "bottom-end",
                     icon: "error",
@@ -330,11 +328,11 @@ const Care = () => {
 
         const newErrorsGro = {};
 
-        if (!grooming.before) {
+        if (!file) {
           newErrorsGro.before = 'La foto de antes es requerida';
         }
 
-        if (!grooming.after) {
+        if (!file2) {
           newErrorsGro.after = 'La foto del después es requerida';
         }
 
@@ -347,9 +345,28 @@ const Care = () => {
 
         const validationErrors = validateGrooming();
         if (Object.keys(validationErrors).length === 0) {
-            api.post('/grooming/',grooming)
+
+            const formData = new FormData();
+
+            Object.entries(grooming).forEach(([k,v]) => {
+            if (k !== "before" && k !== "after") {
+                formData.append(k,v);
+            }
+            });
+
+            if (file) {
+            formData.append("beforePhoto", file);
+            }
+
+            if (file2) {
+            formData.append("afterPhoto", file2);
+            }
+
+            //console.log(formData)
+
+            api.post('/grooming/',formData)
             .then(res => {
-                console.log(res);
+                //console.log(res);
                 close.click();
                 Swal.fire({
                     position: "bottom-end",
@@ -358,9 +375,6 @@ const Care = () => {
                     showConfirmButton: false,
                     timer: 1500
                 });
-
-                onUpload(file,grooming.before)
-                onUpload(file2,grooming.after)
 
                 //Limpiar campos
                 e.target.reset();
@@ -383,7 +397,6 @@ const Care = () => {
     }
 
     //GROOMING PHOTO
-
     const [file, setFile] = useState(null);
     const [file2, setFile2] = useState(null);
     const [filePath, setFilePath] = useState('');
@@ -392,45 +405,14 @@ const Care = () => {
     const onFileChange = (event) => {
         const file = event.target.files[0];
         setFile(file);
-        const extension = file.name.split('.').pop().toLowerCase();
-        const photoname = `foto_${Date.now()}.${extension}`;
-        setGrooming({...grooming, before: photoname}) 
         setFilePath(URL.createObjectURL(file))
     };
 
     const onFileChange2 = (event) => {
         const file2 = event.target.files[0];
         setFile2(file2);
-        const extension = file.name.split('.').pop().toLowerCase();
-        const photoname = `foto_${Date.now()}.${extension}`;
-        setGrooming({...grooming, after: photoname}) ;
         setFilePath2(URL.createObjectURL(file2));
-
     };
-
-    const onUpload = async (photofile, photoname) => {
-        const formData = new FormData();
-        console.log(photoname)
-        formData.append('photo', photofile, photoname);
-        
-        try {
-            const response = await axios.post('https://api-vet-2utn.onrender.com/upload', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          })    
-          console.log(response)
-        } catch (error) {
-          console.error('Error al subir el archivo', error);
-          Swal.fire({
-            icon: "error",
-            title: "Ha ocurrido un error.",
-            text: "Error al subir el archivo",
-            showConfirmButton: false,
-            timer: 1500
-          });
-        }
-    }
 
 return (
     <>
