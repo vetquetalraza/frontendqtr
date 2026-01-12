@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import '../styles/global.scss';
+import { useState } from 'react';
+import '../styles/login.scss';
 import axios from 'axios';
 import Swal from 'sweetalert2'
 import { useNavigate } from "react-router-dom";

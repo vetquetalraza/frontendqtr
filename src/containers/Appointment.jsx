@@ -1,4 +1,4 @@
-import '../styles/global.scss';
+import '../styles/appointment.scss';
 import Calendar from '../components/Calendar';
 
 const Appointment = () => {

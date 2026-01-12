@@ -1,0 +1,60 @@
+@import 'vars';
+
+.popup-appo {
+    margin: 70px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    width: 40%;
+    position: relative;
+}
+
+.data-client input {
+    width: 100%;
+}
+
+.fc {
+  font-family: 'Poppins', sans-serif;
+  font-size: var(--sm);
+}
+
+.fc-header-toolbar .fc-toolbar-title {
+  font-size: var(--sm);
+  color: var(--text);
+}
+
+.fc .fc-button-primary {
+  background: #3577db;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+.fc-event {
+  background: #10b981;
+  border: none;
+  padding: 4px 6px;
+  border-radius: 6px;
+  font-size: 10px;
+}
+
+@media (max-width: 900px) {
+    .popup-appo{ 
+        width: 90%;
+    }
+
+    .fc .fc-header-toolbar {
+        display: grid;
+        grid-template-columns: 1fr;
+        row-gap: 8px;
+        text-align: center;
+    }
+
+    .fc .fc-toolbar-chunk {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+}

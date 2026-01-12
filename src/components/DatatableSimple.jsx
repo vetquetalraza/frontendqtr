@@ -1,5 +1,4 @@
 // src/DataTable.js
-import React from 'react';
 import DataTable from 'react-data-table-component';
 import '../styles/global.scss';
 import customStyles from './customStyles';

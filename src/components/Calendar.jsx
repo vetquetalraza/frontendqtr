@@ -1,23 +1,27 @@
 import FullCalendar from '@fullcalendar/react'
-import timeGridPlugin from '@fullcalendar/timegrid' 
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from '@fullcalendar/interaction';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import EventItem from '../hooks/useGetEvent';
 import Swal from 'sweetalert2'
 import moment from 'moment'; 
 import api from '../services/api';
+import { useMediaQuery } from 'react-responsive';
+import '../styles/calendar.scss';
 
 export default function Calendar() {
 
 const close = document.querySelector(".close");
-
+const isMobile = useMediaQuery({ maxWidth: 900 });
 const [events, setEvents] = useState([]);
 const [isReadOnly, setIsReadOnly] = useState(false);
 const [isDisabled, setIsDisabled] = useState(false);
 const [errors, setErrors] = useState({});
 const [dataClient, setDataClient] = useState('');
 // const [doctor, setDoctor] = useState('');
-const [values , setValues] = useState({
+
+const initialValues = {
   idappo: '',
   idpet:'',
   idservice: '',
@@ -26,7 +30,9 @@ const [values , setValues] = useState({
   timeendappo: '',
   comment: '',
   status: ''
-})
+};
+
+const [values , setValues] = useState(initialValues);
 
 const getColor = (e) => {
   var color = '';
@@ -114,7 +120,6 @@ const getPets = (id) =>{
   .catch(err => console.log(err));
 
 }
-
 
 //End nombre mascotas
 
@@ -205,16 +210,7 @@ const handleEventClick = (info) => {
 
 const handleClear = () => {
   setNameClient({nameclient: "Nombre del",surnameclient: "Usuario"});
-  setValues({...values,
-    idappo: '',
-    idpet:'',
-    idservice: '',
-    dateappo: '',
-    timeappo: '',
-    timeendappo: '',
-    comment: '',
-    status: ''
-  })
+  setValues(initialValues);
 }
 
 const convertirAHoras = (hora) => {
@@ -268,19 +264,18 @@ const validateForm = () => {
     }
 
   }
-
-
   return newErrors;
 };
+
   return (
     <>
     <FullCalendar
-      plugins={[ timeGridPlugin,  interactionPlugin]}
-      initialView="timeGridWeek"
+      plugins={[ dayGridPlugin, timeGridPlugin,  interactionPlugin]} 
+      initialView={isMobile ? "timeGridDay" : "timeGridWeek"}
       locale="es"
       timeZone="local"
       headerToolbar={{
-        left: 'timeGridWeek',
+        left: "timeGridWeek,timeGridDay",
         center: 'title',
         right: 'prev,next' // user can switch between the two
       }} 
@@ -318,8 +313,8 @@ const validateForm = () => {
     slotMinTime="08:00"
     slotMaxTime="22:00"
     />
-    <div id="popup1" className="overlay">
-      <div className="popup-pet">
+    <div id="popup1" className="popup-overlay">
+      <div className="popup-appo">
           <div className="popup-header">
               <label className="title">Datos cita</label>
               <a className="close" href="#" onClick={handleClear}>&times;</a>
@@ -328,16 +323,16 @@ const validateForm = () => {
 
               <form action="/" className="form" onSubmit={handleSubmit}>
 
-                  <input type="text" id="idappo"  className="input input-text" onChange={e => setValues({...values,idappo: e.target.value})}  value={values.idappo} hidden />
-                  <input type="text" id="idpet"  className="input input-text" onChange={e => setValues({...values,idpet: e.target.value})}  value={values.idpet} hidden />
+                  <input type="text" id="idappo"  className="input" onChange={e => setValues({...values,idappo: e.target.value})}  value={values.idappo} hidden />
+                  <input type="text" id="idpet"  className="input" onChange={e => setValues({...values,idpet: e.target.value})}  value={values.idpet} hidden />
 
-                  <div id="dataclient">
+                  <div id="dataclient" className="data-client">
                     <label for="dni" className="label">DNI Cliente</label>
-                    <input type="text" id="dni" placeholder="" className="input input-text" onChange={getName} />
+                    <input type="text" id="dni" placeholder="" className="input" onChange={getName} />
                     {errors.dni && <label className="errorMsg">{errors.dni}</label>}
               
                     <label for="name" className="label">Cliente</label>
-                    <input type="text" id="name" disabled placeholder="Nombre del usuario" className="input input-text" value={nameClient.nameclient+ ' ' + nameClient.surnameclient}/>
+                    <input type="text" id="name" disabled placeholder="Nombre del usuario" className="input" value={nameClient.nameclient+ ' ' + nameClient.surnameclient}/>
                     {errors.name && <label className="errorMsg">{errors.name}</label>}
 
                     <label for="idpet" className="label">Nombre mascota</label>

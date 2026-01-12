@@ -129,64 +129,64 @@
 //   }
 
 /* Forms styles */
-/* 1. Login */
-.login {
-  width: 100%;
-  height: 100vh;
-  display: grid;
-  place-items: center;
-}
+// /* 1. Login */
+// .login {
+//   width: 100%;
+//   height: 100vh;
+//   display: grid;
+//   place-items: center;
+// }
 
-.login::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: linear-gradient(180deg, #0000008c 0%, #0000008c 100%), url('../assets/icons/pet4.jpg');
-  background-size: cover;
-  z-index: -1;
-}
+// .login::before {
+//   content: "";
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 100%;
+//   background-image: linear-gradient(180deg, #0000008c 0%, #0000008c 100%), url('../assets/icons/pet4.jpg');
+//   background-size: cover;
+//   z-index: -1;
+// }
 
-.form-container-login {
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  width: 300px;
-}
+// .form-container-login {
+//   display: grid;
+//   grid-template-rows: auto 1fr auto;
+//   width: 300px;
+// }
 
-.form-login {
-  display: flex;
-  flex-direction: column;
-  background-color: #2e2d2d;
-  padding: 20px;
-  border-radius: 10px;
-  opacity: 0.7; 
-}
+// .form-login {
+//   display: flex;
+//   flex-direction: column;
+//   background-color: #2e2d2d;
+//   padding: 20px;
+//   border-radius: 10px;
+//   opacity: 0.7; 
+// }
 
-.label-login {
-  font-size: var(--sm);
-  margin-bottom: 4px;
-  color: white;
-  display: block;
-}
+// .label-login {
+//   font-size: var(--sm);
+//   margin-bottom: 4px;
+//   color: white;
+//   display: block;
+// }
 
-.label-error {
-  font-size: var(--sm);
-  margin-bottom: 4px;
-  color: #f89292;
-  display: block;
-}
+// .label-error {
+//   font-size: var(--sm);
+//   margin-bottom: 4px;
+//   color: #f89292;
+//   display: block;
+// }
 
-.title-login {
-  font-size: var(--md);
-  margin-bottom: 4px;
-  color: white;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
+// .title-login {
+//   font-size: var(--md);
+//   margin-bottom: 4px;
+//   color: white;
+//   display: flex;
+//   justify-content: center;
+//   margin-bottom: 10px;
 
-}
+// }
 
 /* 2. Clients */
 .form-container-list {
@@ -424,16 +424,6 @@
   }
 
 /* 4. Appointments */
-.container-calendar {
-  justify-content: center;
-  //height: 80vh;
-  //width: 100vh;
-  width: 100%;
-}
-
-.container-calendar > div:nth-child(1) {
-  height: 80vh;
-}
 
 
 /* 5. Medical History */
