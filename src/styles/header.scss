@@ -1,0 +1,104 @@
+@import 'vars';
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 64px;
+    width: 100%;
+    background-color: var(--light-color);
+    font-size: var(--md);
+    position: relative;
+}
+
+.navbar-left,
+.navbar-right  {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand,
+.username {
+  color: var(--white);
+}
+
+/* Iconos */
+.nav-user,
+.icon-sidebar {
+  width: 30px;
+  height: 30px;
+}
+
+.nav-user {
+  margin-right: 12px;
+}
+
+.icon-sidebar { 
+  margin-left: 12px;
+}
+
+.button-sidebar {
+  background-color: var(--light-color);
+  border: 0px;
+}
+/* Dropdown */
+.dropdown {
+  position: relative;
+}
+
+.dropbtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Menú */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0; 
+  left: auto;  
+  background-color: #fff;
+  min-width: 180px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,.15);
+  overflow: hidden;
+  z-index: 99;
+  margin-right: 12px;
+}
+
+.dropdown-content.show {
+  display: block;
+}
+
+/* Items */
+.menu-item {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 12px;
+  text-align: left;
+  cursor: pointer;
+  font-size: var(--sm);
+}
+
+.menu-item:hover {
+  background: #f2f2f2;
+}
+
+/* 📱 Móvil */
+@media (max-width: 600px) {
+  .brand{
+    display: none;
+  }
+
+  .username {
+    display: none;
+  }
+
+  nav {
+    height: 56px;
+  }
+}

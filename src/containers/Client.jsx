@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import '../styles/global.scss';
+import '../styles/client.scss';
 import Swal from 'sweetalert2'
 import MyDataTable from '../components/Datatable';
 import api from '../services/api';
+import { useMediaQuery } from 'react-responsive';
 
 const Client = () => {
 
+    const isMobile = useMediaQuery({ maxWidth: 900 });
     const [data, setData] = useState([]);
 
     // Definimos las columnas para el DataTable
@@ -18,14 +20,34 @@ const Client = () => {
         { name: 'Acciones', cell: row => <><a className="button button-edit" href="#popup1" onClick={() => handleList(row.dniclient)}>Editar</a><a className="button button-delete" onClick={() => handleDelete(row.dniclient)}>Eliminar</a></>}
     ];
 
-    const [values, setValues] = useState({
+    const columnsMobile = [
+        {
+            name: 'Datos',
+            cell: row => (
+            <div className="mobile-row">
+                <div><strong>Nombre:</strong> {row.nameclient + " " + row.surnameclient}</div>
+                <div><strong>DNI:</strong> {row.dniclient}</div>
+                <div><strong>Teléfono:</strong> {row.phoneclient}</div>
+                <div><strong>Email:</strong> {row.emailclient}</div>
+                <div className="actions">
+                    <a className="button button-edit" href="#popup1" onClick={() => handleList(row.dniclient)}>Editar</a>
+                    <button className="button button-delete" onClick={() => handleDelete(row.dniclient)}>Eliminar</button>
+                </div>
+            </div>
+            )
+        }
+    ];
+
+    const initialValues = {
         dni: '',
         name: '',
         surname: '',
         address: '',
         email: '',
         phone: ''
-    })
+    };
+
+    const [values, setValues] = useState(initialValues)
 
     const [isReadOnly, setIsReadOnly] = useState(false);
     const [errors, setErrors] = useState({});
@@ -68,7 +90,8 @@ const Client = () => {
                         showConfirmButton: false,
                         timer: 1500
                       });
-                    handleLoad()
+                    handleClear();
+                    handleLoad();
                 })
                 .catch(err => {
                     console.log(err);
@@ -119,16 +142,10 @@ const Client = () => {
         }      
     }
 
+
     const handleClear = () => {
-        setValues({...values,
-            dni:'',
-            name:'',
-            surname:'',
-            address:'',
-            email:'',
-            phone:''
-        })
-    }
+    setValues(initialValues);
+    };
 
     const handleLoad = () => {
         api.get('/clients')
@@ -202,10 +219,14 @@ const Client = () => {
             <a class="button button-new" onClick={() => setIsReadOnly(false)} href="#popup1">Nuevo Cliente</a>
         </div>
         
-        <MyDataTable columns={columns} data={data} />
+        <MyDataTable 
+            columns={isMobile ? columnsMobile : columns}
+            data={data}
+            responsive
+        />
         
-        <div id="popup1" className="overlay">
-            <div className="popup">
+        <div id="popup1" className="popup-overlay">
+            <div className="popup-client">
                 <div className="popup-header">
                     <label className="title">Datos cliente</label>
                     <a className="close" href="#" onClick={handleClear}>&times;</a>

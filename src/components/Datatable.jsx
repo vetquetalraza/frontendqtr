@@ -1,12 +1,13 @@
-// src/DataTable.js
 import React, { useState} from 'react';
 import DataTable from 'react-data-table-component';
 import FilterComponent from './FilterComponent';
-import '../styles/global.scss';
+import '../styles/datatable.scss';
 import customStyles from './customStyles';
+import { useMediaQuery } from 'react-responsive';
 
 const MyDataTable = ({ columns, data }) => {
 
+  const isMobile = useMediaQuery({ maxWidth: 900 });
   const [filterText, setFilterText] = useState('');
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 
@@ -39,7 +40,7 @@ const MyDataTable = ({ columns, data }) => {
   };
 
 return (
-    <FilterComponent onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />
+    <FilterComponent onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} className="field-search"/>
 );
 }, [filterText, resetPaginationToggle]);
 
@@ -49,10 +50,12 @@ return (
         data={result}
         pagination
         paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
+        responsive
         subHeader
         subHeaderComponent={subHeaderComponentMemo}
-        persistTableHead
+        persistTableHead={!isMobile}
         paginationComponentOptions={localization}
+        highlightOnHover
         noDataComponent={<label className="label">{noDataMessage}</label>}
         customStyles={customStyles}
     />

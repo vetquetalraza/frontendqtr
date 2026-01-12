@@ -1,0 +1,16 @@
+.popup-client {
+    margin: 70px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    width: 40%;
+    position: relative;
+}
+
+
+
+@media (max-width: 600px) {
+    .popup-client { 
+        width: 90%;
+    }
+}

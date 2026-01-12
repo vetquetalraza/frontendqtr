@@ -1,0 +1,70 @@
+@import 'vars';
+
+.footer {
+  width: 100%;
+  background-color: var(--dark-color);
+  padding: 20px 10px;
+  height: 56px;
+}
+
+/* Grid principal */
+.social-footer {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  color: var(--white);
+  font-size: var(--sm);
+}
+
+/* Cada item */
+.social-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--white);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.social-item:hover {
+  opacity: 0.8;
+}
+
+/* Iconos */
+.icon-footer {
+  width: 20px;
+  height: 20px;
+}
+
+/* =================== */
+/* RESPONSIVE */
+/* =================== */
+
+@media (max-width: 900px) {
+  .social-footer {
+    grid-template-columns: repeat(2, 1fr);
+    text-align: center;
+  }
+
+  .footer {
+    height: 100px;
+    }
+
+}
+
+@media (max-width: 600px) {
+  .social-footer {
+    grid-template-columns: 1fr;
+    row-gap: 12px;
+  }
+
+  .footer {
+    height: 150px;
+   }
+}
+
+

@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import '../styles/pet.scss';
 import Swal from 'sweetalert2';
 import MyDataTable from '../components/Datatable';
 import api from '../services/api';
-import Select from 'react-select'
+import Select from 'react-select';
+import { useMediaQuery } from 'react-responsive';
 
 const Pet = () => {
 
+    const isMobile = useMediaQuery({ maxWidth: 900 });
     const [data, setData] = useState([])
     const [nameClient, setNameClient] = useState([])
     const [errors, setErrors] = useState({});
@@ -22,19 +24,40 @@ const Pet = () => {
         { name: 'Acciones', cell: row => <><a className="button button-edit" href="#popup1" onClick={() => handleList(row.idpet)}>Editar</a><a className="button button-delete" onClick={() => handleDelete(row.idpet)}>Eliminar</a></>}
     ];
 
-    const [values, setValues] = useState({
-        idpet: '',
-        client: '',
-        namepet: '',
-        idspecie: '',
-        idgender: '',
-        idorigin: '',
-        race: '',
-        color: '',
-        birthdate: '',
-        signs: '',
-        photo: '',
-    })
+    const columnsMobile = [
+        {
+            name: 'Datos',
+            cell: row => (
+            <div className="mobile-row">
+                <div><strong>Nombre:</strong> {row.namepet}</div>
+                <div><strong>Especie:</strong> {row.namespeciepet}</div>
+                <div><strong>Raza:</strong> {row.racepet}</div>
+                <div><strong>Género:</strong> {row.namegenderpet}</div>
+                <div><strong>Edad:</strong> {getEdad(row.birthdatepet)}</div>
+                <div className="actions">
+                    <a className="button button-edit" href="#popup1" onClick={() => handleList(row.idpet)}>Editar</a>
+                    <button className="button button-delete" onClick={() => handleDelete(row.idpet)}>Eliminar</button>
+                </div>
+            </div>
+            )
+        }
+    ];
+
+    const initialValues =  {
+            idpet: '',
+            client: '',
+            namepet: '',
+            idspecie: '',
+            idgender: '',
+            idorigin: '',
+            race: '',
+            color: '',
+            birthdate: '',
+            signs: '',
+            photo: '',
+    };
+
+    const [values, setValues] = useState(initialValues)
 
     const handleLoad = () => {
         api.get("/pets/")
@@ -69,8 +92,8 @@ const Pet = () => {
     }
 
     const getName = (e) =>{
+        setValues({...values,client: e.target.value})
         if (e.target.value.length >= 8) {
-            setValues({...values,client: e.target.value})
             api.get('/clients/' + e.target.value)
             .then( res => {
                 if(res.data[0]){
@@ -120,7 +143,7 @@ const Pet = () => {
                 //Subida de foto
                 //onUpload();
                 //Limpiar campos
-                e.target.reset();
+                handleClear()
 
                 //Cargar lista de datos nuevamente
                 handleLoad()
@@ -200,21 +223,12 @@ const Pet = () => {
           });
     }
 
+    const fileRef = useRef();
+
     const handleClear = () => {
         setNameClient({nameclient: '',surnameclient: ''});
-        setValues({...values,
-            idpet: '',
-            client: '',
-            namepet: '',
-            idspecie: '',
-            idgender: '',
-            idorigin: '',
-            race: '',
-            color: '',
-            birthdate: '',
-            signs: '',
-            photo: '',
-        })
+        setValues(initialValues);
+        if (fileRef.current) fileRef.current.value = '';
     }
 
     const [file, setFile] = useState(null);
@@ -361,9 +375,13 @@ return (
             <a class="button button-new" href="#popup1" onClick={e => setValues({...values,idpet: 0})}>Nueva Mascota</a>
         </div>
 
-        <MyDataTable columns={columns} data={data} />
+        <MyDataTable 
+            columns={isMobile ? columnsMobile : columns}
+            data={data}
+            responsive
+        />
 
-        <div id="popup1" className="overlay">
+        <div id="popup1" className="popup-overlay">
             <div className="popup-pet">
                 <div className="popup-header">
                     <label className="title">Datos mascota</label>
@@ -376,22 +394,22 @@ return (
                         <input type="text" id="idpet"  className="input input-text" onChange={e => setValues({...values,idpet: e.target.value})}  value={values.idpet} hidden />
 
                         <div className="group-data-pet">
-                        
                             <div>
                                 <div>
                                     <label for="dni" className="label">DNI Cliente</label>
                                     <input type="text" id="dni" name="dni" onChange={getName} className="input input-text" value={values.client}/>
                                     {errors.dni && <label className="errorMsg">{errors.dni}</label>}
                                 </div>
-
-
+                                <div>
+                                    <label for="name"  className="label">Cliente</label>
+                                    <input type="text" disabled id="name" name="name" className="input input-text" value={nameClient.nameclient+ ' ' + nameClient.surnameclient}/>
+                                    {errors.name && <label className="errorMsg">{errors.name}</label>}
+                                </div>
                                 <div>
                                     <label for="pet" className="label">Nombre mascota</label>
                                     <input type="text" id="pet" name="namepet" className="input input-name" onChange={e => setValues({...values,namepet: e.target.value})} value={values.namepet} />
                                     {errors.namepet && <label className="errorMsg">{errors.namepet}</label>}
                                 </div>
-
-                                
                                 <div>
                                     <label for="gender" className="label label-pet">Género</label>
                                    <select id="gender" name="gender" className="input" onChange={e => setValues({...values,idgender: Number(e.target.value)})} value={values.idgender}>
@@ -401,39 +419,7 @@ return (
                                     </select>
                                     {errors.idgender && <label className="errorMsg">{errors.idgender}</label>}
                                 </div>
-                                <div>
-                                    <label for="birthday" className="label">Fecha de Nacimiento</label>
-                                    <input type="date" id="birthday" name="birthday" className="input input-name" onChange={e => setValues({...values,birthdate: e.target.value})} value={values.birthdate}/>
-                                    {errors.birthdate && <label className="errorMsg">{errors.birthdate}</label>}
-                                </div>
-                                <div>
-                                    <label for="color" className="label label-pet">Color</label>
-                                    <Select
-                                        closeMenuOnSelect={true}
-                                        id="color"
-                                        className="label"
-                                        placeholder="Seleccionar"
-                                        options={colorOptions}
-                                        value={colorOptions.find(opt => opt.value === values.color) || null}
-                                        onChange={option => {
-                                            setValues({ ...values, color: option ? option.value : "" });
-                                        }}
-                                    />
-                                    {/* <input type="text" id="color" name ="color" className="input input-name" onChange={e => setValues({...values,color: e.target.value})} value={values.color}/> */}
-                                    {errors.color && <label className="errorMsg">{errors.color}</label>}
-                                </div>
-                                <div>
-                                    <label for="description" className="label">Señas particulares</label>
-                                    <textarea className="textarea" rows="3" id="description" onChange={e => setValues({...values,signs: e.target.value})} value={values.signs}></textarea>                        
-                                </div>
-                            </div>  
-                            <div>
-                                <div>
-                                    <label for="name"  className="label">Cliente</label>
-                                    <input type="text" disabled id="name" name="name" className="input input-text" value={nameClient.nameclient+ ' ' + nameClient.surnameclient}/>
-                                    {errors.name && <label className="errorMsg">{errors.name}</label>}
-                                </div>
-                                <div>
+                                 <div>
                                     <label for="specie" className="label label-pet">Especie</label>
                                     <select id="specie" name="specie" className="input" onChange={e => setValues({...values,idspecie: Number(e.target.value)})} value={values.idspecie}>
                                         <option  selected>Seleccionar</option>
@@ -455,7 +441,33 @@ return (
                                     </select>
                                     {errors.idorigin && <label className="errorMsg">{errors.idorigin}</label>}
                                 </div>
-
+                                <div>
+                                    <label for="birthday" className="label">Fecha de Nacimiento</label>
+                                    <input type="date" id="birthday" name="birthday" className="input input-name" onChange={e => setValues({...values,birthdate: e.target.value})} value={values.birthdate}/>
+                                    {errors.birthdate && <label className="errorMsg">{errors.birthdate}</label>}
+                                </div>
+                            </div>  
+                            <div>
+                                <div>
+                                    <label for="color" className="label label-pet">Color</label>
+                                    <Select
+                                        closeMenuOnSelect={true}
+                                        id="color"
+                                        className="label"
+                                        placeholder="Seleccionar"
+                                        options={colorOptions}
+                                        value={colorOptions.find(opt => opt.value === values.color) || null}
+                                        onChange={option => {
+                                            setValues({ ...values, color: option ? option.value : "" });
+                                        }}
+                                    />
+                                    {/* <input type="text" id="color" name ="color" className="input input-name" onChange={e => setValues({...values,color: e.target.value})} value={values.color}/> */}
+                                    {errors.color && <label className="errorMsg">{errors.color}</label>}
+                                </div>
+                                <div>
+                                    <label for="description" className="label">Señas particulares</label>
+                                    <textarea className="textarea" rows="3" id="description" onChange={e => setValues({...values,signs: e.target.value})} value={values.signs}></textarea>                        
+                                </div>
                                 <div>
                                     <label for="race" className="label label-pet">Raza</label>
                                     <Select
@@ -477,7 +489,7 @@ return (
                                     <label for="" className="label">¿Deseas que conoscamos más a tu mascota?</label>
                                     
                                     <div className="group-photo">
-                                        <input id="photo" type="file" onChange={onFileChange}/>
+                                        <input id="photo" type="file" ref={fileRef} onChange={onFileChange}/>
                                     </div>
                                     <div className="photo-preview"><img accept=".jpg, .jpeg, .png" src={filePath}/></div>
                                 </div>
@@ -485,8 +497,7 @@ return (
                         </div> 
                         <div className="button-section">
                             <input type="submit" value="Guardar" className="button primary-button"/> 
-                        </div>
-                            
+                        </div>   
                     </form>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 @import 'vars';
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
+
 .popup-pet {
     margin: 70px auto;
     padding: 20px;
@@ -8,7 +9,6 @@
     border-radius: 5px;
     width: 50%;
     position: relative;
-    transition: all 5s ease-in-out;
   }
 
   .group-data-pet {
@@ -62,3 +62,14 @@
     justify-content: space-around;
     align-items: center;
   }
+
+  @media (max-width: 600px) {
+    .popup-pet{ 
+        width: 90%;
+    }
+
+    .group-data-pet {
+      grid-template-columns: 1fr; 
+      gap: 12px;                  
+    }
+}
