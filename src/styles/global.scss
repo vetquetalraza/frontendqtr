@@ -141,7 +141,19 @@
 }
 
 .button-delete {
-  background-color: var(--text-input-field);
+  background-color: #bd4949;
+  color: var(--white);
+  width: auto;
+  height: auto;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: var(--xs);
+  text-decoration: none;
+  margin-left: 10px;
+}
+
+.button-add {
+  background-color: var(--hover-color); 
   color: var(--black);
   width: auto;
   height: auto;
@@ -150,6 +162,7 @@
   font-size: var(--xs);
   text-decoration: none;
   margin-left: 10px;
+  margin-right: 10px;
 }
 
 .button-new {
@@ -220,4 +233,12 @@
 .content {
     max-height: 75vh; 
     overflow-y: auto; 
+}
+
+//MESSAGE ERROR
+.errorMsg {
+  color: red;
+  font-size: var(--xs);
+  margin-top: -12px;
+  margin-bottom: 12px;
 }

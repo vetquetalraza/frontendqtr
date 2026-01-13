@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import '../styles/global.scss';
+import '../styles/history.scss';
 import MyDataTable from '../components/Datatable';
 import api from '../services/api';
 import Swal from 'sweetalert2'
-
+import { useMediaQuery } from 'react-responsive';
 
 const History = () => {
 
+    const isMobile = useMediaQuery({ maxWidth: 600 });
     const [data, setData] = useState([]);
     const [errors, setErrors] = useState({});
     const [idpet, setPet] = useState("");
@@ -20,10 +21,24 @@ const History = () => {
         { name: 'Acciones', cell: row => row.idvetservices === 1 ? <><a className="button button-edit" onClick={() => getGrooming(row.idappointment)} href="#popup1">Ver detalles</a></> : row.idvetservices === 2  ? <><a className="button button-edit" onClick={ () => getMedical(row.idappointment)} href="#popup2">Ver detalles</a></> : <><a className="button button-edit" onClick={ () => getPlan(row.idappointment)} href="#popup3">Ver detalles</a></> }
     ];
 
+    const columnsMobile = [
+        {
+            name: 'Datos',
+            cell: row => (
+            <div className="mobile-row">
+                <div><strong>Fecha y Hora:</strong> {row.dateappointment + " " + row.timeappointment}</div>
+                <div><strong>Servicio:</strong> {row.namevetservices}</div>
+                <div><strong>Estado:</strong> {row.statusappointment === '2' ? 'Atendido' : ''}</div>
+                <div className="actions">
+                    {row.idvetservices === 1 ? <><a className="button button-edit" onClick={() => getGrooming(row.idappointment)} href="#popup1">Ver detalles</a></> : row.idvetservices === 2  ? <><a className="button button-edit" onClick={ () => getMedical(row.idappointment)} href="#popup2">Ver detalles</a></> : <><a className="button button-edit" onClick={ () => getPlan(row.idappointment)} href="#popup3">Ver detalles</a></>}
+                </div>
+            </div>
+            )
+        }
+    ];
+
     useEffect(()=>{
         setNameClient({nameclient: "",surnameclient: ""});
-
-
     }, []);
 
     //Listar nombres de cliente
@@ -254,14 +269,18 @@ return (
                 })}
             </select>
             {errors.pet && <label className="label errorMsg">{errors.pet}</label>}
-            </div>     
-            <button className="button primary-button" onClick={getHistory}> Buscar</button>
+            </div>
+            <div className="button-section">
+                <button className="button primary-button" onClick={getHistory}> Buscar</button>    
+            </div> 
         </div>
-
-        <MyDataTable columns={columns} data={data} />
-        
-        <div id="popup1" className="overlay">
-            <div className="popup popup-care">
+        <MyDataTable 
+            columns={isMobile ? columnsMobile : columns}
+            data={data}
+            responsive
+        />
+        <div id="popup1" className="popup-overlay">
+            <div className="popup-history">
                 <div className="popup-header">
                     <label className="title">Datos grooming</label>
                     <a className="close" href="#" onClick={handleClearGrooming}>&times;</a>
@@ -287,8 +306,8 @@ return (
                 </div> */}
             </div>
         </div>
-        <div id="popup2" className="overlay">
-            <div className="popup popup-care">
+        <div id="popup2" className="popup-overlay">
+            <div className="popup-medical">
                 <div className="popup-header">
                     <label className="title">Datos atención médica</label>
                     <a className="close" href="#" onClick={handleClearMedical}>&times;</a>
@@ -333,8 +352,8 @@ return (
                 </div> */}
             </div>
         </div>
-        <div id="popup3" className="overlay">
-            <div className="popup popup-care">
+        <div id="popup3" className="popup-overlay">
+            <div className="popup-vaccine">
                 <div className="popup-header">
                     <label className="title">Datos Vacunación</label>
                     <a className="close" href="#" onClick={handleClearPlan}>&times;</a>

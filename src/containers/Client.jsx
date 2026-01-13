@@ -7,7 +7,7 @@ import { useMediaQuery } from 'react-responsive';
 
 const Client = () => {
 
-    const isMobile = useMediaQuery({ maxWidth: 900 });
+    const isMobile = useMediaQuery({ maxWidth: 600 });
     const [data, setData] = useState([]);
 
     // Definimos las columnas para el DataTable

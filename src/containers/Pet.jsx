@@ -8,7 +8,7 @@ import { useMediaQuery } from 'react-responsive';
 
 const Pet = () => {
 
-    const isMobile = useMediaQuery({ maxWidth: 900 });
+    const isMobile = useMediaQuery({ maxWidth: 600 });
     const [data, setData] = useState([])
     const [nameClient, setNameClient] = useState([])
     const [errors, setErrors] = useState({});

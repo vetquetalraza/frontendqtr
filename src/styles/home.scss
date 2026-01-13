@@ -31,6 +31,27 @@ h3 {
 .card-service {
     border: 1px solid #adacac;
     border-radius: 10px;
-    height: 400px;
+    height: 450px;
+    padding: 15px;
 
+}
+
+@media (max-width: 600px) {
+    .container-services {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .card-service  {
+        height: auto;
+        padding: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container-services img {
+        width: 40%;
+        margin: 10px;
+    }
 }

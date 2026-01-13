@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
-import '../styles/global.scss';
+import '../styles/care.scss';
 import moment from 'moment'; 
 import Swal from 'sweetalert2'
 import Select from 'react-select'
 import MyDataTable from '../components/Datatable';
 import api from '../services/api';
+import { useMediaQuery } from 'react-responsive';
 
 const Care = () => {
     
+    const isMobile = useMediaQuery({ maxWidth: 600 });
     const close = document.querySelector(".close");
     const [data, setData] = useState([])
     const [vaccine , setVaccine] = useState([])
@@ -29,7 +31,26 @@ const Care = () => {
         { name: 'Acciones', cell: row => <><a className="button button-edit" data-appo={row.idappointment} data-pet={row.idpet} onClick={handleOpen} href={selectForm(row.idvetservices)}>Atender</a></>}
     ];
     
-    const [medical, setMedical] = useState({
+
+    const columnsMobile = [
+        {
+            name: 'Datos',
+            cell: row => (
+            <div className="mobile-row">
+                <div><strong>Fecha y Hora:</strong> {row.dateappointment + " " + row.timeappointment}</div>
+                <div><strong>Cliente:</strong> {row.nameclient + " " + row.surnameclient}</div>
+                <div><strong>Mascota:</strong> {row.namespeciepet + " - " + row.namepet}</div>
+                <div><strong>Servicio:</strong> {row.namevetservices}</div>
+                <div><strong>Estado:</strong><label className="text-wait">{row.statusappointment === '1' ? ' Agendado' : ''}</label></div>
+                <div className="actions">
+                    <a className="button button-edit" data-appo={row.idappointment} data-pet={row.idpet} onClick={handleOpen} href={selectForm(row.idvetservices)}>Atender</a>
+                </div>
+            </div>
+            )
+        }
+    ];
+    
+    const initialValuesMedical =  {
         idappo: '',
         anamnesis: '',
         weight: '',
@@ -38,22 +59,26 @@ const Care = () => {
         diagnosis: [],
         materials: [],
         treatment: ''
-    })
+    }
 
-    const [grooming, setGrooming] = useState({  
+    const [medical, setMedical] = useState(initialValuesMedical)
+
+    const initialValuesGroo =  {
         idappo: '',
         before: '',
         after: '',
         comment: ''
-    })
+    }
+    const [grooming, setGrooming] = useState(initialValuesGroo)
 
-    const [values, setValues] = useState({
+    const initialValuesVaccine =  {
         idappo: '',
         idvaccine: [],
         weight: '',
         temperature: '',
         comments: ''
-    })
+    }
+    const [values, setValues] = useState(initialValuesVaccine)
 
     //Actualizar lista de atenciones de acuerdo a la fecha de filtrado
     const handleChange = () => {
@@ -420,54 +445,56 @@ return (
         <div className="table-header-history">
             <div>
                 <label htmlFor="" className="label">Inicio</label>
-                <input type="date" id="startDate" className="input input-text"/>
+                <input type="date" id="startDate" className="input"/>
             </div>
             <div>
                 <label htmlFor="" className="label">Fin</label>
-                <input type="date" id="endDate" className="input input-text"/>
+                <input type="date" id="endDate" className="input"/>
             </div>
-            <button onClick={handleChange} className="button primary-button">Filtrar</button>
+            <div className="button-section">
+                <button onClick={handleChange} className="button primary-button">Filtrar</button>
+            </div>
         </div>
-        
-        <MyDataTable columns={columns} data={data} />
-
-        <div id="popup1" className="overlay">
-                <div className="popup popup-care">
-                    <div className="popup-header">
-                        <label className="title">Datos grooming</label>
-                        <a className="close" href="#">&times;</a>
-                    </div>
-                    <div className="content">
-
-                        <form action="/" className="form" onSubmit={handleSubmitGrooming}>
-                            
-                            <div className="contentPhotos">
-                                <div className="columnPhoto">
-                                    <label for="before" className="button photo-file">Sube una foto del antes!</label>
-                                    <input id="before" type="file" onChange={onFileChange}/>
-                                    <div className="preview-pet"><img src={filePath} alt="" accept=".jpg, .jpeg, .png" ></img></div>
-                                    {errors.before && <label className="errorMsg">{errors.before}</label>}
-                                </div>
-                                <div className="columnPhoto">
-                                    <label for="after" className="button photo-file">Sube una foto de ahora!</label>
-                                    <input id="after" type="file" placeholder="" onChange={onFileChange2}/>
-                                    <div className="preview-pet"><img src={filePath2} alt="" accept=".jpg, .jpeg, .png"></img></div>
-                                    {errors.after && <label className="errorMsg">{errors.after}</label>}
-                                </div>
+        <MyDataTable 
+            columns={isMobile ? columnsMobile : columns}
+            data={data}
+            responsive
+        />
+        <div id="popup1" className="popup-overlay">
+            <div className="popup-grooming">
+                <div className="popup-header">
+                    <label className="title">Datos grooming</label>
+                    <a className="close" href="#">&times;</a>
+                </div>
+                <div className="content">
+                    <form action="/" className="form" onSubmit={handleSubmitGrooming}>
+                        <div className="contentPhotos">
+                            <div className="columnPhoto">
+                                <label for="before" className="file-upload"><span>Sube una foto del antes!</span>
+                                <input id="before" type="file" onChange={onFileChange}/></label>
+                                <div className="preview-pet"><img src={filePath} alt="" accept=".jpg, .jpeg, .png" ></img></div>
+                                {errors.before && <label className="errorMsg">{errors.before}</label>}
                             </div>
+                            <div className="columnPhoto">
+                                <label for="after" className="file-upload"><span>Sube una foto de ahora!</span>
+                                <input id="after" type="file" placeholder="" onChange={onFileChange2}/></label>
+                                <div className="preview-pet"><img src={filePath2} alt="" accept=".jpg, .jpeg, .png"></img></div>
+                                {errors.after && <label className="errorMsg">{errors.after}</label>}
+                            </div>
+                        </div>
+                        
                             <label for="comment" className="label">Observaciones</label>
                             <textarea className="textarea" rows="3" id="comment" onChange={e => setGrooming({...grooming,comment: e.target.value})}></textarea>
-            
-                            <div className="button-section">
-                                <input type="submit" value="Guardar" className="button primary-button"/> 
-                            </div>
-                            
-                        </form>
-                    </div>
+                        
+                        <div className="button-section">
+                            <input type="submit" value="Guardar" className="button primary-button"/> 
+                        </div> 
+                    </form>
                 </div>
+            </div>
         </div>
-        <div id="popup2" className="overlay">
-            <div className="popup popup-medical">
+        <div id="popup2" className="popup-overlay">
+            <div className="popup-medical">
                 <div className="popup-header">
                     <label className="title">Datos atención médica</label>
                     <a className="close" href="#">&times;</a>
@@ -524,6 +551,8 @@ return (
                                 <label for="materials" className="label label-care">Medicamentos</label>
                                 <Select
                                 closeMenuOnSelect={true}
+                                id="materials"
+                                className="label"
                                 placeholder="Seleccionar"
                                 options={medicines}
                                 value={medicines.find(opt => opt.value === newIdMaterial) || null}
@@ -533,8 +562,13 @@ return (
                                 }}
                                 />
                                 <label for="dosage" className="label label-care">Cantidad</label>
-                                <input type="number" value={newDosage} id="dosage" min="0" step="0.01" className="input input-text" onChange={(e) => setNewDosage(e.target.value)}/>
-                                <a onClick={handleAdd} className="button button-edit">Agregar</a>
+                                <div className="fields-add">
+                                    <div>
+                                        <input type="number" value={newDosage} id="dosage" min="0" step="0.01" className="input" onChange={(e) => setNewDosage(e.target.value)}/>
+                                    </div>
+                                    <div className="div-add"><a onClick={handleAdd} className="button button-edit">Agregar</a></div>
+                                </div>
+
 
                                 <table className="table-inventory">
                                     <thead>
@@ -572,46 +606,45 @@ return (
                 </div>
              </div>
         </div>
-        <div id="popup3" className="overlay">
-            <div className="popup popup-care">
+        <div id="popup3" className="popup-overlay">
+            <div className="popup-vaccine">
                 <div className="popup-header">
                     <label className="title">Datos Vacunación</label>
                     <a className="close" href="#">&times;</a>
                 </div>
                 <div className="content">
                     <form action="/" className="form" onSubmit={handleSubmitVaccine}>
-                        
-                        <div className="options-vaccine">
+                        <div className="div-select">
+                            <label for="idvaccine" className="label">Seleccione vacuna</label>
+                            <Select
+                            closeMenuOnSelect={true}
+                            id="idvaccine"
+                            className="label"
+                            placeholder="Seleccionar"
+                            options={vaccine}
+                            value={vaccine.find(opt => opt.value === newIdVaccine) || null}
+                            onChange={(option) => {
+                                setNewIdVaccine(option.value);      
+                                setNewVaccine(option.label);        
+                            }}
+                            />
+                        </div>
+                        <label for="idvaccine" className="label">Número dosis</label>
+                        <div className="fields-add">
                             <div>
-                                <label for="idvaccine" className="label">Seleccione vacuna</label>
-                                <Select
-                                closeMenuOnSelect={true}
-                                placeholder="Seleccionar"
-                                options={vaccine}
-                                value={vaccine.find(opt => opt.value === newIdVaccine) || null}
-                                onChange={(option) => {
-                                    setNewIdVaccine(option.value);      // ID
-                                    setNewVaccine(option.label);        // Texto
-                                }}
-                                />
-                            </div>
-                            <div>
-                                <label for="idvaccine" className="label">Número dosis</label>
                                 <input name="numero" type="number" value={newNumber} id="dosage" min="0" step="1" className="input input-text" onChange={(e) => setNewNumber(e.target.value)}/>
-                                
-
                             </div>
-                            <a onClick={handleAddVaccine} className="button button-edit">Agregar</a>
+                            <div className="div-add"><a onClick={handleAddVaccine} className="button button-edit">Agregar</a></div>
                         </div>
                         <div className="tables-data-vaccine">
                             <div>
-                                <label for="idvaccine" className="label">Plan de vacunación</label>
                                 <table className="table-inventory" id="table-vaccine">
+                                    <caption>Plan de vacunación</caption>
                                     <thead>
                                         <tr>
                                             <th>N°</th> 
-                                            <th>Número de dosis</th>
                                             <th>Nombre vacuna</th>
+                                            <th>Número de dosis</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </thead>
@@ -622,7 +655,7 @@ return (
                                             <td>{vaccine.name}</td>
                                             <td>{vaccine.dosis}</td>
                                             <td>
-                                                <button onClick={() => handleDeleteVaccine(vaccine.id)}>Eliminar</button>
+                                                <button className="button button-delete" onClick={() => handleDeleteVaccine(vaccine.id)}>Eliminar</button>
                                             </td>
                                         </tr>
                                     })} 
@@ -631,13 +664,13 @@ return (
                                 {errors.idvaccine && <label className="errorMsg">{errors.idvaccine}</label>}
                             </div>
                             <div>
-                                <label for="idvaccine" className="label">Historial de Vacunación</label>
                                 <table className="table-inventory">
+                                    <caption>Historial de Vacunación</caption>
                                     <thead>
                                         <tr>
                                             <th>N°</th> 
-                                            <th>Número de dosis</th>
                                             <th>Nombre vacuna</th>
+                                            <th>Número de dosis</th>
                                             <th>Fecha aplicación</th>
                                         </tr>
                                     </thead>
@@ -645,8 +678,8 @@ return (
                                     {history.map((history,index) => {
                                     return <tr key={index}>
                                             <td>{index + 1}</td>
-                                            <td>{history.numbervaccine}</td>
                                             <td>{history.namedrug}</td>
+                                            <td>{history.numbervaccine}</td>
                                             <td>{history.dateappointment}</td>
                                         </tr>
                                     })} 
@@ -654,7 +687,6 @@ return (
                                 </table>
                             </div>
                         </div>
-                        
                         <div className="options-vaccine-second">
                             <div className="col">
                                 <div>
@@ -673,7 +705,6 @@ return (
                                 <textarea className="textarea" rows="3" id="comments" onChange={e => setValues({...values,comments: e.target.value})}></textarea>
                             </div>
                         </div>
-
                         <div className="button-section">
                             <input type="submit" value="Guardar" className="button primary-button"/> 
                         </div>

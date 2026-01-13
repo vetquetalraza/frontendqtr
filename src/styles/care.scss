@@ -1,107 +1,301 @@
-.form {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-    background-color: #fdfdfd;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  .label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: #333;
-  }
-  
-  .input,
-  .textarea,
-  select {
-    width: 100%;
-    padding: 0.6rem 0.8rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
-    box-sizing: border-box;
-  }
-  
-  .input:focus,
-  .textarea:focus,
-  select:focus {
-    border-color: #007bff;
-    outline: none;
-  }
-  
-  .options-vaccine {
+  .form {
     display: grid;
-    grid-template-columns: 1fr 1fr auto;
-    gap: 1rem;
-    align-items: end;
-    margin-bottom: 2rem;
-  }
-  
-  .tables-data-vaccine {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    margin-bottom: 2rem;
-  }
-  
-  .table-inventory {
+    grid-template-columns: auto;
     width: 100%;
-    border-collapse: collapse;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   }
-  
-  .table-inventory th,
-  .table-inventory td {
-    padding: 0.75rem 1rem;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .table-inventory thead {
-    background-color: #007bff;
-    color: white;
-  }
-  
-  .table-inventory tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .button {
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-  }
-  
-  .primary-button {
-    background-color: #28a745;
-    color: white;
-  }
-  
-  .button-edit {
-    background-color: #17a2b8;
-    color: white;
-  }
-  
-  .button-section {
-    text-align: right;
-    margin-top: 2rem;
-  }
-  
-  .extra-data {
+
+.table-header-history {
+    margin-top: 10px;
     display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    margin-bottom: 2rem;
+    justify-content: start;
+    gap: 15px;
+    align-items: center;
+    border-style: solid;
+    border-color: #c3c6ca;
+    border-width: 1px;
+    border-radius: 10px;
+    padding: 15px;
+    width: fit-content;
+    margin-bottom: 15px;
   }
-  
-  .extra-data > div {
-    flex: 1 1 200px;
+
+  .table-header-history  button{
+    width: 100px; 
   }
+
+  .table-header-history  input, .table-header-history  select{
+    width: 200px;
+  }
+
+  .popup-care{
+    margin: 70px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    position: relative;
+    width: 50%;
+  }
+
+  .popup-medical {
+    margin: 70px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    position: relative;
+    width: 65%;
+  }
+
+  .popup-vaccine {
+    margin: 70px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    position: relative;
+    width: 50%;
+  }
+
+  .column1 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 15px;
+  align-items: flex-start;
+}
+
+.column2 {
+  display: grid;
+  grid-template-rows: auto;
+}
+
+.label-care {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+//VACCINES
+
+.table-inventory caption {
+  caption-side: top;
+  font-size: var(--sm);
+  font-weight: bold;
+  text-align: center;
+  padding: 6px 0;
+  color: var(--white);
+  background-color: #525353;
+}
+
+// .options-vaccine  {
+//   display: flex;
+//   justify-content: flex-start;
+//   gap: 15px;
+//   align-items: center;
+//   width: fit-content;
+// }
+
+// .options-vaccine  input, .options-vaccine  select{
+//   width: 200px;
+// }
+
+.options-vaccine-second {
+  display: flex;
+  gap: 2rem;
+  //margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.options-vaccine-second .col {
+  flex: 1 1 300px; /* ancho mínimo y flexible */
+}
+
+.options-vaccine-second input,
+.options-vaccine-second textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.tables-data-vaccine {
+  //margin-top: 10px;
+  display: block;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.tables-data-vaccine div {
+  width: 100%;
+}
+
+//MEDICAL
+.table-inventory {
+  border-collapse: collapse;
+  font-size: var(--sm);
+  text-align: center;
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.table-inventory th, .table-inventory td {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.table-inventory thead {
+  background-color: var(--text-input-field);
+  color:var(--black);
+}
+
+.table-inventory thead th {
+  font-weight: normal;
+}
+
+.table-inventory tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.table-inventory th, .table-inventory td {
+  padding: 4px 8px;
+}
+
+.fields-add {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
   
+.div-add {
+  margin-bottom: 12px;
+}
+
+.div-select {
+  margin-bottom: 10px;
+}
+//GROOMING
+
+  .popup-grooming {
+    margin: 70px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    width: 50%;
+    position: relative;
+  }
+
+  .contentPhotos {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .columnPhoto {
+    width: 50%;
+  }
+
+  .preview-pet {
+    border: 1px solid var(--second-color);
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5px;
+    margin-bottom: 10px;
+  }
+
+  .preview-pet img{
+    width: 30%;
+  }
+
+  .photo-file {
+    background-color: aqua;
+  }
+
+    .textarea {
+    width: 100%;
+  }
+
+  .file-upload {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--dark-color);
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: var(--sm);
+}
+
+.file-upload:hover {
+  background: var(--hover-color);
+}
+
+.file-upload input {
+  display: none;   /* OCULTA el input real */
+}
+
+@media (max-width: 600px) {
+
+  //GROOMING
+
+  .popup-grooming {
+    width: 90%;
+  }
+
+  .contentPhotos {
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: center;
+      padding: 0px;
+  }
+
+  .columnPhoto {
+    width: 100%;
+  }
+
+  .textarea {
+    width: 100%;
+  }
+  //MEDICAL
+
+  .popup-medical {
+    width: 90%;
+  }
+
+  .column1 {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .table-inventory {
+    border-collapse: collapse;
+    font-size: var(--xs);
+  }
+  //VACCINE
+
+    .table-header-history { 
+      display: grid;
+      grid-template-columns: 1fr;
+      padding: 15px;
+      width: 100%;
+      gap: 0px;
+    }
+
+    .button-section {
+      margin-top: 0px;
+    }
+
+    .table-header-history  input, .table-header-history  select{
+      width: 100%;
+    }
+
+    //MEDICAL
+
+  .popup-vaccine  {
+    width: 90%;
+  }
+
+  .options-vaccine-second {
+    gap: 0px;
+  }
+}

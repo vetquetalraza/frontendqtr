@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
-import '../styles/global.scss';
+import '../styles/inventory.scss';
 import Swal from 'sweetalert2'
 import MyDataTable from '../components/Datatable';
 import api from '../services/api';
+import { useMediaQuery } from 'react-responsive';
 
 const Inventory = () => {
+
+    const isMobile = useMediaQuery({ maxWidth: 600 });
     const [data, setData] = useState([])
     const [errors, setErrors] = useState({});
-    const [values, setValues] = useState({
+
+    const initialValuesDrug = {
         iddrug: null,
         name: '',
         description: '',
@@ -15,15 +19,19 @@ const Inventory = () => {
         quantity: '',
         category: '',
         brand: ''
-    })
+    }
 
-    const [income, setIncome] = useState({
+    const [values, setValues] = useState(initialValuesDrug)
+
+    const initialValuesBatches = {
         iddrug: '',
         number: '',
         quantity: '',
         startdate: '',
         duedate: '',
-    })
+    }
+
+    const [income, setIncome] = useState(initialValuesBatches)
 
     // Definimos las columnas para el DataTable
     const columns = [
@@ -33,7 +41,25 @@ const Inventory = () => {
         { name: 'Descripción', selector: row => row.descriptiondrug, sortable: true },
         { name: 'Presentación', selector: row => row.presentationdrug + " " + row.quantityperpresentation, sortable: true },
         { name: 'Stock', selector: row => row.total_batches - row.total_history, sortable: true },
-        { name: 'Acciones', cell: row => <><a class="button button-edit" href="#popup2" data-drug={row.iddrug} onClick={e => setIncome({...income,iddrug: e.target.dataset.drug})}>Agregar</a><a class="button button-delete" href="#popup" onClick={() => handleList(row.iddrug)}>Editar</a></>}
+        { name: 'Acciones', cell: row => <><a class="button button-add" href="#popup2" data-drug={row.iddrug} onClick={e => setIncome({...income,iddrug: e.target.dataset.drug})}>Agregar</a><a class="button button-edit" href="#popup" onClick={() => handleList(row.iddrug)}>Editar</a></>}
+    ];
+
+    const columnsMobile = [
+        {
+            name: 'Datos',
+            cell: row => (
+            <div className="mobile-row">
+                <div><strong>Nombre:</strong> {row.namedrug}</div>
+                <div><strong>Marca:</strong> {row.branddrug}</div>
+                <div><strong>Descripción:</strong> {row.descriptiondrug}</div>
+                <div><strong>Presentación:</strong> {row.presentationdrug + " " + row.quantityperpresentation}</div>
+                <div><strong>Stock:</strong> {row.total_batches - row.total_history}</div>
+                <div className="actions">
+                    <><a class="button button-add" href="#popup2" data-drug={row.iddrug} onClick={e => setIncome({...income,iddrug: e.target.dataset.drug})}>Agregar</a><a class="button button-edit" href="#popup" onClick={() => handleList(row.iddrug)}>Editar</a></>
+                </div>
+            </div>
+            )
+        }
     ];
 
     const validateDrugs = () => {
@@ -63,17 +89,12 @@ const Inventory = () => {
     };
 
     const handleClear = () => {
-        setValues({...values,
-            iddrug: '',
-            name: '',
-            description: '',
-            presentation: '',
-            quantity: '',
-            category: '',
-            brand: ''
-        })
+        setValues(initialValuesDrug)
     }
 
+    const handleClearBatch = () => {
+        setIncome(initialValuesBatches)
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -189,6 +210,7 @@ const Inventory = () => {
                 //Limpiar campos
                 e.target.reset();
                 handleLoad();
+                handleClearBatch();
             })
             .catch(err => {
                 console.log(err);
@@ -237,9 +259,13 @@ return (
             <label for="" class="title">Medicamentos e Insumos</label>
             <a class="button button-new" href="#popup">Nuevo ingreso</a>
         </div>
-        <MyDataTable columns={columns} data={data} />
-        <div id="popup" className="overlay">
-            <div className="popup">
+        <MyDataTable 
+            columns={isMobile ? columnsMobile : columns}
+            data={data}
+            responsive
+        />
+        <div id="popup" className="popup-overlay">
+            <div className="popup-inventory">
                 <div className="popup-header">
                     <label className="title">Datos Medicamentos</label>
                     <a className="close" href="#">&times;</a>
@@ -297,8 +323,8 @@ return (
                 </div>
             </div>
         </div>
-        <div id="popup2" className="overlay">
-            <div className="popup">
+        <div id="popup2" className="popup-overlay">
+            <div className="popup-batches">
                 <div className="popup-header">
                     <label className="title">Registro de entradas</label>
                     <a className="close" href="#">&times;</a>

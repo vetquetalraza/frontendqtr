@@ -1,6 +1,6 @@
-//import React, { useEffect, useState } from 'react';
-import '../styles/global.scss';
+import '../styles/reports.scss';
 import api from '../services/api';
+import Swal from 'sweetalert2';
 
 const Reports = () => {
 
@@ -23,14 +23,31 @@ const descargarExcel = async () => {
     link.click();
 
     window.URL.revokeObjectURL(url);
+
+    Swal.fire({
+      position: "bottom-end",
+      icon: "success",
+      title: "Reporte descargado correctamente",
+      showConfirmButton: false,
+      timer: 1500
+    });
   } catch (error) {
-    console.error("Error al descargar el Excel:", error);
+      Swal.fire({
+        position: "bottom-end",
+        icon: "error",
+        title: "Ha ocurrido un error",
+        showConfirmButton: false,
+        timer: 1500
+      });
   }
 };
 
 return (
-    <>
-        <label for="" className="title">Reportes</label>
+    <>  
+    <div class="popup-header-tables">
+      <label for="" className="title">Reportes</label>
+    </div>
+        
 
         {/* <div className="table-header-history">
             <div>

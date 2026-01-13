@@ -293,62 +293,61 @@
 //     outline: none;
 //     border: 1px solid var(--hover-color);
 //   }
-
-
   
-  .table-header {
-    margin-top: 10px;
-  }
+  // .table-header {
+  //   margin-top: 10px;
+  // }
 
-  .table-header-history {
-    margin-top: 10px;
-    display: flex;
-    justify-content: start;
-    gap: 15px;
-    align-items: center;
-    border-style: solid;
-    border-color: #c3c6ca;
-    border-width: 1px;
-    border-radius: 10px;
-    padding: 15px;
-    width: fit-content;
-    margin-bottom: 15px;
-  }
+  // .table-header-history {
+  //   margin-top: 10px;
+  //   display: flex;
+  //   justify-content: start;
+  //   gap: 15px;
+  //   align-items: center;
+  //   border-style: solid;
+  //   border-color: #c3c6ca;
+  //   border-width: 1px;
+  //   border-radius: 10px;
+  //   padding: 15px;
+  //   width: fit-content;
+  //   margin-bottom: 15px;
+  // }
 
-  .table-header-history  button{
-    width: 100px; 
-  }
+  // .table-header-history  button{
+  //   width: 100px; 
+  // }
 
-  .table-header-history  input, .table-header-history  select{
-    width: 200px;
-  }
+  // .table-header-history  input, .table-header-history  select{
+  //   width: 200px;
+  // }
   /* popup */
-  .overlay {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.7);
-    transition: opacity 500ms;
-    visibility: hidden;
-    opacity: 0;
-    z-index: 3;
-  }
-  .overlay:target {
-    visibility: visible;
-    opacity: 1;
-  }
+
+  // .overlay {
+  //   position: fixed;
+  //   top: 0;
+  //   bottom: 0;
+  //   left: 0;
+  //   right: 0;
+  //   background: rgba(0, 0, 0, 0.7);
+  //   transition: opacity 500ms;
+  //   visibility: hidden;
+  //   opacity: 0;
+  //   z-index: 3;
+  // }
+  // .overlay:target {
+  //   visibility: visible;
+  //   opacity: 1;
+  // }
   
-  .popup {
-    margin: 70px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 5px;
-    width: 40%;
-    position: relative;
-    transition: all 5s ease-in-out;
-  }
+  // .popup {
+  //   margin: 70px auto;
+  //   padding: 20px;
+  //   background: #fff;
+  //   border-radius: 5px;
+  //   width: 40%;
+  //   position: relative;
+  //   transition: all 5s ease-in-out;
+  // }
 
   .popup-delete {
     margin: 70px auto;
@@ -361,33 +360,33 @@
     text-align: center;
   }
   
-  .popup-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+  // .popup-header {
+  //   display: flex;
+  //   justify-content: space-between;
+  //   align-items: center;
+  // }
 
-  .popup-header-tables {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    justify-content: flex-start;
-    align-items: start;
-    margin-bottom: 15px;
-  }
+  // .popup-header-tables {
+  //   display: flex;
+  //   flex-direction: column;
+  //   gap: 10px;
+  //   justify-content: flex-start;
+  //   align-items: start;
+  //   margin-bottom: 15px;
+  // }
 
-  .close {
-    transition: all 200ms;
-    font-size: 30px;
-    font-weight: bold;
-    text-decoration: none;
-    color: #333;
-  }
+  // .close {
+  //   transition: all 200ms;
+  //   font-size: 30px;
+  //   font-weight: bold;
+  //   text-decoration: none;
+  //   color: #333;
+  // }
 
-  .content {
-    max-height: 30%;
-    overflow: auto;
-  }
+  // .content {
+  //   max-height: 30%;
+  //   overflow: auto;
+  // }
 
   .content-delete label {
     display: block;
@@ -397,9 +396,9 @@
 .content-delete label {
   margin-bottom: 10px;
 }
-  .close:hover{
-    color: #f71717;
-  }
+  // .close:hover{
+  //   color: #f71717;
+  // }
 
   .header-delete {
     display: flex;
@@ -408,20 +407,20 @@
   }
 
   
-  .preview-pet {
-    border: 1px solid var(--second-color);
-    width: 100%;
-    height: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 5px;
-    margin-bottom: 10px;
-  }
+  // .preview-pet {
+  //   border: 1px solid var(--second-color);
+  //   width: 100%;
+  //   height: auto;
+  //   display: flex;
+  //   justify-content: center;
+  //   align-items: center;
+  //   margin-top: 5px;
+  //   margin-bottom: 10px;
+  // }
 
-  .preview-pet img{
-    width: 30%;
-  }
+  // .preview-pet img{
+  //   width: 30%;
+  // }
 
 /* 4. Appointments */
 
@@ -456,18 +455,18 @@
 
 }
 
-.popup-medical {
-  width: 65%;
-}
+// .popup-medical {
+//   width: 65%;
+// }
 
-.popup-care{
-  width: 50%;
-}
+// .popup-care{
+//   width: 50%;
+// }
 
-.label-care {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
+// .label-care {
+//   margin-top: 10px;
+//   margin-bottom: 10px;
+// }
 
 .group-checkbox {
   margin-bottom: 10px;
@@ -488,28 +487,28 @@
   margin-top: 10px;
 }
 
-.table-inventory {
-  border-collapse: collapse;
-  font-size: var(--sm);
-  text-align: center;
-  width: 100%;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-}
+// .table-inventory {
+//   border-collapse: collapse;
+//   font-size: var(--sm);
+//   text-align: center;
+//   width: 100%;
+//   margin-top: 10px;
+//   margin-bottom: 10px;
+//   border-radius: 8px;
+// }
 
-.table-inventory thead {
-  background-color: #525353;
-  color: #fff;
-}
+// .table-inventory thead {
+//   background-color: #525353;
+//   color: #fff;
+// }
 
-.table-inventory tbody tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
+// .table-inventory tbody tr:nth-child(even) {
+//   background-color: #f2f2f2;
+// }
 
-.table-inventory th, .table-inventory td {
-  padding: 8px 10px;
-}
+// .table-inventory th, .table-inventory td {
+//   padding: 8px 10px;
+// }
 
 .input-table
 {
@@ -542,81 +541,81 @@
   font-weight: bold;
 }
 
-//Grooming
+// //Grooming
 
-.contentPhotos {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  width: 100%;
-}
+// .contentPhotos {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: flex-start;
+//   width: 100%;
+// }
 
-.columnPhoto {
-  width: 50%;
-}
+// .columnPhoto {
+//   width: 50%;
+// }
 
-//Plan de vacunación
+// //Plan de vacunación
 
-.options-vaccine  {
-  display: flex;
-  justify-content: flex-start;
-  gap: 15px;
-  align-items: center;
-  width: fit-content;
-}
+// .options-vaccine  {
+//   display: flex;
+//   justify-content: flex-start;
+//   gap: 15px;
+//   align-items: center;
+//   width: fit-content;
+// }
 
-.options-vaccine  input, .options-vaccine  select{
-  width: 200px;
-}
+// .options-vaccine  input, .options-vaccine  select{
+//   width: 200px;
+// }
 
-.options-vaccine-second {
-  display: flex;
-  gap: 2rem;
-  margin-top: 1.5rem;
-  flex-wrap: wrap;
-}
+// .options-vaccine-second {
+//   display: flex;
+//   gap: 2rem;
+//   margin-top: 1.5rem;
+//   flex-wrap: wrap;
+// }
 
-.options-vaccine-second .col {
-  flex: 1 1 300px; /* ancho mínimo y flexible */
-}
+// .options-vaccine-second .col {
+//   flex: 1 1 300px; /* ancho mínimo y flexible */
+// }
 
-.options-vaccine-second input,
-.options-vaccine-second textarea {
-  width: 100%;
-  box-sizing: border-box;
-}
+// .options-vaccine-second input,
+// .options-vaccine-second textarea {
+//   width: 100%;
+//   box-sizing: border-box;
+// }
 
-.tables-data-vaccine {
-  margin-top: 10px;
-  display: block;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-.tables-data-vaccine div {
-  width: 100%;
-}
+// .tables-data-vaccine {
+//   margin-top: 10px;
+//   display: block;
+//   gap: 10px;
+//   margin-bottom: 10px;
+// }
+// .tables-data-vaccine div {
+//   width: 100%;
+// }
 
 //Consulta médica
 
-.column1 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 15px;
-  align-items: flex-start;
-}
+// .column1 {
+//   display: grid;
+//   grid-template-columns: 1fr 1fr;
+//   grid-gap: 15px;
+//   align-items: flex-start;
+// }
 
-.column2 {
-  display: grid;
-  grid-template-rows: auto;
+// .column2 {
+//   display: grid;
+//   grid-template-rows: auto;
 
-}
+// }
 
-.errorMsg {
-  color: red;
-  font-size: var(--xs);
-  margin-top: -12px;
-  margin-bottom: 12px;
-}
+// .errorMsg {
+//   color: red;
+//   font-size: var(--xs);
+//   margin-top: -12px;
+//   margin-bottom: 12px;
+// }
 
 .resume {
   font-weight: bold;
@@ -627,32 +626,32 @@
   width: 100%;
 }
 
-//History
+// //History
 
-.report-content {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  border-style: solid;
-  border-color: #c3c6ca;
-  border-width: 1px;
-  border-radius: 10px;
-  padding: 15px;
-  width: 100%;
+// .report-content {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 15px;
+//   border-style: solid;
+//   border-color: #c3c6ca;
+//   border-width: 1px;
+//   border-radius: 10px;
+//   padding: 15px;
+//   width: 100%;
 
-}
+// }
 
-.report-content ul {
-  margin-left: 15px;
-}
+// .report-content ul {
+//   margin-left: 15px;
+// }
 
-.content-photos {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  width: 100%;
-}
+// .content-photos {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: flex-start;
+//   width: 100%;
+// }
 
-.column-photo {
-  width: 50%;
-}
+// .column-photo {
+//   width: 50%;
+// }

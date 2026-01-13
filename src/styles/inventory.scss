@@ -1,0 +1,27 @@
+.popup-inventory {
+  margin: 70px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  position: relative;
+  width: 50%;
+}
+
+.popup-batches {
+  margin: 70px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  position: relative;
+  width: 30%; 
+}
+  
+  @media (max-width: 600px) {
+    .popup-batches {
+        width: 90%;
+    }
+
+    .popup-inventory {
+        width: 90%;
+    }
+  }
