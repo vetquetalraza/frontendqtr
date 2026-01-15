@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://api-vet-2utn.onrender.com/api/v1',
+  baseURL: 'https://backendqtr.onrender.com/api/v1',
 });
 
 api.interceptors.request.use(
