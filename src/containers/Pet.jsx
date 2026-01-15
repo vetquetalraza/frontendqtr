@@ -385,7 +385,7 @@ return (
             <div className="popup-pet">
                 <div className="popup-header">
                     <label className="title">Datos mascota</label>
-                    <a className="close" href="#" onClick={handleClear}>&times;</a>
+                    <a className="close" href="#!" onClick={handleClear}>&times;</a>
                 </div>
                 <div className="content">
 
@@ -491,7 +491,7 @@ return (
                                     <div className="group-photo">
                                         <input id="photo" type="file" ref={fileRef} onChange={onFileChange}/>
                                     </div>
-                                    <div className="photo-preview"><img accept=".jpg, .jpeg, .png" src={filePath}/></div>
+                                    <div className="photo-preview"><img alt="Foto mascota" accept=".jpg, .jpeg, .png" src={filePath}/></div>
                                 </div>
                             </div>
                         </div> 

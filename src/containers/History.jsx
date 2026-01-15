@@ -283,7 +283,7 @@ return (
             <div className="popup-history">
                 <div className="popup-header">
                     <label className="title">Datos grooming</label>
-                    <a className="close" href="#" onClick={handleClearGrooming}>&times;</a>
+                    <a className="close" href="#!" onClick={handleClearGrooming}>&times;</a>
                 </div>
                 <div className="report-content">
                     <label htmlFor="" className="label">1. Fecha y Hora Atención: {grooming.date}</label>
@@ -291,12 +291,12 @@ return (
                     <div className="content-photos">
                          <div className="column-photo">
                             <label for="before" className="label">2. Foto del antes!</label>
-                            <div className="preview-pet"><img src={filePath} alt=""></img></div>
+                            <div className="preview-pet"><img src={filePath} alt="Foto antes"></img></div>
                             <label id="label_before"></label>
                         </div>
                         <div className="column-photo">
                             <label for="after" className="label">3. Foto de ahora!</label>
-                            <div className="preview-pet"><img src={filePath2} alt=""></img></div>
+                            <div className="preview-pet"><img src={filePath2} alt="Foto después"></img></div>
                         </div>
                     </div>
                     <label for="comment" className="label">4. Observaciones: {grooming.comment}</label>
@@ -310,7 +310,7 @@ return (
             <div className="popup-medical">
                 <div className="popup-header">
                     <label className="title">Datos atención médica</label>
-                    <a className="close" href="#" onClick={handleClearMedical}>&times;</a>
+                    <a className="close" href="#!" onClick={handleClearMedical}>&times;</a>
                 </div>
                 <div className="report-content"> 
                     <label className="label">1. Fecha y Hora Atención: {medical.date}</label>
@@ -356,7 +356,7 @@ return (
             <div className="popup-vaccine">
                 <div className="popup-header">
                     <label className="title">Datos Vacunación</label>
-                    <a className="close" href="#" onClick={handleClearPlan}>&times;</a>
+                    <a className="close" href="#!" onClick={handleClearPlan}>&times;</a>
                 </div>
                 <div className="report-content">
                     <label className="label">1. Fecha y Hora Atención: {plan.date}</label>

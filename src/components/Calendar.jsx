@@ -46,6 +46,8 @@ const getColor = (e) => {
     case 3:
       color = '#5D58D7';
       break;  
+    default:
+      console.warn("Tipo no manejado:", e);
   }
   return color
 }
@@ -56,7 +58,7 @@ const load = () => {
     
     var data = Array.from(res.data);
     var lista = [];
-    data.map((element, index) => {
+    data.forEach((element, index) => {
       let varStart = element.dateappointment + " " + element.timeappointment
       let varEnd = element.dateappointment + " " + element.timeaendppointment
       let color = getColor(element.idvetservices);
@@ -146,7 +148,7 @@ const handleSelect = (info) => {
         .then(res => {
           //console.log(res.data[0].agendar_cita);
           const result = res.data[0].agendar_cita;
-          if (result == 66 ) {
+          if (result === 66 ) {
             close.click();
             Swal.fire({
               position: "bottom-end",
@@ -160,9 +162,9 @@ const handleSelect = (info) => {
             handleClear();
             //Actualizar vista
             load()
-          } else if (result == 99 ) {
+          } else if (result === 99 ) {
               Swal.fire("No se puede agendar en fechas anteriores");
-          } else if (result == 88 ) {
+          } else if (result === 88 ) {
               Swal.fire("El paciente ya tiene una cita en ese horario");
           }
 

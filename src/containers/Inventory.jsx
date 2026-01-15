@@ -268,7 +268,7 @@ return (
             <div className="popup-inventory">
                 <div className="popup-header">
                     <label className="title">Datos Medicamentos</label>
-                    <a className="close" href="#">&times;</a>
+                    <a className="close" href="#!">&times;</a>
                 </div>
                 <div className="content">
                     <form action="/" className="form" onSubmit={handleSubmit} >
@@ -327,7 +327,7 @@ return (
             <div className="popup-batches">
                 <div className="popup-header">
                     <label className="title">Registro de entradas</label>
-                    <a className="close" href="#">&times;</a>
+                    <a className="close" href="#!">&times;</a>
                 </div>
                 <div className="content">
                     <form action="/" className="form" onSubmit={handleSubmitStock} >

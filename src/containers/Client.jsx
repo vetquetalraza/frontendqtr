@@ -229,7 +229,7 @@ const Client = () => {
             <div className="popup-client">
                 <div className="popup-header">
                     <label className="title">Datos cliente</label>
-                    <a className="close" href="#" onClick={handleClear}>&times;</a>
+                    <a className="close" href="#!" onClick={handleClear}>&times;</a>
                 </div>
                 <div className="content">
                     <form action="/" className="form" onSubmit={handleSubmit}>

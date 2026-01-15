@@ -464,7 +464,7 @@ return (
             <div className="popup-grooming">
                 <div className="popup-header">
                     <label className="title">Datos grooming</label>
-                    <a className="close" href="#">&times;</a>
+                    <a className="close" href="#!">&times;</a>
                 </div>
                 <div className="content">
                     <form action="/" className="form" onSubmit={handleSubmitGrooming}>
@@ -472,13 +472,13 @@ return (
                             <div className="columnPhoto">
                                 <label for="before" className="file-upload"><span>Sube una foto del antes!</span>
                                 <input id="before" type="file" onChange={onFileChange}/></label>
-                                <div className="preview-pet"><img src={filePath} alt="" accept=".jpg, .jpeg, .png" ></img></div>
+                                <div className="preview-pet"><img src={filePath} alt="Foto mascota antes" accept=".jpg, .jpeg, .png"></img></div>
                                 {errors.before && <label className="errorMsg">{errors.before}</label>}
                             </div>
                             <div className="columnPhoto">
                                 <label for="after" className="file-upload"><span>Sube una foto de ahora!</span>
                                 <input id="after" type="file" placeholder="" onChange={onFileChange2}/></label>
-                                <div className="preview-pet"><img src={filePath2} alt="" accept=".jpg, .jpeg, .png"></img></div>
+                                <div className="preview-pet"><img src={filePath2} alt="Foto mascota después" accept=".jpg, .jpeg, .png"></img></div>
                                 {errors.after && <label className="errorMsg">{errors.after}</label>}
                             </div>
                         </div>
@@ -497,7 +497,7 @@ return (
             <div className="popup-medical">
                 <div className="popup-header">
                     <label className="title">Datos atención médica</label>
-                    <a className="close" href="#">&times;</a>
+                    <a className="close" href="#!">&times;</a>
                 </div>
                 <div className="content">
                     <form action="/" className="form" onSubmit={handleSubmitMedic}>    
@@ -610,7 +610,7 @@ return (
             <div className="popup-vaccine">
                 <div className="popup-header">
                     <label className="title">Datos Vacunación</label>
-                    <a className="close" href="#">&times;</a>
+                    <a className="close" href="#!">&times;</a>
                 </div>
                 <div className="content">
                     <form action="/" className="form" onSubmit={handleSubmitVaccine}>
