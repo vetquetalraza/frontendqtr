@@ -16,7 +16,7 @@ const Login = () => {
   
     const login = async () => {
       try {
-        const res = await axios.post('https://api-vet-2utn.onrender.com/api/v1/users/login', values);
+        const res = await axios.post('https://backendqtr.onrender.com/api/v1/users/login', values);
         //console.log(res.data)
         localStorage.setItem('token', res.data.token);
         setToken(res.data.token);
